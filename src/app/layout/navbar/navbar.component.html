@@ -1,10 +1,15 @@
-<div class="card custom-menubar">
+<div class="card" [style]="{ maxWidth: '100%' }">
   <p-menubar [model]="items">
     <ng-template pTemplate="start">
-      <img src="cinema-logo.png" width="70px" alt="" />
+      <img src="cinema-logo.png" width="70px" alt="Cinema Logo" />
     </ng-template>
     <ng-template pTemplate="item" let-item let-root="root">
-      <a pRipple class="flex align-items-center p-menuitem-link">
+      <a
+        pRipple
+        class="flex align-items-center p-menuitem-link"
+        [routerLink]="item.routerLink || []"
+        *ngIf="!item.separator"
+      >
         <span [class]="item.icon"></span>
         <span class="ml-2">{{ item.label }}</span>
         <p-badge
@@ -15,8 +20,9 @@
         <span
           *ngIf="item.shortcut"
           class="ml-auto border-1 surface-border border-round surface-100 text-xs p-1"
-          >{{ item.shortcut }}</span
         >
+          {{ item.shortcut }}
+        </span>
         <i
           *ngIf="item.items"
           [ngClass]="[
@@ -35,9 +41,64 @@
           class="w-8rem sm:w-auto"
         />
         <p-avatar
-          image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
-          shape="circle"
+          icon="pi pi-user"
+          styleClass="mr-2"
+          size="large"
+          (click)="op.toggle($event)"
         ></p-avatar>
+        <p-overlayPanel #op>
+          <div class="card">
+            <div class="flex flex-column md:flex-row">
+              <div
+                class="w-full md:w-5 flex flex-column align-items-center justify-content-center gap-3 py-5"
+              >
+                <div
+                  class="flex flex-wrap justify-content-center align-items-center gap-2"
+                >
+                  <label class="w-6rem">Username</label>
+                  <input pInputText id="username" type="text" class="w-14rem" />
+                </div>
+                <div
+                  class="flex flex-wrap justify-content-center align-items-center gap-2"
+                >
+                  <label class="w-6rem">Password</label>
+                  <input
+                    pInputText
+                    id="password"
+                    type="password"
+                    class="w-14rem"
+                  />
+                </div>
+                <p-button
+                  label="Login"
+                  icon="pi pi-user"
+                  styleClass="w-10rem mx-auto"
+                />
+              </div>
+              <div class="w-full md:w-2">
+                <p-divider layout="vertical" styleClass="hidden md:flex">
+                  <b>OR</b>
+                </p-divider>
+                <p-divider
+                  layout="horizontal"
+                  styleClass="flex md:hidden"
+                  [align]="'center'"
+                >
+                  <b>OR</b>
+                </p-divider>
+              </div>
+              <div
+                class="w-full md:w-5 flex align-items-center justify-content-center py-5"
+              >
+                <p-button
+                  label="Sign Up"
+                  icon="pi pi-user-plus"
+                  styleClass="p-button-success w-10rem"
+                />
+              </div>
+            </div>
+          </div>
+        </p-overlayPanel>
       </div>
     </ng-template>
   </p-menubar>
