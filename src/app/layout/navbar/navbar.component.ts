@@ -9,6 +9,8 @@ import { RippleModule } from 'primeng/ripple';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
+import { SignupComponent } from '../../auth/signup/signup.component';
+import { DialogModule } from 'primeng/dialog';
 
 @Component({
   selector: 'app-navbar',
@@ -23,12 +25,15 @@ import { DividerModule } from 'primeng/divider';
     OverlayPanelModule,
     ButtonModule,
     DividerModule,
+    SignupComponent,
+    DialogModule,
   ],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent implements OnInit {
   items: MenuItem[] | undefined;
+  visible: boolean = false;
 
   ngOnInit() {
     this.items = [
@@ -116,5 +121,9 @@ export class NavbarComponent implements OnInit {
   signUp() {
     // Handle sign up logic
     console.log('Sign Up button clicked');
+  }
+
+  showSignUpForm() {
+    this.visible = true;
   }
 }
