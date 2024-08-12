@@ -1,0 +1,84 @@
+<div class="flex justify-content-center">
+  <div
+    class="formgrid grid w-4 p-4 surface-card border-round shadow-2 justify-content-center"
+  >
+    <div class="field">
+      <label for="firstname" class="block mb-2 font-medium text-lg"
+        >Firstname</label
+      >
+      <input
+        id="firstname"
+        type="text"
+        class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-30rem"
+      />
+    </div>
+    <div class="field">
+      <label for="lastname" class="block mb-2 font-medium text-lg"
+        >Lastname</label
+      >
+      <input
+        id="lastname"
+        type="text"
+        class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-30rem"
+      />
+    </div>
+    <div class="field">
+      <label for="dob" class="block mb-2 font-medium text-lg"
+        >Date of Birth</label
+      >
+      <input
+        id="dob"
+        type="date"
+        class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-30rem"
+      />
+    </div>
+    <div class="field">
+      <label for="email" class="block mb-2 font-medium text-lg">Email</label>
+      <input
+        id="email"
+        type="email"
+        class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-30rem"
+      />
+    </div>
+    <div class="field">
+      <label for="password" class="block mb-2 font-medium text-lg"
+        >Password</label
+      >
+      <p-password
+        id="password"
+        [feedback]="true"
+        [toggleMask]="true"
+        class="w-full"
+        inputStyleClass="text-base text-color surface-overlay p-2 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-30rem"
+      ></p-password>
+    </div>
+    <div class="field">
+      <label for="confirmPassword" class="block mb-2 font-medium text-lg"
+        >Confirm Password</label
+      >
+      <p-password
+        [(ngModel)]="value"
+        inputStyleClass="text-base text-color surface-overlay p-2 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-30rem"
+      >
+        <ng-template pTemplate="header">
+          <h6>Pick a password</h6>
+        </ng-template>
+        <ng-template pTemplate="footer">
+          <p-divider />
+          <p class="mt-2">Suggestions</p>
+          <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
+            <li>At least one lowercase</li>
+            <li>At least one uppercase</li>
+            <li>At least one numeric</li>
+            <li>Minimum 8 characters</li>
+          </ul>
+        </ng-template>
+      </p-password>
+      <div class="field mt-4">
+        <button type="submit" class="p-button w-full p-3 border-round">
+          Sign Up
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
