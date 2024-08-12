@@ -1,1 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
+@import "primeng/resources/themes/lara-dark-teal/theme.css";
+@import "primeng/resources/primeng.css";
+@import "primeicons/primeicons.css";
+@import "primeflex/primeflex.css";
+/* @import "https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css"; */

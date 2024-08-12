@@ -1,0 +1,38 @@
+<div class="movie-card" tooltipPosition="top">
+  <div
+    class="movie-poster"
+    (mouseover)="showDetails = true"
+    (mouseleave)="showDetails = false"
+  >
+    <img [src]="movie.imageUrl" alt="{{ movie.title }} poster" />
+    <div class="movie-details" *ngIf="showDetails">
+      <div class="details-content">
+        <h2>{{ movie.title }} <span>({{ movie.year }})</span> - <span class="rating">{{ movie.rating }}</span></h2>
+        <div class="info-bar">
+          <span class="age-rating">{{ movie.ageRating }}</span>
+          <span class="genre">{{ movie.genre }}</span>
+          <span class="runtime">{{ movie.duration }}m</span>
+        </div>
+        <p>{{ movie.description }}</p>
+        <p><strong>Actors:</strong> {{ movie.actors.join(', ') }}</p>
+        <p><strong>Director:</strong> {{ movie.director }}</p>
+      </div>
+      <div class="buttons">
+        <button
+          pButton
+          type="button"
+          label="Watch Trailer"
+          icon="pi pi-play"
+          (click)="watchTrailer()"
+        ></button>
+        <button
+          pButton
+          type="button"
+          label="Buy Ticket"
+          icon="pi pi-ticket"
+          (click)="buyTicket()"
+        ></button>
+      </div>
+    </div>
+  </div>
+</div>

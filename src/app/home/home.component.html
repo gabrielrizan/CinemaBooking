@@ -1,0 +1,5 @@
+<div class="flex flex-wrap gap-3 justify-content-center mt-6">
+  @for (movie of movies; track movie.movieId) {
+  <app-movie-card [movie]="movie"></app-movie-card>
+  }
+</div>

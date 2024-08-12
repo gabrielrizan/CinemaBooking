@@ -1,0 +1,9 @@
+.custom-menubar {
+  margin: 0 auto;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.custom-menubar .p-menubar {
+  border-radius: 15px; /* Make the menubar's border more rounded */
+}
