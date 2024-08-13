@@ -1,16 +1,73 @@
-.search-results-container {
-  position: absolute;
-  left: 50%; /* Start positioning from the center of the screen */
-  top: 60px; /* Adjust this based on the height of your navbar and search bar */
-  transform: translateX(
-    -50%
-  ); /* Move the container back by half of its own width */
-  width: 100%; /* Make sure the container takes full width, but the content inside can be constrained */
-  max-width: 900px; /* Optional: If you want to constrain the max width */
-  z-index: 1001; /* Ensure it appears above other content */
+.custom-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  max-width: 100%;
+  margin: 0 auto;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  height: auto;
+  overflow: hidden;
+  z-index: 1002;
 }
 
-.movie-card {
+.custom-dialog .ui-dialog-content {
+  padding: 0;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  overflow-y: visible;
+}
+
+.expanded-search {
+  width: 100%;
+  max-width: 1000px;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+}
+
+.expanded-search-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.expanded-search-input {
+  width: 85%;
+  height: 3rem;
+  font-size: 1.5rem;
+  padding: 0 20px;
+  border-radius: 25px;
+  outline: none;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.close-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0 10px;
+}
+
+.expanded-search-content {
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-height: 70vh;
+}
+
+.ui-widget-overlay {
+  background: rgba(0, 0, 0, 0.3);
 }
 
 .blur-overlay {
@@ -19,24 +76,13 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: transparent;
+  background: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(10px);
   z-index: 1000;
 }
 
-.search-active .search-input {
-  position: fixed;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60%;
-  max-width: 800px;
-  height: 3rem;
-  font-size: 1.5rem;
-  padding: 0 20px;
-  border-radius: 25px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  outline: none;
-  z-index: 1001;
-  transition: all 0.3s ease-in-out;
+.back-home-btn {
+  position: absolute;
+  left: -10%;
+  top: -10%;
 }

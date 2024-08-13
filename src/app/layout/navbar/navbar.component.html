@@ -1,8 +1,4 @@
-<div
-  class="card mb-4"
-  [style]="{ maxWidth: '100%' }"
-  [ngClass]="{ 'search-active': isSearchActive }"
->
+<div class="card mb-4" [style]="{ maxWidth: '100%' }">
   <p-menubar [model]="items">
     <ng-template pTemplate="start">
       <img src="cinema-logo.png" width="70px" alt="Cinema Logo" />
@@ -45,7 +41,6 @@
           class="search-input"
           [(ngModel)]="searchTerm"
           (focus)="onSearchFocus()"
-          (blur)="onSearchBlur()"
           (input)="onSearchChange($event)"
         />
         <p-avatar
@@ -124,29 +119,77 @@
     </ng-template>
   </p-menubar>
 
-  <!-- Movie cards displayed under search bar -->
-  <div
-    *ngIf="searchTerm && filteredMovies.length > 0"
-    class="search-results-container"
-    [style.zIndex]="1001"
+  <!-- Expanded search bar with additional content -->
+  <p-dialog
+    [(visible)]="isSearchActive"
+    [modal]="true"
+    [closable]="false"
+    [draggable]="false"
+    [resizable]="false"
+    [contentStyle]="{ background: 'transparent', padding: '0' }"
+    [style]="{
+      width: '100%',
+      maxWidth: '1000px',
+      margin: '0 auto',
+      position: 'fixed',
+      top: '10%',
+      left: '0',
+      right: '0',
+      border: 'none',
+      boxShadow: 'none',
+      background: 'transparent'
+    }"
+    [appendTo]="'body'"
+    [baseZIndex]="1002"
+    [closeOnEscape]="true"
+    [dismissableMask]="true"
+    showHeader="false"
+    [blockScroll]="true"
+    focusOnShow="true"
+    [transitionOptions]="'150ms cubic-bezier(0, 0, 0.2, 1)'"
   >
-    <app-search-card
-      *ngFor="let movie of filteredMovies"
-      [movie]="movie"
-    ></app-search-card>
-  </div>
+    <div class="expanded-search">
+      <div class="expanded-search-header flex justify-content-center">
+        <p-button
+          label="Back to Home"
+          class="back-home-btn"
+          (click)="onSearchBlur()"
+        >
+        </p-button>
+        <input
+          type="text"
+          pInputText
+          placeholder="Search for movies, shows, etc..."
+          class="expanded-search-input"
+          [(ngModel)]="searchTerm"
+          (input)="onSearchChange($event)"
+        />
+      </div>
 
+      <div class="expanded-search-content">
+        <div class="flex flex-wrap justify-content-center p-gap-3">
+          <div *ngFor="let movie of filteredMovies" class="w-9 mb-2">
+            <app-search-card [movie]="movie"></app-search-card>
+          </div>
+        </div>
+      </div>
+    </div>
+  </p-dialog>
   <!-- Dialog for Sign Up -->
   <p-dialog
     header="Sign up"
     [(visible)]="visible"
     [modal]="true"
     [closable]="true"
-    [style]="{ width: '50vw' }"
+    [style]="{ width: '50vw', opacity: 0 }"
   >
     <app-signup></app-signup>
   </p-dialog>
 
   <!-- Full screen overlay for blur effect -->
-  <div *ngIf="isSearchActive" class="blur-overlay"></div>
+  <div
+    *ngIf="isSearchActive"
+    class="blur-overlay"
+    (click)="onSearchBlur()"
+  ></div>
 </div>

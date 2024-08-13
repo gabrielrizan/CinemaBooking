@@ -35,6 +35,7 @@ import { BigsearchComponent } from '../../bigsearch/bigsearch.component';
     FormsModule,
     SearchCardComponent,
     BigsearchComponent,
+    OverlayPanelModule,
   ],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
@@ -45,20 +46,48 @@ export class NavbarComponent implements OnInit {
 
   movies = [
     {
-      id: 1,
-      title: 'Inception',
-      description: 'A thief who steals corporate secrets...',
-      releaseDate: '2010-07-16',
-      rating: '8.8',
-      poster: 'inception-backdrop.jpg',
+      title: 'The Shawshank Redemption',
+      year: 1994,
+      director: 'Frank Darabont',
+      duration: 142,
+      genres: 'Drama',
+      description:
+        'Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.',
+      poster: 'shawshack-redemption.jpg',
+      background: 'shawshank-backdrop.jpg',
     },
     {
-      id: 2,
-      title: 'The Dark Knight',
-      description: 'When the menace known as the Joker...',
-      releaseDate: '2008-07-18',
-      rating: '9.0',
-      poster: 'https://link-to-dark-knight-poster.jpg',
+      title: 'Warcraft',
+      year: 2016,
+      description:
+        'As an Orc horde invades the planet Azeroth using a magic portal, a few human heroes and dissenting Orcs must attempt to stop the true evil behind this war.',
+      duration: 123,
+      poster: 'warcraft.jpg',
+      genre: 'Action, Adventure, Fantasy',
+      director: 'Duncan Jones',
+      background: 'warcraft-backdrop.jpg',
+    },
+    {
+      title: 'The Shawshank Redemption',
+      year: 1994,
+      director: 'Frank Darabont',
+      duration: 142,
+      genres: 'Drama',
+      description:
+        'Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.',
+      poster: 'shawshack-redemption.jpg',
+      background: 'shawshank-backdrop.jpg',
+    },
+    {
+      title: 'Warcraft',
+      year: 2016,
+      description:
+        'As an Orc horde invades the planet Azeroth using a magic portal, a few human heroes and dissenting Orcs must attempt to stop the true evil behind this war.',
+      duration: 123,
+      poster: 'warcraft.jpg',
+      genre: 'Action, Adventure, Fantasy',
+      director: 'Duncan Jones',
+      background: 'warcraft-backdrop.jpg',
     },
   ];
 
