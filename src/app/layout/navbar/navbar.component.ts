@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
 import { BadgeModule } from 'primeng/badge';
@@ -6,11 +6,12 @@ import { AvatarModule } from 'primeng/avatar';
 import { InputTextModule } from 'primeng/inputtext';
 import { CommonModule } from '@angular/common';
 import { RippleModule } from 'primeng/ripple';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
 import { SignupComponent } from '../../auth/signup/signup.component';
 import { DialogModule } from 'primeng/dialog';
+import { TieredMenu, TieredMenuModule } from 'primeng/tieredmenu';
 
 @Component({
   selector: 'app-navbar',
@@ -27,12 +28,16 @@ import { DialogModule } from 'primeng/dialog';
     DividerModule,
     SignupComponent,
     DialogModule,
+    TieredMenuModule,
   ],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent implements OnInit {
   items: MenuItem[] | undefined;
+
+  @ViewChild('op') overlayPanel: OverlayPanel | undefined;
+
   visible: boolean = false;
 
   ngOnInit() {
@@ -111,6 +116,37 @@ export class NavbarComponent implements OnInit {
         routerLink: ['/about'],
       },
     ];
+  }
+
+  isLoggedIn = true; // Set this based on your actual authentication logic
+
+  loggedInItems: MenuItem[] = [
+    {
+      label: 'My Account',
+      icon: 'pi pi-user',
+      routerLink: ['/my-account'],
+    },
+    {
+      label: 'My Tickets',
+      icon: 'pi pi-ticket',
+      routerLink: ['/my-tickets'],
+    },
+    {
+      label: 'My Searches',
+      icon: 'pi pi-history',
+      routerLink: ['/my-searches'],
+    },
+    {
+      label: 'Logout',
+      icon: 'pi pi-sign-out',
+      command: () => this.logout(),
+    },
+  ];
+
+  logout() {
+    // Implement your logout logic here
+    this.isLoggedIn = false;
+    this.overlayPanel?.hide();
   }
 
   logIn() {
