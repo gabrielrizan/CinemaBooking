@@ -2,6 +2,8 @@ import { Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 import { BananasComponent } from './apples/bananas/bananas.component';
 import { SignupComponent } from './auth/signup/signup.component';
+import { SearchCardComponent } from './search-card/search-card.component';
+import { BigsearchComponent } from './bigsearch/bigsearch.component';
 
 export const routes: Routes = [
   {
@@ -20,5 +22,13 @@ export const routes: Routes = [
   {
     path: 'sign-up',
     component: SignupComponent,
+  },
+  {
+    path: 'search-card',
+    component: SearchCardComponent,
+  },
+  {
+    path: 'bigsearch',
+    component: BigsearchComponent,
   },
 ];

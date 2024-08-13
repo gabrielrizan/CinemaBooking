@@ -46,6 +46,7 @@
           [(ngModel)]="searchTerm"
           (focus)="onSearchFocus()"
           (blur)="onSearchBlur()"
+          (input)="onSearchChange($event)"
         />
         <p-avatar
           icon="pi pi-user"
@@ -122,6 +123,18 @@
       </div>
     </ng-template>
   </p-menubar>
+
+  <!-- Movie cards displayed under search bar -->
+  <div
+    *ngIf="searchTerm && filteredMovies.length > 0"
+    class="search-results-container"
+    [style.zIndex]="1001"
+  >
+    <app-search-card
+      *ngFor="let movie of filteredMovies"
+      [movie]="movie"
+    ></app-search-card>
+  </div>
 
   <!-- Dialog for Sign Up -->
   <p-dialog

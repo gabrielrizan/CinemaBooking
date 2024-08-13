@@ -13,6 +13,8 @@ import { SignupComponent } from '../../auth/signup/signup.component';
 import { DialogModule } from 'primeng/dialog';
 import { TieredMenu, TieredMenuModule } from 'primeng/tieredmenu';
 import { FormsModule } from '@angular/forms';
+import { SearchCardComponent } from '../../search-card/search-card.component';
+import { BigsearchComponent } from '../../bigsearch/bigsearch.component';
 
 @Component({
   selector: 'app-navbar',
@@ -30,7 +32,9 @@ import { FormsModule } from '@angular/forms';
     SignupComponent,
     DialogModule,
     TieredMenuModule,
-    FormsModule
+    FormsModule,
+    SearchCardComponent,
+    BigsearchComponent,
   ],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
@@ -38,6 +42,25 @@ import { FormsModule } from '@angular/forms';
 export class NavbarComponent implements OnInit {
   items: MenuItem[] | undefined;
   searchTerm: string = '';
+
+  movies = [
+    {
+      id: 1,
+      title: 'Inception',
+      description: 'A thief who steals corporate secrets...',
+      releaseDate: '2010-07-16',
+      rating: '8.8',
+      poster: 'inception-backdrop.jpg',
+    },
+    {
+      id: 2,
+      title: 'The Dark Knight',
+      description: 'When the menace known as the Joker...',
+      releaseDate: '2008-07-18',
+      rating: '9.0',
+      poster: 'https://link-to-dark-knight-poster.jpg',
+    },
+  ];
 
   @ViewChild('op') overlayPanel: OverlayPanel | undefined;
 
@@ -146,6 +169,8 @@ export class NavbarComponent implements OnInit {
     },
   ];
 
+  filteredMovies = this.movies;
+
   logout() {
     // Implement your logout logic here
     this.isLoggedIn = false;
@@ -170,6 +195,13 @@ export class NavbarComponent implements OnInit {
 
   onSearchBlur() {
     this.isSearchActive = false;
+  }
+
+  onSearchChange(event: any) {
+    const query = event.target.value.toLowerCase();
+    this.filteredMovies = this.movies.filter((movie) =>
+      movie.title.toLowerCase().includes(query)
+    );
   }
 
   showSignUpForm() {

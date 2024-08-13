@@ -1,0 +1,17 @@
+<div class="flex justify-content-center p-4 mb-4">
+  <input
+    type="text"
+    pInputText
+    [(ngModel)]="searchQuery"
+    (input)="searchMovies()"
+    placeholder="Search for movies..."
+    class="p-inputtext-lg"
+    style="width: 50%"
+  />
+</div>
+
+<div class="flex flex-wrap justify-content-center p-gap-3">
+  <div *ngFor="let movie of filteredMovies" class="w-7 mb-2">
+    <app-search-card [movie]="movie"></app-search-card>
+  </div>
+</div>

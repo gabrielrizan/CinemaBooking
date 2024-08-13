@@ -1,4 +1,29 @@
-/* Expanded search input when focused */
+.search-results-container {
+  position: absolute;
+  left: 50%; /* Start positioning from the center of the screen */
+  top: 60px; /* Adjust this based on the height of your navbar and search bar */
+  transform: translateX(
+    -50%
+  ); /* Move the container back by half of its own width */
+  width: 100%; /* Make sure the container takes full width, but the content inside can be constrained */
+  max-width: 900px; /* Optional: If you want to constrain the max width */
+  z-index: 1001; /* Ensure it appears above other content */
+}
+
+.movie-card {
+}
+
+.blur-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: transparent;
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+}
+
 .search-active .search-input {
   position: fixed;
   top: 10px;
@@ -14,21 +39,4 @@
   outline: none;
   z-index: 1001;
   transition: all 0.3s ease-in-out;
-}
-
-/* Blur overlay */
-.blur-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: transparent;
-  backdrop-filter: blur(10px); /* Adjust blur intensity */
-  z-index: 1000; /* Layer just behind the search input */
-}
-
-/* Hide unnecessary elements when search is active */
-.search-active .p-avatar {
-  display: none;
 }
