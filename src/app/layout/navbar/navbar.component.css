@@ -1,0 +1,34 @@
+/* Expanded search input when focused */
+.search-active .search-input {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  max-width: 800px;
+  height: 3rem;
+  font-size: 1.5rem;
+  padding: 0 20px;
+  border-radius: 25px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  outline: none;
+  z-index: 1001;
+  transition: all 0.3s ease-in-out;
+}
+
+/* Blur overlay */
+.blur-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: transparent;
+  backdrop-filter: blur(10px); /* Adjust blur intensity */
+  z-index: 1000; /* Layer just behind the search input */
+}
+
+/* Hide unnecessary elements when search is active */
+.search-active .p-avatar {
+  display: none;
+}

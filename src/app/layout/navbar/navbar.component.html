@@ -1,4 +1,8 @@
-<div class="card mb-4" [style]="{ maxWidth: '100%' }">
+<div
+  class="card mb-4"
+  [style]="{ maxWidth: '100%' }"
+  [ngClass]="{ 'search-active': isSearchActive }"
+>
   <p-menubar [model]="items">
     <ng-template pTemplate="start">
       <img src="cinema-logo.png" width="70px" alt="Cinema Logo" />
@@ -38,7 +42,10 @@
           type="text"
           pInputText
           placeholder="Search"
-          class="w-8rem sm:w-auto"
+          class="search-input"
+          [(ngModel)]="searchTerm"
+          (focus)="onSearchFocus()"
+          (blur)="onSearchBlur()"
         />
         <p-avatar
           icon="pi pi-user"
@@ -126,4 +133,7 @@
   >
     <app-signup></app-signup>
   </p-dialog>
+
+  <!-- Full screen overlay for blur effect -->
+  <div *ngIf="isSearchActive" class="blur-overlay"></div>
 </div>

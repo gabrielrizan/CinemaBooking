@@ -12,6 +12,7 @@ import { DividerModule } from 'primeng/divider';
 import { SignupComponent } from '../../auth/signup/signup.component';
 import { DialogModule } from 'primeng/dialog';
 import { TieredMenu, TieredMenuModule } from 'primeng/tieredmenu';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-navbar',
@@ -29,12 +30,14 @@ import { TieredMenu, TieredMenuModule } from 'primeng/tieredmenu';
     SignupComponent,
     DialogModule,
     TieredMenuModule,
+    FormsModule
   ],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent implements OnInit {
   items: MenuItem[] | undefined;
+  searchTerm: string = '';
 
   @ViewChild('op') overlayPanel: OverlayPanel | undefined;
 
@@ -157,6 +160,16 @@ export class NavbarComponent implements OnInit {
   signUp() {
     // Handle sign up logic
     console.log('Sign Up button clicked');
+  }
+
+  isSearchActive: boolean = false;
+
+  onSearchFocus() {
+    this.isSearchActive = true;
+  }
+
+  onSearchBlur() {
+    this.isSearchActive = false;
   }
 
   showSignUpForm() {
