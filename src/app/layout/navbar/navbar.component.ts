@@ -198,7 +198,7 @@ export class NavbarComponent implements OnInit {
     },
   ];
 
-  filteredMovies = this.movies;
+  filteredMovies: any[] = [];
 
   logout() {
     // Implement your logout logic here
@@ -228,9 +228,14 @@ export class NavbarComponent implements OnInit {
 
   onSearchChange(event: any) {
     const query = event.target.value.toLowerCase();
-    this.filteredMovies = this.movies.filter((movie) =>
-      movie.title.toLowerCase().includes(query)
-    );
+
+    if (query) {
+      this.filteredMovies = this.movies.filter((movie) =>
+        movie.title.toLowerCase().includes(query)
+      );
+    } else {
+      this.filteredMovies = []; // Empty the list when there's no search query
+    }
   }
 
   showSignUpForm() {
