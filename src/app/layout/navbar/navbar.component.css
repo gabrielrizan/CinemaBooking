@@ -13,6 +13,12 @@
   z-index: 1002;
 }
 
+.search-input {
+  box-sizing: border-box;
+  width: 100%;
+  transition: none;
+}
+
 .custom-dialog .ui-dialog-content {
   padding: 0;
   background: transparent;
@@ -22,48 +28,12 @@
   overflow-y: visible;
 }
 
-.expanded-search {
-  width: 100%;
-  max-width: 1000px;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  display: flex;
-  flex-direction: column;
-}
-
-.expanded-search-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.expanded-search-input {
-  width: 85%;
-  height: 3rem;
-  font-size: 1.5rem;
-  padding: 0 20px;
-  border-radius: 25px;
-  outline: none;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
 .close-btn {
   background: transparent;
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
   padding: 0 10px;
-}
-
-.expanded-search-content {
-  padding: 20px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  max-height: 70vh;
 }
 
 .ui-widget-overlay {
@@ -82,7 +52,25 @@
 }
 
 .back-home-btn {
-  position: absolute;
-  left: -10%;
-  top: -10%;
+  top: -60px;
+  left: 50px;
+  z-index: 1001; /* Ensure it's on top of other elements */
+}
+
+/* Hide scrollbars for WebKit browsers (Chrome, Safari) */
+.custom-dialog-content::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Hide scrollbar for Firefox */
+.custom-dialog-content {
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important; /* IE and Edge */
+}
+
+/* Ensure the content is scrollable */
+.custom-dialog-content {
+  overflow-y: scroll; /* Ensure vertical scrolling */
+  overflow-x: hidden; /* Hide horizontal scrollbar if not needed */
 }
