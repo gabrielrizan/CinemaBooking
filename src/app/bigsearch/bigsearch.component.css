@@ -1,0 +1,10 @@
+.custom-card-dialog {
+  overflow-y: scroll;
+  scrollbar-width: none; /* For Firefox */
+  -ms-overflow-style: none; /* For Internet Explorer and Edge */
+}
+
+.custom-card-dialog::-webkit-scrollbar {
+  width: 0px; /* Hide scrollbar for WebKit browsers */
+  background: transparent; /* Optional: remove scrollbar background */
+}

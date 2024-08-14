@@ -6,6 +6,7 @@ import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { SearchCardComponent } from '../search-card/search-card.component';
 import { popResultSelector } from 'rxjs/internal/util/args';
+import { DialogModule } from 'primeng/dialog';
 
 @Component({
   selector: 'app-bigsearch',
@@ -17,11 +18,17 @@ import { popResultSelector } from 'rxjs/internal/util/args';
     CardModule,
     ButtonModule,
     SearchCardComponent,
+    DialogModule,
   ],
   templateUrl: './bigsearch.component.html',
   styleUrls: ['./bigsearch.component.css'],
 })
 export class BigsearchComponent {
+  visible: boolean = false;
+
+  showDialog() {
+    this.visible = true;
+  }
   searchQuery: string = '';
   filteredMovies: any[] = [];
 

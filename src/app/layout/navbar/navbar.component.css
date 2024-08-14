@@ -1,43 +1,9 @@
-.custom-dialog {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  max-width: 100%;
-  margin: 0 auto;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  height: auto;
-  overflow: hidden;
-  z-index: 1002;
-}
-
-.search-input {
-  box-sizing: border-box;
-  width: 100%;
-  transition: none;
-}
-
-.custom-dialog .ui-dialog-content {
-  padding: 0;
-  background: transparent;
-  display: flex;
-  flex-direction: column;
-  height: auto;
-  overflow-y: visible;
-}
-
 .close-btn {
   background: transparent;
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
   padding: 0 10px;
-}
-
-.ui-widget-overlay {
-  background: rgba(0, 0, 0, 0.3);
 }
 
 .blur-overlay {
@@ -52,25 +18,7 @@
 }
 
 .back-home-btn {
-  top: -60px;
-  left: 50px;
-  z-index: 1001; /* Ensure it's on top of other elements */
-}
-
-/* Hide scrollbars for WebKit browsers (Chrome, Safari) */
-.custom-dialog-content::-webkit-scrollbar {
-  width: 0 !important;
-  height: 0 !important;
-}
-
-/* Hide scrollbar for Firefox */
-.custom-dialog-content {
-  scrollbar-width: none !important; /* Firefox */
-  -ms-overflow-style: none !important; /* IE and Edge */
-}
-
-/* Ensure the content is scrollable */
-.custom-dialog-content {
-  overflow-y: scroll; /* Ensure vertical scrolling */
-  overflow-x: hidden; /* Hide horizontal scrollbar if not needed */
+  z-index: 1001; /* E\nsure it's on top of other elements */
+  top: -3rem;
+  left: 1rem;
 }

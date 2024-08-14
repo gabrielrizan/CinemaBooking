@@ -123,15 +123,16 @@
   <p-dialog
     [(visible)]="isSearchActive"
     [modal]="true"
-    [closable]="false"
+    [closable]="true"
     [draggable]="false"
     [resizable]="false"
-    [contentStyle]="{ background: 'transparent', padding: '0' }"
-    [contentStyleClass]="'custom-dialog-content'"
+    [contentStyle]="{
+      background: 'transparent',
+      'overflow-y': 'scroll',
+      'scrollbar-width': 'none',
+      '-ms-overflow-style': 'none'
+    }"
     [style]="{
-      width: '100%',
-      maxWidth: '1000px',
-      margin: '0 auto',
       position: 'fixed',
       top: '10%',
       left: '0',
@@ -149,28 +150,27 @@
     focusOnShow="true"
     [transitionOptions]="'150ms cubic-bezier(0, 0, 0.2, 1)'"
   >
-    <div class="custom-dialog-content">
-      <div class="flex flex-wrap justify-content-center">
-        <input
-          type="text"
-          pInputText
-          placeholder="Search for movies, shows, etc..."
-          class="search-input w-7 border-round-3xl"
-          [(ngModel)]="searchTerm"
-          (input)="onSearchChange($event)"
-        />
-        <p-button
-          label="Back to Home"
-          class="back-home-btn fixed top-5 left-0"
-          (click)="onSearchBlur()"
-        >
-        </p-button>
-        <div *ngFor="let movie of filteredMovies" class="w-9 mb-2">
-          <app-search-card [movie]="movie"></app-search-card>
-        </div>
+    <div class="flex flex-wrap justify-content-center">
+      <input
+        type="text"
+        pInputText
+        placeholder="Search for movies, shows, etc..."
+        class="search-input w-7 border-round-3xl relative"
+        [(ngModel)]="searchTerm"
+        (input)="onSearchChange($event)"
+      />
+      <p-button
+        label="Back to Home"
+        class="back-home-btn fixed"
+        (click)="onSearchBlur()"
+      >
+      </p-button>
+      <div *ngFor="let movie of filteredMovies" class="w-9 mb-2">
+        <app-search-card [movie]="movie"></app-search-card>
       </div>
     </div>
   </p-dialog>
+
   <!-- Dialog for Sign Up -->
   <p-dialog
     header="Sign up"
