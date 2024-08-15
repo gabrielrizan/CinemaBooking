@@ -165,13 +165,12 @@
         (click)="onSearchBlur()"
       >
       </p-button>
-      <div *ngFor="let movie of filteredMovies" class="w-9 mb-2">
+      <div *ngFor="let movie of movies" class="w-9 mb-2">
         <app-search-card [movie]="movie"></app-search-card>
       </div>
     </div>
   </p-dialog>
 
-  <!-- Dialog for Sign Up -->
   <p-dialog
     header="Sign up"
     [(visible)]="visible"
@@ -182,7 +181,6 @@
     <app-signup></app-signup>
   </p-dialog>
 
-  <!-- Full screen overlay for blur effect -->
   <div
     *ngIf="isSearchActive"
     class="blur-overlay"

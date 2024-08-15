@@ -9,91 +9,57 @@ import { RippleModule } from 'primeng/ripple';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
-import { SignupComponent } from '../../auth/signup/signup.component';
 import { DialogModule } from 'primeng/dialog';
-import { TieredMenu, TieredMenuModule } from 'primeng/tieredmenu';
+import { TieredMenuModule } from 'primeng/tieredmenu';
 import { FormsModule } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { MultiSearchService } from '../../multi-search.service';
+import { SignupComponent } from '../../auth/signup/signup.component';
 import { SearchCardComponent } from '../../search-card/search-card.component';
 import { BigsearchComponent } from '../../bigsearch/bigsearch.component';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
   imports: [
+    CommonModule,
+    FormsModule,
     MenubarModule,
     BadgeModule,
     AvatarModule,
     InputTextModule,
     RippleModule,
-    CommonModule,
     OverlayPanelModule,
     ButtonModule,
     DividerModule,
-    SignupComponent,
     DialogModule,
     TieredMenuModule,
-    FormsModule,
-    SearchCardComponent,
-    BigsearchComponent,
-    OverlayPanelModule,
+    SignupComponent, // Assuming this is a standalone component
+    SearchCardComponent, // Assuming this is a standalone component
+    BigsearchComponent, // Assuming this is a standalone component
   ],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent implements OnInit {
-  items: MenuItem[] | undefined;
+  movies: any[] = [];
+  loading: boolean = true;
+  error: string | null = null;
   searchTerm: string = '';
 
-  movies = [
-    {
-      title: 'The Shawshank Redemption',
-      year: 1994,
-      director: 'Frank Darabont',
-      duration: 142,
-      genres: 'Drama',
-      description:
-        'Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.',
-      poster: 'shawshack-redemption.jpg',
-      background: 'shawshank-backdrop.jpg',
-    },
-    {
-      title: 'Warcraft',
-      year: 2016,
-      description:
-        'As an Orc horde invades the planet Azeroth using a magic portal, a few human heroes and dissenting Orcs must attempt to stop the true evil behind this war.',
-      duration: 123,
-      poster: 'warcraft.jpg',
-      genre: 'Action, Adventure, Fantasy',
-      director: 'Duncan Jones',
-      background: 'warcraft-backdrop.jpg',
-    },
-    {
-      title: 'The Shawshank Redemption',
-      year: 1994,
-      director: 'Frank Darabont',
-      duration: 142,
-      genres: 'Drama',
-      description:
-        'Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.',
-      poster: 'shawshack-redemption.jpg',
-      background: 'shawshank-backdrop.jpg',
-    },
-    {
-      title: 'Warcraft',
-      year: 2016,
-      description:
-        'As an Orc horde invades the planet Azeroth using a magic portal, a few human heroes and dissenting Orcs must attempt to stop the true evil behind this war.',
-      duration: 123,
-      poster: 'warcraft.jpg',
-      genre: 'Action, Adventure, Fantasy',
-      director: 'Duncan Jones',
-      background: 'warcraft-backdrop.jpg',
-    },
-  ];
+  items: MenuItem[] | undefined;
+  isLoggedIn = true; // Set this based on your actual authentication logic
+  isSearchActive: boolean = false;
+  visible: boolean = false;
+  filteredMovies: any[] = [];
 
   @ViewChild('op') overlayPanel: OverlayPanel | undefined;
 
-  visible: boolean = false;
+  private searchSubject = new Subject<string>(); // Subject to handle the search input
+
+  constructor(private movieService: MultiSearchService) {}
 
   ngOnInit() {
     this.items = [
@@ -171,9 +137,33 @@ export class NavbarComponent implements OnInit {
         routerLink: ['/about'],
       },
     ];
-  }
 
-  isLoggedIn = true; // Set this based on your actual authentication logic
+    this.searchSubject
+      .pipe(
+        debounceTime(300), // Wait for 300ms pause in events
+        distinctUntilChanged() // Ignore if next search term is same as previous
+      )
+      .subscribe((query) => {
+        if (!query.trim()) {
+          this.movies = []; // Clear the results if the query is empty
+          return;
+        }
+
+        this.loading = true;
+        this.error = null;
+
+        this.movieService.searchMovies(query).subscribe({
+          next: (response) => {
+            this.movies = response.results || []; // Handle the API response and extract results
+            this.loading = false;
+          },
+          error: () => {
+            this.error = 'Failed to fetch movies';
+            this.loading = false;
+          },
+        });
+      });
+  }
 
   loggedInItems: MenuItem[] = [
     {
@@ -198,8 +188,6 @@ export class NavbarComponent implements OnInit {
     },
   ];
 
-  filteredMovies: any[] = [];
-
   logout() {
     // Implement your logout logic here
     this.isLoggedIn = false;
@@ -216,8 +204,6 @@ export class NavbarComponent implements OnInit {
     console.log('Sign Up button clicked');
   }
 
-  isSearchActive: boolean = false;
-
   onSearchFocus() {
     this.isSearchActive = true;
   }
@@ -228,14 +214,7 @@ export class NavbarComponent implements OnInit {
 
   onSearchChange(event: any) {
     const query = event.target.value.toLowerCase();
-
-    if (query) {
-      this.filteredMovies = this.movies.filter((movie) =>
-        movie.title.toLowerCase().includes(query)
-      );
-    } else {
-      this.filteredMovies = []; // Empty the list when there's no search query
-    }
+    this.searchSubject.next(query); // Emit the query to the searchSubject
   }
 
   showSignUpForm() {

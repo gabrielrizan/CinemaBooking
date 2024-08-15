@@ -8,7 +8,6 @@
   border-radius: 15px;
   overflow: hidden;
   background-color: var(--surface-card);
-  box-shadow: 0px 0px 40px -15px rgba(0, 0, 0, 0.6);
   transition: transform 0.3s, box-shadow 0.3s;
 }
 

@@ -1,14 +1,24 @@
-<div class="movie_card p-shadow-4">
+<div class="movie_card shadow-8">
   <div
     class="blur_back"
-    [ngStyle]="{ 'background-image': 'url(' + movie.background + ')' }"
+    [ngStyle]="{
+      'background-image':
+        'url(https://image.tmdb.org/t/p/w1280' + movie.backdrop_path + ')'
+    }"
   ></div>
   <div class="info_section p-d-flex p-flex-column p-p-3">
     <div class="movie_header p-d-flex">
-      <img class="locandina" [src]="movie.poster" alt="Movie Poster" />
+      <img
+        class="locandina"
+        [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
+        alt="Movie Poster"
+      />
       <div class="movie_info p-pl-3">
-        <h1>{{ movie.title }}</h1>
-        <h4>{{ movie.year }}, {{ movie.director }}</h4>
+        <h1>{{ movie.title ? movie.title : movie.name }}</h1>
+        <h4>
+          {{ movie.release_date ? movie.release_date : movie.first_air_date }},
+          {{ movie.director }}
+        </h4>
         <span class="minutes p-tag p-tag-rounded p-tag-secondary"
           >{{ movie.duration }} min</span
         >
@@ -16,7 +26,7 @@
       </div>
     </div>
     <div class="movie_desc p-mt-3">
-      <p class="text">{{ movie.description }}</p>
+      <p class="text">{{ movie.overview }}</p>
     </div>
     <div class="movie_social p-mt-3">
       <ul class="p-d-flex">
