@@ -28,7 +28,7 @@ export class SearchCardComponent implements OnInit {
   searchTerm: string = '';
   searchResults: any[] = [];
   isSearchActive: boolean = false;
-  genres: any[] = [];
+  @Input() genres: any[] = [];
   movieOrTvDetails: any;
   duration: any = '';
   private observer!: IntersectionObserver;
@@ -39,9 +39,9 @@ export class SearchCardComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.multiSearchService.getGenres().subscribe((data) => {
-      this.genres = data.genres;
-    });
+    // this.multiSearchService.getGenres().subscribe((data) => {
+    //   this.genres = data.genres;
+    // });
     this.setUpIntersectionObserver();
   }
 

@@ -54,6 +54,7 @@ export class NavbarComponent implements OnInit {
   isSearchActive: boolean = false;
   visible: boolean = false;
   filteredMovies: any[] = [];
+  genres: any[] = [];
 
   @ViewChild('op') overlayPanel: OverlayPanel | undefined;
 
@@ -163,6 +164,10 @@ export class NavbarComponent implements OnInit {
           },
         });
       });
+
+    this.movieService.getGenres().subscribe((data) => {
+      this.genres = data.genres;
+    });
   }
 
   loggedInItems: MenuItem[] = [
