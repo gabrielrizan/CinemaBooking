@@ -7,6 +7,8 @@ import { CardModule } from 'primeng/card';
 import { KnobModule } from 'primeng/knob';
 import { PanelModule } from 'primeng/panel';
 import { MultiSearchService } from '../multi-search.service';
+import { Router } from '@angular/router';
+import { SharedService } from '../shared.service';
 
 @Component({
   selector: 'app-search-card',
@@ -28,14 +30,18 @@ export class SearchCardComponent implements OnInit {
   searchTerm: string = '';
   searchResults: any[] = [];
   isSearchActive: boolean = false;
-  @Input() genres: any[] = [];
-  movieOrTvDetails: any;
+  @Input() movieGenres: any[] = [];
+  @Input() tvGenres: any[] = [];
   duration: any = '';
+  movieDetails: any = {};
+  tvDetails: any = {};
   private observer!: IntersectionObserver;
 
   constructor(
     private multiSearchService: MultiSearchService,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private router: Router,
+    private sharedService: SharedService
   ) {}
 
   ngOnInit() {
@@ -100,8 +106,11 @@ export class SearchCardComponent implements OnInit {
     return this.movie.release_date.split('-')[0];
   }
 
-  getGenres(genreIds: number[]) {
-    return this.genres
+  getGenres(genreIds: number[]): string {
+    const genres =
+      this.movie.media_type === 'movie' ? this.movieGenres : this.tvGenres;
+
+    return genres
       .filter((genre) => genreIds.includes(genre.id))
       .map((genre) => genre.name)
       .join(', ');
@@ -111,14 +120,20 @@ export class SearchCardComponent implements OnInit {
     if (mediaType === 'movie') {
       this.multiSearchService.getMovieDetails(id).subscribe((data) => {
         this.duration = data.runtime ? `${data.runtime} min` : 'N/A'; // For movies
+        this.movieDetails = data;
       });
     } else if (mediaType === 'tv') {
       this.multiSearchService.getTvDetails(id).subscribe((data) => {
         this.duration = data.last_episode_to_air.runtime
           ? `~${data.last_episode_to_air.runtime} min on average`
           : 'N/A';
-        console.log(data.last_episode_to_air.runtime);
+        this.tvDetails = data;
       });
     }
+  }
+
+  goToMovieDetails(movieId: string) {
+    this.router.navigate(['/movie-info', movieId]); // Navigate to /movie/:id
+    this.sharedService.triggerSearchBlur(); // Emit the searchBlur$ event
   }
 }

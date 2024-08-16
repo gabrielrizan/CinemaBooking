@@ -4,6 +4,7 @@ import { BananasComponent } from './apples/bananas/bananas.component';
 import { SignupComponent } from './auth/signup/signup.component';
 import { SearchCardComponent } from './search-card/search-card.component';
 import { BigsearchComponent } from './bigsearch/bigsearch.component';
+import { MovieInfoComponent } from './movie-info/movie-info.component';
 
 export const routes: Routes = [
   {
@@ -30,5 +31,9 @@ export const routes: Routes = [
   {
     path: 'bigsearch',
     component: BigsearchComponent,
+  },
+  {
+    path: 'movie-info/:id',
+    component: MovieInfoComponent,
   },
 ];

@@ -166,7 +166,11 @@
       >
       </p-button>
       <div *ngFor="let movie of movies" class="w-9 mb-2">
-        <app-search-card [movie]="movie" [genres]="genres"></app-search-card>
+        <app-search-card
+          [movie]="movie"
+          [movieGenres]="movieGenres"
+          [tvGenres]="tvGenres"
+        ></app-search-card>
       </div>
     </div>
   </p-dialog>

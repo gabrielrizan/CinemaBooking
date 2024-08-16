@@ -1,4 +1,4 @@
-<div class="movie_card shadow-8">
+<div class="movie_card shadow-8" (click)="goToMovieDetails(movie.id)">
   <div
     class="blur_back"
     [ngStyle]="{
@@ -15,28 +15,26 @@
         [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
         alt="Movie Poster"
       />
-      <div class="movie_info p-pl-3 flex">
-        <div>
-          <h1>
-            {{ movie.title ? movie.title : movie.name }}
-            <span class="font-italic text-600 text-2xl">
-              ({{
-                movie.release_date
-                  ? (movie.release_date | date : "yyyy")
-                  : (movie.first_air_date | date : "yyyy")
-              }})
-            </span>
-          </h1>
-          <h4>
-            {{ movie.director }}
-          </h4>
-          <span class="minutes p-tag p-tag-rounded p-tag-secondary">{{
-            duration
-          }}</span>
-          <p class="type mt-2 font-italic">
-            {{ getGenres(movie.genre_ids) }}
-          </p>
-        </div>
+      <div class="movie_info">
+        <h1 class="mb-4">
+          {{ movie.title ? movie.title : movie.name }}
+          <span class="font-italic text-600 text-2xl">
+            ({{
+              movie.release_date
+                ? (movie.release_date | date : "yyyy")
+                : (movie.first_air_date | date : "yyyy")
+            }})
+          </span>
+        </h1>
+        <!-- <h4>
+          {{ movie.director }}
+        </h4> -->
+        <span class="minutes p-tag p-tag-rounded p-tag-secondary mb-4">{{
+          duration
+        }}</span>
+        <p class="type mt-2 font-italic mt-4">
+          {{ getGenres(movie.genre_ids) }}
+        </p>
 
         <p-knob
           [(ngModel)]="votePercentage"

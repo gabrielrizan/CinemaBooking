@@ -8,7 +8,8 @@ import { environment } from '../environments/environment';
 })
 export class MultiSearchService {
   private apiUrl = 'https://api.themoviedb.org/3/search/multi'; // The Movie Database (TMDb) API endpoint
-  private genreUrl = 'https://api.themoviedb.org/3/genre/movie/list'; // The Movie Database (TMDb) API endpoint
+  private movieGenreUrl = 'https://api.themoviedb.org/3/genre/movie/list'; // The Movie Database (TMDb) API endpoint
+  private tvGenreUrl = 'https://api.themoviedb.org/3/genre/tv/list'; // The Movie Database (TMDb) API endpoint
   private movieUrl = 'https://api.themoviedb.org/3/movie'; // The Movie Database (TMDb) API endpoint
   private tvUrl = 'https://api.themoviedb.org/3/tv'; // The Movie Database (TMDb) API endpoint
 
@@ -49,7 +50,7 @@ export class MultiSearchService {
     return this.http.get<any>(`${this.tvUrl}/${tvId}`, { headers: header });
   }
 
-  getGenres(): Observable<any> {
+  getMovieGenres(): Observable<any> {
     if (this.cachedGenres) {
       return of({ genres: this.cachedGenres });
     }
@@ -59,10 +60,20 @@ export class MultiSearchService {
     });
 
     // Return the HTTP request as an Observable
-    return this.http.get<any>(this.genreUrl, { headers }).pipe(
+    return this.http.get<any>(this.movieGenreUrl, { headers }).pipe(
       tap((data) => {
         this.cachedGenres = data.genres;
       })
     );
+  }
+
+  getTvGenres(): Observable<any> {
+    // Set up the headers with the Authorization Bearer token
+    const headers = new HttpHeaders({
+      Authorization: environment.bearer,
+    });
+
+    // Return the HTTP request as an Observable
+    return this.http.get<any>(this.tvGenreUrl, { headers });
   }
 }

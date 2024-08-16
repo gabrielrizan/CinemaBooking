@@ -19,6 +19,7 @@ import { SignupComponent } from '../../auth/signup/signup.component';
 import { SearchCardComponent } from '../../search-card/search-card.component';
 import { BigsearchComponent } from '../../bigsearch/bigsearch.component';
 import { of } from 'rxjs';
+import { SharedService } from '../../shared.service';
 
 @Component({
   selector: 'app-navbar',
@@ -54,13 +55,17 @@ export class NavbarComponent implements OnInit {
   isSearchActive: boolean = false;
   visible: boolean = false;
   filteredMovies: any[] = [];
-  genres: any[] = [];
+  movieGenres: any[] = [];
+  tvGenres: any[] = [];
 
   @ViewChild('op') overlayPanel: OverlayPanel | undefined;
 
   private searchSubject = new Subject<string>(); // Subject to handle the search input
 
-  constructor(private movieService: MultiSearchService) {}
+  constructor(
+    private movieService: MultiSearchService,
+    private sharedService: SharedService
+  ) {}
 
   ngOnInit() {
     this.items = [
@@ -165,8 +170,16 @@ export class NavbarComponent implements OnInit {
         });
       });
 
-    this.movieService.getGenres().subscribe((data) => {
-      this.genres = data.genres;
+    this.movieService.getMovieGenres().subscribe((data) => {
+      this.movieGenres = data.genres;
+    });
+
+    this.movieService.getTvGenres().subscribe((data) => {
+      this.tvGenres = data.genres;
+    });
+
+    this.sharedService.searchBlur$.subscribe(() => {
+      this.isSearchActive = false;
     });
   }
 
