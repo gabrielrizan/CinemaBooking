@@ -1,13 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { KnobModule } from 'primeng/knob';
 import { PanelModule } from 'primeng/panel';
 import { MultiSearchService } from '../multi-search.service';
-import { Router } from '@angular/router';
 import { SharedService } from '../shared.service';
 
 @Component({
@@ -23,16 +22,13 @@ import { SharedService } from '../shared.service';
     KnobModule,
   ],
   templateUrl: './search-card.component.html',
-  styleUrl: './search-card.component.css',
+  styleUrls: ['./search-card.component.css'],
 })
 export class SearchCardComponent implements OnInit {
   @Input() movie: any;
-  searchTerm: string = '';
-  searchResults: any[] = [];
-  isSearchActive: boolean = false;
   @Input() movieGenres: any[] = [];
   @Input() tvGenres: any[] = [];
-  duration: any = '';
+  duration: string = '';
   movieDetails: any = {};
   tvDetails: any = {};
   private observer!: IntersectionObserver;
@@ -41,31 +37,62 @@ export class SearchCardComponent implements OnInit {
     private multiSearchService: MultiSearchService,
     private elementRef: ElementRef,
     private router: Router,
-    private sharedService: SharedService
+    private shared: SharedService
   ) {}
 
-  ngOnInit() {
-    // this.multiSearchService.getGenres().subscribe((data) => {
-    //   this.genres = data.genres;
-    // });
+  ngOnInit(): void {
     this.setUpIntersectionObserver();
   }
 
-  setUpIntersectionObserver() {
-    // Create a new IntersectionObserver instance
+  setUpIntersectionObserver(): void {
     this.observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          // The card is visible in the viewport, trigger the movie/TV details request
           this.getMovieOrTvDetails(this.movie.id, this.movie.media_type);
-          // Once the details are loaded, we stop observing this element
-          this.observer.disconnect();
+          this.observer.disconnect(); // Stop observing after data is fetched
         }
       });
     });
 
     // Start observing the component's root element
     this.observer.observe(this.elementRef.nativeElement);
+  }
+
+  getMovieOrTvDetails(id: string, mediaType: string): void {
+    if (mediaType === 'movie') {
+      this.multiSearchService.getMovieDetails(id).subscribe((data) => {
+        this.duration = data.runtime ? `${data.runtime} min` : 'N/A';
+        this.movieDetails = data;
+      });
+    } else if (mediaType === 'tv') {
+      this.multiSearchService.getTvDetails(id).subscribe((data) => {
+        this.duration = data.last_episode_to_air?.runtime
+          ? `~${data.last_episode_to_air.runtime} min on average`
+          : 'N/A';
+        this.tvDetails = data;
+      });
+    }
+  }
+
+  goToMovieDetails(movieId: string): void {
+    // overly complicated code because this.tvDetails || this.movieDetails doesnt work for some reason
+    // this basically checks if either of the two objects is not empty
+    let details = null;
+
+    if (this.tvDetails && Object.keys(this.tvDetails).length > 0) {
+      details = this.tvDetails;
+    } else if (this.movieDetails && Object.keys(this.movieDetails).length > 0) {
+      details = this.movieDetails;
+    }
+
+    if (!details) {
+      console.log('No valid details available for navigation.');
+      return;
+    }
+
+    this.shared.setMovieOrTvDetails(details); // Set the movie/TV details
+    this.router.navigate(['/movie-info', movieId]);
+    this.shared.triggerSearchBlur(); // Trigger the search blur event
   }
 
   get votePercentage(): number {
@@ -103,37 +130,20 @@ export class SearchCardComponent implements OnInit {
   }
 
   getReleaseYear(date: string): string {
-    return this.movie.release_date.split('-')[0];
+    return this.movie.release_date ? this.movie.release_date.split('-')[0] : '';
   }
 
-  getGenres(genreIds: number[]): string {
+  getGenres(genreIds: number[] = []): string {
     const genres =
       this.movie.media_type === 'movie' ? this.movieGenres : this.tvGenres;
+
+    if (!genreIds || genreIds.length === 0 || !genres) {
+      return 'Unknown';
+    }
 
     return genres
       .filter((genre) => genreIds.includes(genre.id))
       .map((genre) => genre.name)
       .join(', ');
-  }
-
-  getMovieOrTvDetails(id: string, mediaType: string) {
-    if (mediaType === 'movie') {
-      this.multiSearchService.getMovieDetails(id).subscribe((data) => {
-        this.duration = data.runtime ? `${data.runtime} min` : 'N/A'; // For movies
-        this.movieDetails = data;
-      });
-    } else if (mediaType === 'tv') {
-      this.multiSearchService.getTvDetails(id).subscribe((data) => {
-        this.duration = data.last_episode_to_air.runtime
-          ? `~${data.last_episode_to_air.runtime} min on average`
-          : 'N/A';
-        this.tvDetails = data;
-      });
-    }
-  }
-
-  goToMovieDetails(movieId: string) {
-    this.router.navigate(['/movie-info', movieId]); // Navigate to /movie/:id
-    this.sharedService.triggerSearchBlur(); // Emit the searchBlur$ event
   }
 }

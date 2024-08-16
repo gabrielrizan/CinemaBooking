@@ -1,36 +1,42 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { CardModule } from 'primeng/card';
-import { KnobModule } from 'primeng/knob';
-import { MultiSearchService } from '../multi-search.service';
-import { MovieInfoService } from '../movie-info.service';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { SharedService } from '../shared.service';
 
 @Component({
   selector: 'app-movie-info',
-  standalone: true,
-  imports: [CardModule, KnobModule],
   templateUrl: './movie-info.component.html',
-  styleUrl: './movie-info.component.css',
+  styleUrls: ['./movie-info.component.css'],
 })
 export class MovieInfoComponent implements OnInit {
   movieId: string | null = '';
   movie: any = {};
+  mediaType: string = '';
 
-  constructor(
-    private searchService: MultiSearchService,
-    private movieInfo: MovieInfoService,
-    private route: ActivatedRoute
-  ) {}
+  constructor(private route: ActivatedRoute, private shared: SharedService) {}
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe((params) => {
-      this.movieId = params.get('id');
-      if (this.movieId) {
-        this.searchService.getMovieDetails(this.movieId).subscribe((data) => {
-          this.movie = data;
-          console.log('Movie data:', this.movie); // Log the movie object to the console
-        });
+    this.resetComponentState();
+
+    // Retrieve the movieId from the route params
+    this.movieId = this.route.snapshot.paramMap.get('id');
+
+    // Retrieve movie/TV details from the shared service
+    this.shared.movieOrTvDetails$.subscribe((details) => {
+      if (details) {
+        this.movie = details;
+        this.mediaType = details.media_type;
+        console.log(
+          'Retrieved movie/TV details from shared service:',
+          this.movie
+        );
+      } else {
+        console.log('No movie details available from shared service.');
       }
     });
+  }
+
+  resetComponentState(): void {
+    this.movie = {};
+    this.mediaType = '';
   }
 }
