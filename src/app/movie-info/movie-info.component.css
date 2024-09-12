@@ -1,0 +1,57 @@
+.movie-container {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 2rem;
+  border-radius: 10px;
+}
+
+.movie-poster {
+  width: 100%; /* Ensure responsiveness */
+  border-radius: 8px;
+  object-fit: cover; /* Ensure it fits properly */
+}
+
+.movie-info {
+  padding-left: 1rem;
+}
+
+.movie-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.movie-meta {
+  font-weight: bold;
+  color: #b0b0d0;
+  margin-bottom: 1rem;
+}
+
+.movie-overview {
+  font-size: 1.25rem;
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+
+.movie-description {
+  margin-bottom: 3rem;
+  line-height: 1.5;
+}
+
+.user-score-section {
+  margin-top: 1rem;
+  font-size: 1.25rem;
+}
+
+.button-section button {
+  margin-right: 0.5rem;
+}
+
+.chip-success {
+  background-color: #4caf50;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  font-weight: bold;
+}

@@ -1,1 +1,59 @@
-<p>{{ movie.title ? movie.title : movie.name }}</p>
+<div
+  class="grid movie-container"
+  [ngStyle]="{
+    'background-image':
+      'linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(https://image.tmdb.org/t/p/w1280' +
+      movie.backdrop_path +
+      ')'
+  }"
+>
+  <!-- Movie Poster and Main Info Section -->
+  <div class="col-2">
+    <!-- Poster Image -->
+    <img
+      [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
+      alt="Movie Poster"
+      class="movie-poster"
+    />
+  </div>
+  <div class="col-10 movie-info">
+    <h1 class="movie-title mt-0">{{ movie.title }}</h1>
+    <p class="movie-meta">
+      {{ movie.release_date }} |
+      <span *ngFor="let genre of movie.genres; let last = last"
+        >{{ genre.name }}<span *ngIf="!last">, </span></span
+      >
+      | {{ movie.runtime }}m
+    </p>
+
+    <!-- Movie Overview -->
+    <p class="movie-overview">
+      {{ movie.tagline }}
+    </p>
+
+    <p class="movie-description">
+      {{ movie.overview }}
+    </p>
+
+    <!-- User Score Section -->
+    <div class="user-score-section">
+      <span class="chip chip-success">{{ movie.vote_average }}</span>
+    </div>
+
+    <!-- Buttons -->
+    <div class="button-section mt-3">
+      <button
+        pButton
+        label="Play Trailer"
+        icon="pi pi-play"
+        class="p-button-primary"
+      ></button>
+      <button
+        pButton
+        label="Add to Favorites"
+        icon="pi pi-heart"
+        class="p-button-outlined ml-2"
+      ></button>
+    </div>
+  </div>
+</div>
