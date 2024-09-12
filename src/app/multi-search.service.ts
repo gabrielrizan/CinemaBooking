@@ -42,6 +42,16 @@ export class MultiSearchService {
     });
   }
 
+  getMovieCredits(movieId: string): Observable<any> {
+    const header = new HttpHeaders({
+      Authorization: environment.bearer,
+    });
+
+    return this.http.get<any>(`${this.movieUrl}/${movieId}/credits`, {
+      headers: header,
+    });
+  }
+
   getTvDetails(tvId: string): Observable<any> {
     const header = new HttpHeaders({
       Authorization: environment.bearer,

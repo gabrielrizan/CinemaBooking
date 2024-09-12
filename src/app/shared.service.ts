@@ -10,11 +10,19 @@ export class SharedService {
   private searchBlurSubject = new Subject<void>();
 
   private movieOrTvDetailsSubject = new BehaviorSubject<any>(null);
+  private movieCreditsSubject = new BehaviorSubject<any>(null);
 
   // Observable to subscribe to in the NavbarComponent
   searchBlur$ = this.searchBlurSubject.asObservable();
 
-  movieOrTvDetails$: Observable<any> = this.movieOrTvDetailsSubject.asObservable();
+  movieOrTvDetails$: Observable<any> =
+    this.movieOrTvDetailsSubject.asObservable();
+
+  movieCredits$: Observable<any> = this.movieCreditsSubject.asObservable();
+
+  setCredits(credits: any) {
+    this.movieCreditsSubject.next(credits);
+  }
 
   setMovieOrTvDetails(details: any) {
     this.movieOrTvDetailsSubject.next(details); // Emit the new details

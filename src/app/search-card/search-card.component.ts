@@ -28,6 +28,7 @@ export class SearchCardComponent implements OnInit {
   @Input() movie: any;
   @Input() movieGenres: any[] = [];
   @Input() tvGenres: any[] = [];
+  credits: any = {};
   duration: string = '';
   movieDetails: any = {};
   tvDetails: any = {};
@@ -64,6 +65,9 @@ export class SearchCardComponent implements OnInit {
         this.duration = data.runtime ? `${data.runtime} min` : 'N/A';
         this.movieDetails = data;
       });
+      this.multiSearchService.getMovieCredits(id).subscribe((credits) => {
+        this.credits = credits;
+      });
     } else if (mediaType === 'tv') {
       this.multiSearchService.getTvDetails(id).subscribe((data) => {
         this.duration = data.last_episode_to_air?.runtime
@@ -90,6 +94,8 @@ export class SearchCardComponent implements OnInit {
       return;
     }
 
+    this.shared.setCredits(this.credits); // Set the movie credits
+    console.log(this.credits);
     this.shared.setMovieOrTvDetails(details); // Set the movie/TV details
     this.router.navigate(['/movie-info', movieId]);
     this.shared.triggerSearchBlur(); // Trigger the search blur event
