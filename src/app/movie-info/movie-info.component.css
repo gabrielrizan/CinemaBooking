@@ -1,6 +1,6 @@
 .movie-container {
-  background-size: cover;
-  background-position: center;
+  background-size: contain;
+  background-position: right;
   background-repeat: no-repeat;
   padding: 2rem;
   border-radius: 10px;

@@ -2,9 +2,16 @@
   class="grid movie-container"
   [ngStyle]="{
     'background-image':
-      'linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(https://image.tmdb.org/t/p/w1280' +
+      'linear-gradient(to right, ' +
+      blackBarsColor +
+      ' 0%, ' +
+      blackBarsColor +
+      ' 30%, ' +
+      blackBarsColor +
+      ' 55%, rgba(0, 0, 0, 0) 100%), url(https://image.tmdb.org/t/p/w1280' +
       movie.backdrop_path +
-      ')'
+      ')',
+    'background-color': blackBarsColor
   }"
 >
   <!-- Movie Poster and Main Info Section -->

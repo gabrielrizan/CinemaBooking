@@ -4,7 +4,7 @@ import { SharedService } from '../shared.service';
 import { ButtonModule } from 'primeng/button';
 import { ChipModule } from 'primeng/chip';
 import { CommonModule } from '@angular/common';
-import { MultiSearchService } from '../multi-search.service';
+import { ColorExtractionService } from '../services/color-extraction.service';
 
 @Component({
   standalone: true,
@@ -19,11 +19,12 @@ export class MovieInfoComponent implements OnInit {
   mediaType: string = '';
   credits: any = {};
   director: any[] = [];
+  blackBarsColor: string = '#000000'; // Default color
 
   constructor(
     private route: ActivatedRoute,
     private shared: SharedService,
-    private multiSearchService: MultiSearchService
+    private colorExtract: ColorExtractionService
   ) {}
 
   ngOnInit(): void {
@@ -38,10 +39,28 @@ export class MovieInfoComponent implements OnInit {
       if (details) {
         this.movie = details;
         this.mediaType = details.media_type;
+
+        // Construct the full image URL
+        const imageUrl = `https://image.tmdb.org/t/p/w1280${this.movie.backdrop_path}`;
+
+        // Extract the dominant color
+        this.colorExtract
+          .getDominantColor(imageUrl)
+          .then((color) => {
+            this.blackBarsColor = color;
+            console.log('Dominant color:', this.blackBarsColor);
+          })
+          .catch((error) => {
+            console.error('Error getting dominant color:', error);
+            // Fallback color
+            this.blackBarsColor = '#000000';
+          });
       } else {
         console.log('No movie details available from shared service.');
       }
     });
+
+    // Retrieve movie credits
     this.shared.movieCredits$.subscribe((credits) => {
       if (credits) {
         this.credits = credits;
@@ -52,15 +71,6 @@ export class MovieInfoComponent implements OnInit {
         console.log('No movie credits available from shared service.');
       }
     });
-    // this.multiSearchService
-    //   .getMovieCredits(this.movieId ?? '')
-    //   .subscribe((credits) => {
-    //     this.credits = credits;
-    //     // console.log('Movie credits:', this.credits);
-    //     this.director = credits.crew.filter(
-    //       (crew: any) => crew.job === 'Director'
-    //     );
-    //   });
   }
 
   resetComponentState(): void {
