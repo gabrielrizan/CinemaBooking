@@ -6,16 +6,16 @@
       blackBarsColor +
       ' 0%, ' +
       blackBarsColor +
-      ' 30%, ' +
+      ' 15%, ' +
       blackBarsColor +
-      ' 55%, rgba(0, 0, 0, 0) 100%), url(https://image.tmdb.org/t/p/w1280' +
+      ' 16%, rgba(0, 0, 0, 0) 100%), url(https://image.tmdb.org/t/p/w1280' +
       movie.backdrop_path +
       ')',
     'background-color': blackBarsColor
   }"
 >
   <!-- Movie Poster and Main Info Section -->
-  <div class="col-2">
+  <div class="col-3">
     <!-- Poster Image -->
     <img
       [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
@@ -23,7 +23,7 @@
       class="movie-poster"
     />
   </div>
-  <div class="col-10 movie-info">
+  <div class="col-9 movie-info">
     <h1 class="movie-title mt-0">{{ movie.title }}</h1>
     <p class="movie-meta">
       {{ movie.release_date }} |
