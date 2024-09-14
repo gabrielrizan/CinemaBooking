@@ -1,69 +1,113 @@
-<div
-  class="grid movie-container"
-  [ngStyle]="{
-    'background-image':
-      'linear-gradient(to right, ' +
-      blackBarsColor +
-      ' 0%, ' +
-      blackBarsColor +
-      ' 15%, ' +
-      blackBarsColor +
-      ' 16%, rgba(0, 0, 0, 0) 100%), url(https://image.tmdb.org/t/p/w1280' +
-      movie.backdrop_path +
-      ')',
-    'background-color': blackBarsColor
-  }"
->
-  <!-- Movie Poster and Main Info Section -->
-  <div class="col-3">
-    <!-- Poster Image -->
-    <img
-      [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
-      alt="Movie Poster"
-      class="movie-poster"
-    />
-  </div>
-  <div class="col-9 movie-info">
-    <h1 class="movie-title mt-0">{{ movie.title }}</h1>
-    <p class="movie-meta">
-      {{ movie.release_date }} |
-      <span *ngFor="let genre of movie.genres; let last = last"
-        >{{ genre.name }}<span *ngIf="!last">, </span></span
+<p-card class="movie-card">
+  <div class="content-wrapper">
+    <div
+      class="movie-container"
+      [ngStyle]="{
+        'background-image':
+          'linear-gradient(to right, rgba(31, 31, 31, 0.95) 150px, rgba(31, 31, 31, 0.84) 100%), url(https://image.tmdb.org/t/p/w1280' +
+          movie.backdrop_path +
+          ')',
+        'background-size': 'cover',
+        'background-position': 'center',
+        'background-repeat': 'no-repeat'
+      }"
+    >
+      <!-- Movie Poster and Main Info Section -->
+      <div class="movie-content">
+        <div class="movie-poster-container">
+          <!-- Poster Image -->
+          <img
+            [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
+            alt="Movie Poster"
+            class="movie-poster"
+          />
+        </div>
+        <div class="movie-info">
+          <h1 class="movie-title mt-0">{{ movie.title }}</h1>
+          <p class="movie-meta">
+            {{ movie.release_date }} |
+            <span *ngFor="let genre of movie.genres; let last = last"
+              >{{ genre.name }}<span *ngIf="!last">, </span></span
+            >
+            | {{ movie.runtime }}m
+          </p>
+          <p *ngIf="director.length > 0">
+            <strong>Director:</strong> {{ director[0].name }}
+          </p>
+
+          <!-- Movie Overview -->
+          <p class="movie-overview">{{ movie.tagline }}</p>
+
+          <p class="movie-description">{{ movie.overview }}</p>
+
+          <!-- User Score Section -->
+          <div class="user-score-section mt-3">
+            <p-chip
+              label="{{ movie.vote_average }}"
+              class="custom-chip"
+              [style]="{ 'background-color': getVoteColor(movie.vote_average) }"
+            ></p-chip>
+          </div>
+
+          <!-- Buttons -->
+          <div class="button-section mt-3">
+            <button
+              pButton
+              label="Play Trailer"
+              icon="pi pi-play"
+              class="p-button-primary"
+            ></button>
+            <button
+              pButton
+              label="Add to Favorites"
+              icon="pi pi-heart"
+              class="p-button-outlined ml-2"
+            ></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actors Section -->
+    <h2 class="mt-4">Cast</h2>
+    <div class="carousel-container">
+      <p-carousel
+        [value]="actors"
+        [numVisible]="7"
+        [numScroll]="1"
+        [circular]="true"
+        class="custom-carousel"
+        [responsiveOptions]="[]"
+        [showIndicators]="false"
+        [showNavigators]="true"
+        previousIcon="pi pi-angle-left"
+        nextIcon="pi pi-angle-right"
       >
-      | {{ movie.runtime }}m
-    </p>
-    @if (director.length > 0) {
-    <p><strong>Director:</strong> {{ director[0].name }}</p>
-    }
-
-    <!-- Movie Overview -->
-    <p class="movie-overview">
-      {{ movie.tagline }}
-    </p>
-
-    <p class="movie-description">
-      {{ movie.overview }}
-    </p>
-
-    <!-- User Score Section -->
-    <div class="user-score-section">
-      <span class="chip chip-success">{{ movie.vote_average }}</span>
-    </div>
-
-    <!-- Buttons -->
-    <div class="button-section mt-3">
-      <button
-        pButton
-        label="Play Trailer"
-        icon="pi pi-play"
-        class="p-button-primary"
-      ></button>
-      <button
-        pButton
-        label="Add to Favorites"
-        icon="pi pi-heart"
-        class="p-button-outlined ml-2"
-      ></button>
+        <ng-template pTemplate="item" let-actor>
+          <div class="actor-card">
+            <div class="actor-image-container">
+              <img
+                pImage
+                [src]="
+                  actor.profile_path
+                    ? 'https://image.tmdb.org/t/p/w185' + actor.profile_path
+                    : 'assets/placeholder.png'
+                "
+                alt="{{ actor.name }}"
+                class="actor-image"
+              />
+            </div>
+            <div class="actor-details">
+              <div class="actor-name" [title]="actor.name">
+                {{ actor.name }}
+              </div>
+              <div class="character-name" [title]="actor.character">
+                {{ actor.character }}
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </p-carousel>
     </div>
   </div>
-</div>
+</p-card>
