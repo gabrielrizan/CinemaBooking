@@ -77,6 +77,26 @@ export class MultiSearchService {
     );
   }
 
+  getMovieReviews(movieId: string): Observable<any> {
+    const header = new HttpHeaders({
+      Authorization: environment.bearer,
+    });
+
+    return this.http.get<any>(`${this.movieUrl}/${movieId}/reviews`, {
+      headers: header,
+    });
+  }
+
+  getMovieRecommendations(movieId: string): Observable<any> {
+    const header = new HttpHeaders({
+      Authorization: environment.bearer,
+    });
+
+    return this.http.get<any>(`${this.movieUrl}/${movieId}/recommendations`, {
+      headers: header,
+    });
+  }
+
   getTvGenres(): Observable<any> {
     // Set up the headers with the Authorization Bearer token
     const headers = new HttpHeaders({

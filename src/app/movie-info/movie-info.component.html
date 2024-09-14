@@ -1,5 +1,6 @@
 <p-card class="movie-card">
   <div class="content-wrapper">
+    <!-- Movie Header Section -->
     <div
       class="movie-container"
       [ngStyle]="{
@@ -68,6 +69,19 @@
       </div>
     </div>
 
+    <!-- Movie Financial Info -->
+    <div class="movie-financial-info mt-4">
+      <h2>Financial Information</h2>
+      <div class="p-grid">
+        <div class="p-col-6">
+          <p><strong>Budget:</strong> {{ movie.budget | currency }}</p>
+        </div>
+        <div class="p-col-6">
+          <p><strong>Revenue:</strong> {{ movie.revenue | currency }}</p>
+        </div>
+      </div>
+    </div>
+
     <!-- Actors Section -->
     <h2 class="mt-4">Cast</h2>
     <div class="carousel-container">
@@ -103,6 +117,71 @@
               </div>
               <div class="character-name" [title]="actor.character">
                 {{ actor.character }}
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </p-carousel>
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="reviews-section mt-4">
+      <h2>Reviews</h2>
+      <div class="reviews-list">
+        <div class="review-card" *ngFor="let review of reviews">
+          <div class="review-header">
+            <strong>{{ review.author }}</strong>
+            <span class="review-date">{{
+              review.created_at | date : "longDate"
+            }}</span>
+          </div>
+          <p class="review-content">
+            {{ getTruncatedContent(review.content, review.showFullContent) }}
+            <a
+              *ngIf="review.content.length > maxContentLength"
+              (click)="review.showFullContent = !review.showFullContent"
+            >
+              {{ review.showFullContent ? "Read less" : "Read more" }}
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recommendations Section -->
+    <div class="recommendations-section mt-4">
+      <h2>Recommendations</h2>
+      <p-carousel
+        [value]="recommendations"
+        [numVisible]="5"
+        [numScroll]="1"
+        [circular]="true"
+        [showIndicators]="false"
+        [showNavigators]="true"
+        previousIcon="pi pi-angle-left"
+        nextIcon="pi pi-angle-right"
+        class="custom-carousel"
+      >
+        <ng-template pTemplate="item" let-movie>
+          <div
+            class="recommendation-card"
+            [routerLink]="['/movie-info', movie.id]"
+          >
+            <div class="recommendation-image-container">
+              <img
+                pImage
+                [src]="
+                  movie.poster_path
+                    ? 'https://image.tmdb.org/t/p/w185' + movie.poster_path
+                    : 'assets/placeholder.png'
+                "
+                alt="{{ movie.title }}"
+                class="recommendation-image"
+              />
+            </div>
+            <div class="recommendation-details">
+              <div class="recommendation-title" [title]="movie.title">
+                {{ movie.title }}
               </div>
             </div>
           </div>

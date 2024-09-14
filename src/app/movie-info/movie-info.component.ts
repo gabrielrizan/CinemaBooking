@@ -1,21 +1,31 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { SharedService } from '../shared.service';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { MultiSearchService } from '../multi-search.service';
+import { ColorExtractionService } from '../services/color-extraction.service';
+import { Subscription } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
 import { ChipModule } from 'primeng/chip';
 import { CommonModule } from '@angular/common';
-import { ColorExtractionService } from '../services/color-extraction.service';
-import { MultiSearchService } from '../multi-search.service';
-import { Card, CardModule } from 'primeng/card';
+import { AccordionModule } from 'primeng/accordion';
 import { CarouselModule } from 'primeng/carousel';
-import { Subscription } from 'rxjs';
+import { TooltipModule } from 'primeng/tooltip';
+import { CardModule } from 'primeng/card';
 
 @Component({
   standalone: true,
   selector: 'app-movie-info',
   templateUrl: './movie-info.component.html',
   styleUrls: ['./movie-info.component.css'],
-  imports: [ButtonModule, ChipModule, CommonModule, CardModule, CarouselModule],
+  imports: [
+    ButtonModule,
+    ChipModule,
+    CommonModule,
+    AccordionModule,
+    CarouselModule,
+    TooltipModule,
+    CardModule,
+    RouterModule,
+  ],
 })
 export class MovieInfoComponent implements OnInit, OnDestroy {
   movieId: string | null = '';
@@ -23,11 +33,15 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
   credits: any = {};
   director: any[] = [];
   actors: any[] = [];
+  reviews: any[] = [];
+  recommendations: any[] = [];
   blackBarsColor: string = '#000000'; // Default color
+  maxContentLength = 300; // Maximum length of content to display
   private routeSub: Subscription = new Subscription();
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private multiSearchService: MultiSearchService,
     private colorExtract: ColorExtractionService
   ) {}
@@ -42,6 +56,8 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
         this.resetComponentState();
         this.fetchMovieDetails(this.movieId);
         this.fetchMovieCredits(this.movieId);
+        this.fetchMovieReviews(this.movieId);
+        this.fetchMovieRecommendations(this.movieId);
       } else {
         console.error('Movie ID is missing in route parameters.');
       }
@@ -60,6 +76,8 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
     this.credits = {};
     this.director = [];
     this.actors = [];
+    this.reviews = [];
+    this.recommendations = [];
     this.blackBarsColor = '#000000';
   }
 
@@ -83,6 +101,38 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
         console.error('Error fetching movie credits:', error);
       }
     );
+  }
+
+  fetchMovieReviews(movieId: string): void {
+    this.multiSearchService.getMovieReviews(movieId).subscribe(
+      (data) => {
+        this.reviews = data.results;
+        console.log('Reviews:', this.reviews);
+      },
+      (error) => {
+        console.error('Error fetching movie reviews:', error);
+      }
+    );
+  }
+
+  fetchMovieRecommendations(movieId: string): void {
+    this.multiSearchService.getMovieRecommendations(movieId).subscribe(
+      (data) => {
+        this.recommendations = data.results;
+        console.log('Recommendations:', this.recommendations);
+      },
+      (error) => {
+        console.error('Error fetching movie recommendations:', error);
+      }
+    );
+  }
+
+  getTruncatedContent(content: string, showFullContent: boolean): string {
+    if (showFullContent || content.length <= this.maxContentLength) {
+      return content;
+    } else {
+      return content.slice(0, this.maxContentLength) + '...';
+    }
   }
 
   processMovieDetails(details: any): void {

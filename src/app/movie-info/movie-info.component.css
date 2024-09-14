@@ -83,16 +83,19 @@
   margin-right: 0.5rem;
 }
 
-/* Actor Image */
-.actor-image {
-  width: 100%;
-  border-radius: 8px;
-}
-
 /* Custom Chip */
 .custom-chip {
   color: #fff;
   font-weight: bold;
+}
+
+/* Financial Info */
+.movie-financial-info h2 {
+  margin-bottom: 1rem;
+}
+
+.movie-financial-info p {
+  font-size: 1.1rem;
 }
 
 /* Actor Card */
@@ -103,10 +106,13 @@
   align-items: center;
   margin: 0.5rem;
   box-sizing: border-box;
-  background-color: #ffffff;
   border-radius: 8px;
   overflow: hidden;
   flex-shrink: 0;
+}
+
+.actor-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 /* Actor Image Container */
@@ -144,14 +150,74 @@
   font-weight: bold;
 }
 
-.actor-card:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
 /* Adjust Carousel Items */
 .custom-carousel .p-carousel-item {
   display: flex;
   justify-content: center;
+}
+
+/* Reviews Section */
+.reviews-section h2 {
+  margin-bottom: 1rem;
+}
+
+.review-date {
+  font-size: 0.9rem;
+  color: #888;
+  margin-top: 0.5rem;
+}
+
+/* Recommendations Section */
+.recommendations-section h2 {
+  margin-bottom: 1rem;
+}
+
+/* Recommendation Card */
+.recommendation-card {
+  width: 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0.5rem;
+  box-sizing: border-box;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.recommendation-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Recommendation Image Container */
+.recommendation-image-container {
+  width: 100%;
+  height: 225px;
+  overflow: hidden;
+}
+
+.recommendation-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Recommendation Details */
+.recommendation-details {
+  padding: 0.5rem;
+  text-align: center;
+  width: 100%;
+}
+
+.recommendation-title {
+  font-size: 0.9rem;
+  font-family: "Roboto", sans-serif;
+  margin: 0.2rem 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* Responsive Adjustments */
