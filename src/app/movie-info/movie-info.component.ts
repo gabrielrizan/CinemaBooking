@@ -13,6 +13,7 @@ import { FieldsetModule } from 'primeng/fieldset';
 import { AvatarModule } from 'primeng/avatar';
 import { CardModule } from 'primeng/card';
 import { PanelModule } from 'primeng/panel';
+import { DialogModule } from 'primeng/dialog';
 
 @Component({
   standalone: true,
@@ -31,6 +32,7 @@ import { PanelModule } from 'primeng/panel';
     AvatarModule,
     CardModule,
     PanelModule,
+    DialogModule,
   ],
 })
 export class MovieInfoComponent implements OnInit, OnDestroy {
@@ -46,6 +48,8 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
   visibleReviews = 1; // Number of reviews to display by default
   initialVisibleReviews = 1; // Initial number of reviews to display
   reviewsExpanded: boolean = false; // Whether all reviews are expanded or not
+  fullCast: any[] = [];
+  isFullCastDialogVisible: boolean = false; // Whether to show the full cast modal
   private routeSub: Subscription = new Subscription();
 
   constructor(
@@ -167,6 +171,9 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
     this.actors = credits.cast
       .filter((cast: any) => cast.known_for_department === 'Acting')
       .slice(0, 10);
+    this.fullCast = credits.cast.filter(
+      (cast: any) => cast.known_for_department === 'Acting'
+    );
     console.log('Actors:', this.actors);
   }
 
@@ -225,6 +232,14 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
     return url;
   }
 
+  showFullCastDialog(): void {
+    this.isFullCastDialogVisible = true;
+  }
+
+  hideFullCastDialog(): void {
+    this.isFullCastDialogVisible = false;
+  }
+
   getInitials(name: string): string {
     if (!name) return '';
     const names = name.trim().split(' ');
@@ -234,6 +249,10 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
         names[0].charAt(0).toUpperCase() +
         names[names.length - 1].charAt(0).toUpperCase()
       );
+  }
+
+  getVotePercentage(voteAverage: number): number {
+    return Math.round(voteAverage * 10); // Convert score to percentage
   }
 
   formatNumber(value: number): string {
