@@ -71,13 +71,30 @@
 
     <!-- Movie Financial Info -->
     <div class="movie-financial-info mt-4">
-      <h2>Financial Information</h2>
-      <div class="p-grid">
-        <div class="p-col-6">
-          <p><strong>Budget:</strong> {{ movie.budget | currency }}</p>
+      <div class="grid align-center justify-center financial-container">
+        <div class="col-6 text-center">
+          <p-card class="financial-card">
+            <p>
+              <i
+                class="pi pi-dollar"
+                style="font-size: 2rem; color: #2196f3"
+              ></i>
+            </p>
+            <p><strong>Budget:</strong></p>
+            <p>{{ formatNumber(movie.budget) }}</p>
+          </p-card>
         </div>
-        <div class="p-col-6">
-          <p><strong>Revenue:</strong> {{ movie.revenue | currency }}</p>
+        <div class="col-6 text-center">
+          <p-card class="financial-card">
+            <p>
+              <i
+                class="pi pi-chart-line"
+                style="font-size: 2rem; color: #4caf50"
+              ></i>
+            </p>
+            <p><strong>Revenue:</strong></p>
+            <p>{{ formatNumber(movie.revenue) }}</p>
+          </p-card>
         </div>
       </div>
     </div>
@@ -125,26 +142,66 @@
     </div>
 
     <!-- Reviews Section -->
+    <!-- Reviews Section -->
     <div class="reviews-section mt-4">
       <h2>Reviews</h2>
       <div class="reviews-list">
-        <div class="review-card" *ngFor="let review of reviews">
-          <div class="review-header">
-            <strong>{{ review.author }}</strong>
-            <span class="review-date">{{
-              review.created_at | date : "longDate"
-            }}</span>
-          </div>
-          <p class="review-content">
-            {{ getTruncatedContent(review.content, review.showFullContent) }}
-            <a
-              *ngIf="review.content.length > maxContentLength"
-              (click)="review.showFullContent = !review.showFullContent"
-            >
-              {{ review.showFullContent ? "Read less" : "Read more" }}
-            </a>
-          </p>
-        </div>
+        <ng-container *ngFor="let review of reviews.slice(0, visibleReviews)">
+          <p-panel [collapsed]="true" [toggleable]="true">
+            <ng-template pTemplate="header">
+              <div class="review-header">
+                <p-avatar
+                  *ngIf="getAvatarUrl(review.author_details.avatar_path)"
+                  [image]="getAvatarUrl(review.author_details.avatar_path)"
+                  size="large"
+                  shape="circle"
+                  class="mr-2"
+                ></p-avatar>
+                <p-avatar
+                  *ngIf="!getAvatarUrl(review.author_details.avatar_path)"
+                  [label]="getInitials(review.author)"
+                  size="large"
+                  shape="circle"
+                  class="mr-2"
+                ></p-avatar>
+                <div class="author-details">
+                  <strong class="review-author">{{ review.author }}</strong>
+                  <span class="review-date">{{
+                    review.created_at | date : "longDate"
+                  }}</span>
+                </div>
+              </div>
+            </ng-template>
+            <div class="review-content">
+              {{ getTruncatedContent(review.content, review.showFullContent) }}
+              <a
+                *ngIf="review.content.length > maxContentLength"
+                (click)="toggleReviewContent(review); $event.stopPropagation()"
+              >
+                {{ review.showFullContent ? "Read less" : "Read more" }}
+              </a>
+            </div>
+          </p-panel>
+        </ng-container>
+      </div>
+
+      <!-- Show More/Show Less Buttons -->
+      <div class="reviews-load-more">
+        <button
+          *ngIf="!reviewsExpanded && visibleReviews < reviews.length"
+          pButton
+          label="Show More Reviews"
+          (click)="loadMoreReviews()"
+          class="p-button-text"
+        ></button>
+
+        <button
+          *ngIf="reviewsExpanded"
+          pButton
+          label="Show Less Reviews"
+          (click)="showLessReviews()"
+          class="p-button-text"
+        ></button>
       </div>
     </div>
 

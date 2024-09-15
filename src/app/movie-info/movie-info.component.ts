@@ -9,7 +9,10 @@ import { CommonModule } from '@angular/common';
 import { AccordionModule } from 'primeng/accordion';
 import { CarouselModule } from 'primeng/carousel';
 import { TooltipModule } from 'primeng/tooltip';
+import { FieldsetModule } from 'primeng/fieldset';
+import { AvatarModule } from 'primeng/avatar';
 import { CardModule } from 'primeng/card';
+import { PanelModule } from 'primeng/panel';
 
 @Component({
   standalone: true,
@@ -23,8 +26,11 @@ import { CardModule } from 'primeng/card';
     AccordionModule,
     CarouselModule,
     TooltipModule,
-    CardModule,
     RouterModule,
+    FieldsetModule,
+    AvatarModule,
+    CardModule,
+    PanelModule,
   ],
 })
 export class MovieInfoComponent implements OnInit, OnDestroy {
@@ -36,7 +42,10 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
   reviews: any[] = [];
   recommendations: any[] = [];
   blackBarsColor: string = '#000000'; // Default color
-  maxContentLength = 300; // Maximum length of content to display
+  maxContentLength = 300; // Maximum length of truncated review content
+  visibleReviews = 1; // Number of reviews to display by default
+  initialVisibleReviews = 1; // Initial number of reviews to display
+  reviewsExpanded: boolean = false; // Whether all reviews are expanded or not
   private routeSub: Subscription = new Subscription();
 
   constructor(
@@ -79,6 +88,7 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
     this.reviews = [];
     this.recommendations = [];
     this.blackBarsColor = '#000000';
+    this.visibleReviews = 1;
   }
 
   fetchMovieDetails(movieId: string): void {
@@ -106,7 +116,11 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
   fetchMovieReviews(movieId: string): void {
     this.multiSearchService.getMovieReviews(movieId).subscribe(
       (data) => {
-        this.reviews = data.results;
+        // Add 'showFullContent' property to each review
+        this.reviews = data.results.map((review: any) => ({
+          ...review,
+          showFullContent: false,
+        }));
         console.log('Reviews:', this.reviews);
       },
       (error) => {
@@ -125,14 +139,6 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
         console.error('Error fetching movie recommendations:', error);
       }
     );
-  }
-
-  getTruncatedContent(content: string, showFullContent: boolean): string {
-    if (showFullContent || content.length <= this.maxContentLength) {
-      return content;
-    } else {
-      return content.slice(0, this.maxContentLength) + '...';
-    }
   }
 
   processMovieDetails(details: any): void {
@@ -174,5 +180,68 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
     } else {
       return '#FF0000'; // Red
     }
+  }
+
+  getTruncatedContent(content: string, showFullContent: boolean): string {
+    if (showFullContent || content.length <= this.maxContentLength) {
+      return content;
+    } else {
+      return content.slice(0, this.maxContentLength) + '...';
+    }
+  }
+
+  loadMoreReviews(): void {
+    this.visibleReviews = this.reviews.length; // Show all reviews
+    this.reviewsExpanded = true;
+  }
+
+  showLessReviews(): void {
+    this.visibleReviews = this.initialVisibleReviews; // Show initial number of reviews
+    this.reviewsExpanded = false;
+  }
+
+  toggleReviewContent(review: any): void {
+    review.showFullContent = !review.showFullContent;
+  }
+
+  getAvatarUrl(avatarPath: string | null): string | undefined {
+    if (!avatarPath) {
+      return undefined;
+    }
+
+    let url: string;
+
+    if (
+      avatarPath.startsWith('/https://') ||
+      avatarPath.startsWith('/http://')
+    ) {
+      // Remove the leading '/' and return the URL
+      url = avatarPath.substring(1);
+    } else {
+      // Return the full URL to the TMDb image
+      url = `https://image.tmdb.org/t/p/original${avatarPath}`;
+    }
+
+    return url;
+  }
+
+  getInitials(name: string): string {
+    if (!name) return '';
+    const names = name.trim().split(' ');
+    if (names.length === 1) return names[0].charAt(0).toUpperCase();
+    else
+      return (
+        names[0].charAt(0).toUpperCase() +
+        names[names.length - 1].charAt(0).toUpperCase()
+      );
+  }
+
+  formatNumber(value: number): string {
+    if (value >= 1_000_000_000) {
+      return (value / 1_000_000_000).toFixed(1) + 'B';
+    } else if (value >= 1_000_000) {
+      return (value / 1_000_000).toFixed(1) + 'M';
+    }
+    return value.toLocaleString(); // For numbers below 1M
   }
 }
