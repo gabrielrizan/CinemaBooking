@@ -64,3 +64,13 @@
     </div>
   </ng-template>
 </p-overlayPanel>
+
+<p-dialog
+  header="Sign up"
+  [(visible)]="visible"
+  [modal]="true"
+  [closable]="true"
+  [style]="{ width: '50vw' }"
+>
+  <app-signup></app-signup>
+</p-dialog>

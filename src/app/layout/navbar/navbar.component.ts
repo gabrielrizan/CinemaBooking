@@ -21,6 +21,7 @@ import { BigsearchComponent } from '../../bigsearch/bigsearch.component';
 import { of } from 'rxjs';
 import { SharedService } from '../../shared.service';
 import { LoginComponent } from '../../auth/login/login.component';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-navbar',
@@ -65,7 +66,8 @@ export class NavbarComponent implements OnInit {
 
   constructor(
     private movieService: MultiSearchService,
-    private sharedService: SharedService
+    private sharedService: SharedService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -182,46 +184,30 @@ export class NavbarComponent implements OnInit {
     this.sharedService.searchBlur$.subscribe(() => {
       this.isSearchActive = false;
     });
+
+
+    this.authService.isLoggedIn$.subscribe((loggedIn) => {
+      this.isLoggedIn = loggedIn; // Update the isLoggedIn flag in the component
+      console.log("Component log in status:", this.isLoggedIn);
+    });
   }
 
-  loggedInItems: MenuItem[] = [
-    {
-      label: 'My Account',
-      icon: 'pi pi-user',
-      routerLink: ['/my-account'],
-    },
-    {
-      label: 'My Tickets',
-      icon: 'pi pi-ticket',
-      routerLink: ['/my-tickets'],
-    },
-    {
-      label: 'My Searches',
-      icon: 'pi pi-history',
-      routerLink: ['/my-searches'],
-    },
-    {
-      label: 'Logout',
-      icon: 'pi pi-sign-out',
-      command: () => this.logout(),
-    },
-  ];
-
+ 
   logout() {
     // Implement your logout logic here
     this.isLoggedIn = false;
     this.overlayPanel?.hide();
   }
 
-  logIn() {
-    // Handle log in logic
-    console.log('Log In button clicked');
-  }
+  // logIn() {
+  //   // Handle log in logic
+  //   console.log('Log In button clicked');
+  // }
 
-  signUp() {
-    // Handle sign up logic
-    console.log('Sign Up button clicked');
-  }
+  // signUp() {
+  //   // Handle sign up logic
+  //   console.log('Sign Up button clicked');
+  // }
 
   onSearchFocus() {
     this.isSearchActive = true;
@@ -236,7 +222,7 @@ export class NavbarComponent implements OnInit {
     this.searchSubject.next(query); // Emit the query to the searchSubject
   }
 
-  showSignUpForm() {
-    this.visible = true;
-  }
+  // showSignUpForm() {
+  //   this.visible = true;
+  // }
 }
