@@ -1,13 +1,12 @@
 <div class="flex justify-content-center">
-  <div
-    class="formgrid grid w-5 p-4 surface-card border-round shadow-2 justify-content-center"
-  >
+  <div class="grid w-5 p-4 surface-card border-round justify-content-center">
     <div class="field">
       <label for="firstname" class="block mb-2 font-medium text-lg"
         >Firstname</label
       >
       <input
         id="firstname"
+        [(ngModel)]="signupForm.firstname"
         type="text"
         class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-30rem"
       />
@@ -18,6 +17,7 @@
       >
       <input
         id="lastname"
+        [(ngModel)]="signupForm.lastname"
         type="text"
         class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-30rem"
       />
@@ -28,6 +28,7 @@
       >
       <input
         id="dob"
+        [(ngModel)]="signupForm.dob"
         type="date"
         class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-30rem"
       />
@@ -36,6 +37,7 @@
       <label for="email" class="block mb-2 font-medium text-lg">Email</label>
       <input
         id="email"
+        [(ngModel)]="signupForm.email"
         type="email"
         class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-30rem"
       />
@@ -46,6 +48,7 @@
       >
       <p-password
         id="password"
+        [(ngModel)]="signupForm.password"
         [feedback]="true"
         [toggleMask]="true"
         class="w-full"
@@ -57,28 +60,22 @@
         >Confirm Password</label
       >
       <p-password
-        [(ngModel)]="value"
+        [(ngModel)]="signupForm.confirmPassword"
         inputStyleClass="text-base text-color surface-overlay p-2 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-30rem"
       >
         <ng-template pTemplate="header">
           <h6>Pick a password</h6>
         </ng-template>
-        <ng-template pTemplate="footer">
-          <p-divider />
-          <p class="mt-2">Suggestions</p>
-          <ul class="pl-2 ml-2 mt-0" style="line-height: 1.5">
-            <li>At least one lowercase</li>
-            <li>At least one uppercase</li>
-            <li>At least one numeric</li>
-            <li>Minimum 8 characters</li>
-          </ul>
-        </ng-template>
       </p-password>
-      <div class="field mt-4">
-        <button type="submit" class="p-button w-full p-3 border-round">
-          Sign Up
-        </button>
-      </div>
+    </div>
+    <div class="mt-4">
+      <button
+        type="submit"
+        class="p-button w-full p-3 border-round"
+        (click)="onSubmit()"
+      >
+        Sign Up
+      </button>
     </div>
   </div>
 </div>

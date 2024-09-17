@@ -20,6 +20,7 @@ import { SearchCardComponent } from '../../search-card/search-card.component';
 import { BigsearchComponent } from '../../bigsearch/bigsearch.component';
 import { of } from 'rxjs';
 import { SharedService } from '../../shared.service';
+import { LoginComponent } from '../../auth/login/login.component';
 
 @Component({
   selector: 'app-navbar',
@@ -39,7 +40,7 @@ import { SharedService } from '../../shared.service';
     TieredMenuModule,
     SignupComponent, // Assuming this is a standalone component
     SearchCardComponent, // Assuming this is a standalone component
-    BigsearchComponent, // Assuming this is a standalone component
+    LoginComponent, // Assuming this is a standalone component
   ],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
@@ -51,7 +52,7 @@ export class NavbarComponent implements OnInit {
   searchTerm: string = '';
 
   items: MenuItem[] | undefined;
-  isLoggedIn = true; // Set this based on your actual authentication logic
+  isLoggedIn = false; // Set this based on your actual authentication logic
   isSearchActive: boolean = false;
   visible: boolean = false;
   filteredMovies: any[] = [];

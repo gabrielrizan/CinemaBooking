@@ -1,50 +1,53 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { ButtonModule } from 'primeng/button';
-import { CalendarModule } from 'primeng/calendar';
-import { DividerModule } from 'primeng/divider';
-import { InputTextModule } from 'primeng/inputtext';
+import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 import { PasswordModule } from 'primeng/password';
+import { DividerModule } from 'primeng/divider';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-signup',
   standalone: true,
-  imports: [
-    FormsModule,
-    InputTextModule,
-    ButtonModule,
-    CalendarModule,
-    PasswordModule,
-    ButtonModule,
-    DividerModule,
-
-  ],
+  selector: 'app-signup',
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.css'],
+  imports: [PasswordModule, DividerModule, CommonModule, FormsModule],
 })
 export class SignupComponent {
-  value!: string;
-  cinemaOptions: any[] = [
-    { label: 'Cinema 1', value: 'cinema1' },
-    { label: 'Cinema 2', value: 'cinema2' },
-    { label: 'Cinema 3', value: 'cinema3' },
-  ];
+  signupForm = {
+    firstname: '',
+    lastname: '',
+    dob: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  };
 
-  genderOptions: any[] = [
-    { label: 'Masculin', value: 'male' },
-    { label: 'Feminin', value: 'female' },
-    { label: 'Altceva', value: 'other' },
-  ];
+  constructor(private authService: AuthService, private router: Router) {}
 
-  countyOptions: any[] = [
-    { label: 'Județ 1', value: 'county1' },
-    { label: 'Județ 2', value: 'county2' },
-    { label: 'Județ 3', value: 'county3' },
-  ];
+  onSubmit() {
+    if (this.signupForm.password !== this.signupForm.confirmPassword) {
+      alert('Passwords do not match');
+      return;
+    }
 
-  cityOptions: any[] = [
-    { label: 'Oraș 1', value: 'city1' },
-    { label: 'Oraș 2', value: 'city2' },
-    { label: 'Oraș 3', value: 'city3' },
-  ];
+    const payload = {
+      firstname: this.signupForm.firstname,
+      lastname: this.signupForm.lastname,
+      dob: this.signupForm.dob,
+      email: this.signupForm.email,
+      password: this.signupForm.password,
+      re_password: this.signupForm.confirmPassword,
+    };
+
+    this.authService.register(payload).subscribe({
+      next: (response) => {
+        console.log('User registered successfully:', response);
+      },
+      error: (error) => {
+        console.error('Error during registration:', error);
+        // Handle error (e.g., display validation errors)
+      },
+    });
+  }
 }
