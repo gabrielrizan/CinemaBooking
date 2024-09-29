@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
@@ -10,7 +10,8 @@ import { TieredMenuModule } from 'primeng/tieredmenu';
 import { AuthService } from '../../services/auth.service'; // Import the AuthService
 import { DialogModule } from 'primeng/dialog';
 import { SignupComponent } from '../signup/signup.component';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-login',
@@ -25,7 +26,9 @@ import { MenuItem } from 'primeng/api';
     TieredMenuModule,
     DialogModule,
     SignupComponent,
+    ToastModule,
   ],
+  providers: [MessageService],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
@@ -33,11 +36,16 @@ export class LoginComponent {
   visible = false;
   username = '';
   password = '';
-  isLoggedIn : boolean = false; // Set this based on your actual authentication logic
+  isLoggedIn: boolean = false; // Set this based on your actual authentication logic
 
   @ViewChild('op') overlayPanel!: OverlayPanel;
 
-  constructor(private authService: AuthService, private router: Router) {
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private cdr: ChangeDetectorRef,
+    private messageService: MessageService
+  ) {
     this.isLoggedIn = this.authService.isTokenValid(); // Check if the user is already logged in
   }
 
@@ -64,7 +72,7 @@ export class LoginComponent {
     {
       label: 'Logout',
       icon: 'pi pi-sign-out',
-      command: () => this.authService.logout(),
+      command: () => this.logout(),
     },
   ];
 
@@ -84,15 +92,32 @@ export class LoginComponent {
 
         // Mark user as logged in
         this.isLoggedIn = true;
-
+        this.cdr.detectChanges(); // Trigger change detection to update the UI
+        this.overlayPanel.hide(); // Hide the overlay panel
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Login successful',
+        });
         // Optionally redirect after login
-        this.router.navigate(['/dashboard']); // Adjust this route
       },
       error: (error) => {
         console.error('Login failed', error);
         // Handle login error (e.g., show a message to the user)
         alert('Login failed. Please check your credentials.');
       },
+    });
+  }
+
+  logout() {
+    this.authService.logout();
+    this.isLoggedIn = false;
+    this.cdr.detectChanges(); // Trigger change detection to update the UI
+    this.overlayPanel.hide(); // Hide the overlay panel
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Success',
+      detail: 'Logged out successfully',
     });
   }
 
