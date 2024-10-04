@@ -1,123 +1,125 @@
-<div class="mb-4" [style]="{ maxWidth: '100%' }">
-  <p-menubar [model]="items">
-    <ng-template pTemplate="start">
-      <img src="cinema-logo.png" width="70px" alt="Cinema Logo" />
-    </ng-template>
-    <ng-template pTemplate="item" let-item let-root="root">
-      <a
-        pRipple
-        class="flex align-items-center p-menuitem-link"
-        [routerLink]="item.routerLink || []"
-        *ngIf="!item.separator"
-      >
-        <span [class]="item.icon"></span>
-        <span class="ml-2">{{ item.label }}</span>
-        <p-badge
-          *ngIf="item.badge"
-          [ngClass]="{ 'ml-auto': !root, 'ml-2': root }"
-          [value]="item.badge"
-        ></p-badge>
-        <span
-          *ngIf="item.shortcut"
-          class="ml-auto border-1 surface-border border-round surface-100 text-xs p-1"
+<div class="navbar-container mb-4" [style]="{ maxWidth: '100%' }">
+  <!-- Inner container to limit content width and center it -->
+  <div class="navbar-content mx-auto">
+    <p-menubar [model]="items">
+      <ng-template pTemplate="start">
+        <img src="cinema-logo.png" width="70px" alt="Cinema Logo" />
+      </ng-template>
+
+      <ng-template pTemplate="item" let-item let-root="root">
+        <a
+          pRipple
+          class="flex align-items-center p-menuitem-link"
+          [routerLink]="item.routerLink || []"
+          *ngIf="!item.separator"
         >
-          {{ item.shortcut }}
-        </span>
-        <i
-          *ngIf="item.items"
-          [ngClass]="[
-            'pi',
-            root ? 'pi-angle-down ml-2' : 'pi-angle-right ml-auto'
-          ]"
-        ></i>
-      </a>
-    </ng-template>
-    <ng-template pTemplate="end">
-      <div class="flex align-items-center gap-2">
+          <span [class]="item.icon"></span>
+          <span class="ml-2">{{ item.label }}</span>
+          <p-badge
+            *ngIf="item.badge"
+            [ngClass]="{ 'ml-auto': !root, 'ml-2': root }"
+            [value]="item.badge"
+          ></p-badge>
+          <span
+            *ngIf="item.shortcut"
+            class="ml-auto border-1 surface-border border-round surface-100 text-xs p-1"
+          >
+            {{ item.shortcut }}
+          </span>
+          <i
+            *ngIf="item.items"
+            [ngClass]="[
+              'pi',
+              root ? 'pi-angle-down ml-2' : 'pi-angle-right ml-auto'
+            ]"
+          ></i>
+        </a>
+      </ng-template>
+
+      <ng-template pTemplate="end">
+        <div class="flex align-items-center gap-2">
+          <input
+            type="text"
+            pInputText
+            placeholder="Search"
+            class="search-input"
+            [(ngModel)]="searchTerm"
+            (focus)="onSearchFocus()"
+            (input)="onSearchChange($event)"
+          />
+          <p-avatar
+            icon="pi pi-user"
+            styleClass="mr-2 size-large transition-duration-150 transform-scale-100 hover:transform-scale-105"
+            size="large"
+            pTooltip="Click to open menu"
+            tooltipPosition="bottom"
+            (click)="loginComponent.togglePanel($event)"
+          ></p-avatar>
+          <app-login #loginComponent></app-login>
+        </div>
+      </ng-template>
+    </p-menubar>
+
+    <!-- Expanded search bar with additional content -->
+    <p-dialog
+      [(visible)]="isSearchActive"
+      [modal]="true"
+      [closable]="true"
+      [draggable]="false"
+      [resizable]="false"
+      [contentStyle]="{
+        background: 'transparent',
+        'overflow-y': 'scroll',
+        'scrollbar-width': 'none',
+        '-ms-overflow-style': 'none'
+      }"
+      [style]="{
+        position: 'fixed',
+        top: '10%',
+        left: '0',
+        right: '0',
+        border: 'none',
+        boxShadow: 'none',
+        background: 'transparent'
+      }"
+      [appendTo]="'body'"
+      [baseZIndex]="1002"
+      [closeOnEscape]="true"
+      [dismissableMask]="true"
+      showHeader="false"
+      [blockScroll]="true"
+      focusOnShow="true"
+      [transitionOptions]="'150ms cubic-bezier(0, 0, 0.2, 1)'"
+    >
+      <div class="flex flex-wrap justify-content-center">
         <input
           type="text"
           pInputText
-          placeholder="Search"
-          class="search-input"
+          placeholder="Search for movies, shows, etc..."
+          class="search-input w-7 border-round-3xl relative"
           [(ngModel)]="searchTerm"
-          (focus)="onSearchFocus()"
           (input)="onSearchChange($event)"
         />
-        <p-avatar
-          icon="pi pi-user"
-          styleClass="mr-2 size-large transition-duration-150 transform-scale-100 hover:transform-scale-105"
-          size="large"
-          pTooltip="Click to open menu"
-          tooltipPosition="bottom"
-          (click)="loginComponent.togglePanel($event)"
-        >
-        </p-avatar>
-        <app-login #loginComponent></app-login>
+        <p-button
+          label="Back to Home"
+          class="back-home-btn fixed"
+          (click)="onSearchBlur()"
+        ></p-button>
+        <div *ngFor="let movie of movies" class="w-9 mb-2">
+          <app-search-card
+            [movie]="movie"
+            [movieGenres]="movieGenres"
+            [tvGenres]="tvGenres"
+          ></app-search-card>
+        </div>
       </div>
-    </ng-template>
-  </p-menubar>
+    </p-dialog>
 
-  <!-- Expanded search bar with additional content -->
-  <p-dialog
-    [(visible)]="isSearchActive"
-    [modal]="true"
-    [closable]="true"
-    [draggable]="false"
-    [resizable]="false"
-    [contentStyle]="{
-      background: 'transparent',
-      'overflow-y': 'scroll',
-      'scrollbar-width': 'none',
-      '-ms-overflow-style': 'none'
-    }"
-    [style]="{
-      position: 'fixed',
-      top: '10%',
-      left: '0',
-      right: '0',
-      border: 'none',
-      boxShadow: 'none',
-      background: 'transparent'
-    }"
-    [appendTo]="'body'"
-    [baseZIndex]="1002"
-    [closeOnEscape]="true"
-    [dismissableMask]="true"
-    showHeader="false"
-    [blockScroll]="true"
-    focusOnShow="true"
-    [transitionOptions]="'150ms cubic-bezier(0, 0, 0.2, 1)'"
-  >
-    <div class="flex flex-wrap justify-content-center">
-      <input
-        type="text"
-        pInputText
-        placeholder="Search for movies, shows, etc..."
-        class="search-input w-7 border-round-3xl relative"
-        [(ngModel)]="searchTerm"
-        (input)="onSearchChange($event)"
-      />
-      <p-button
-        label="Back to Home"
-        class="back-home-btn fixed"
-        (click)="onSearchBlur()"
-      >
-      </p-button>
-      <div *ngFor="let movie of movies" class="w-9 mb-2">
-        <app-search-card
-          [movie]="movie"
-          [movieGenres]="movieGenres"
-          [tvGenres]="tvGenres"
-        ></app-search-card>
-      </div>
-    </div>
-  </p-dialog>
-
-
-
-  <div
-    *ngIf="isSearchActive"
-    class="blur-overlay"
-    (click)="onSearchBlur()"
-  ></div>
+    <!-- Overlay for search -->
+    <div
+      *ngIf="isSearchActive"
+      class="blur-overlay"
+      (click)="onSearchBlur()"
+    ></div>
+  </div>
 </div>

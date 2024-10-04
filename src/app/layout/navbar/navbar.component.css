@@ -22,3 +22,9 @@
   top: -3rem;
   left: 1rem;
 }
+
+.navbar-content {
+  max-width: 1500px;
+  align-items: center;
+  margin: 0 auto; /* Center content horizontally */
+}
