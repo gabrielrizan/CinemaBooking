@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ImageModule } from 'primeng/image';
 import { TruncatePipe } from '../truncate.pipe';
 import { RouterModule, Router } from '@angular/router';
-import { Movie } from '../models/movie.model';
+import { HomepageMovie } from '../models/movie.model';
 
 @Component({
   selector: 'app-movie-card',
@@ -46,7 +46,7 @@ export class MovieCardComponent {
     this.router.navigate(['/tickets', this.movie.title]);
   }
 
-  @Input() movie!: Movie;
+  @Input() movie!: HomepageMovie;
 
   seeTrailer(url: string) {
     window.open(url, '_blank');

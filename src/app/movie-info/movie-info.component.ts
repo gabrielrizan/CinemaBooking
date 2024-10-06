@@ -14,6 +14,7 @@ import { AvatarModule } from 'primeng/avatar';
 import { CardModule } from 'primeng/card';
 import { PanelModule } from 'primeng/panel';
 import { DialogModule } from 'primeng/dialog';
+import { ApiMovie, MovieCredits } from '../models/movie.model';
 
 @Component({
   standalone: true,
@@ -37,17 +38,17 @@ import { DialogModule } from 'primeng/dialog';
 })
 export class MovieInfoComponent implements OnInit, OnDestroy {
   movieId: string | null = '';
-  movie: any = {};
-  credits: any = {};
-  director: any[] = [];
+  movie: ApiMovie = {};
+  credits: MovieCredits = {};
+  directorName: string = 'Unknown';
   actors: any[] = [];
   reviews: any[] = [];
   recommendations: any[] = [];
-  blackBarsColor: string = '#000000'; // Default color
-  maxContentLength = 300; // Maximum length of truncated review content
-  visibleReviews = 1; // Number of reviews to display by default
-  initialVisibleReviews = 1; // Initial number of reviews to display
-  reviewsExpanded: boolean = false; // Whether all reviews are expanded or not
+  blackBarsColor: string = '#000000';
+  maxContentLength = 300;
+  visibleReviews = 1;
+  initialVisibleReviews = 1;
+  reviewsExpanded: boolean = false;
   fullCast: any[] = [];
   isFullCastDialogVisible: boolean = false; // Whether to show the full cast modal
   private routeSub: Subscription = new Subscription();
@@ -87,7 +88,6 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
   resetComponentState(): void {
     this.movie = {};
     this.credits = {};
-    this.director = [];
     this.actors = [];
     this.reviews = [];
     this.recommendations = [];
@@ -165,15 +165,21 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
       });
   }
 
-  processMovieCredits(credits: any): void {
+  processMovieCredits(credits: MovieCredits): void {
     this.credits = credits;
-    this.director = credits.crew.filter((crew: any) => crew.job === 'Director');
-    this.actors = credits.cast
-      .filter((cast: any) => cast.known_for_department === 'Acting')
-      .slice(0, 10);
-    this.fullCast = credits.cast.filter(
-      (cast: any) => cast.known_for_department === 'Acting'
-    );
+    this.directorName =
+      credits.crew?.find((crewMember) => crewMember.job === 'Director')?.name ||
+      'Unknown';
+    this.actors =
+      credits.cast
+        ?.filter((castMember) => castMember.known_for_department === 'Acting')
+        .slice(0, 10) || [];
+    this.fullCast =
+      credits.cast?.filter(
+        (castMember) => castMember.known_for_department === 'Acting'
+      ) || [];
+
+    console.log('Director:', this.directorName);
     console.log('Actors:', this.actors);
   }
 

@@ -22,6 +22,7 @@ import { of } from 'rxjs';
 import { SharedService } from '../../shared.service';
 import { LoginComponent } from '../../auth/login/login.component';
 import { AuthService } from '../../services/auth.service';
+import { HomepageMovie } from '../../models/movie.model';
 
 @Component({
   selector: 'app-navbar',
@@ -47,7 +48,7 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent implements OnInit {
-  movies: any[] = [];
+  movies: HomepageMovie[] = [];
   loading: boolean = true;
   error: string | null = null;
   searchTerm: string = '';
@@ -56,9 +57,9 @@ export class NavbarComponent implements OnInit {
   isLoggedIn = false; // Set this based on your actual authentication logic
   isSearchActive: boolean = false;
   visible: boolean = false;
-  filteredMovies: any[] = [];
-  movieGenres: any[] = [];
-  tvGenres: any[] = [];
+  filteredMovies: HomepageMovie[] = [];
+  movieGenres: string[] = [];
+  tvGenres: string[] = [];
 
   @ViewChild('op') overlayPanel: OverlayPanel | undefined;
 
@@ -185,14 +186,12 @@ export class NavbarComponent implements OnInit {
       this.isSearchActive = false;
     });
 
-
     this.authService.isLoggedIn$.subscribe((loggedIn) => {
       this.isLoggedIn = loggedIn; // Update the isLoggedIn flag in the component
-      console.log("Component log in status:", this.isLoggedIn);
+      console.log('Component log in status:', this.isLoggedIn);
     });
   }
 
- 
   logout() {
     // Implement your logout logic here
     this.isLoggedIn = false;
@@ -217,8 +216,8 @@ export class NavbarComponent implements OnInit {
     this.isSearchActive = false;
   }
 
-  onSearchChange(event: any) {
-    const query = event.target.value.toLowerCase();
+  onSearchChange(event: Event) {
+    const query = (event.target as HTMLInputElement).value.toLowerCase();
     this.searchSubject.next(query); // Emit the query to the searchSubject
   }
 

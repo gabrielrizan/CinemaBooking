@@ -32,8 +32,8 @@
             >
             | {{ movie.runtime }}m
           </p>
-          <p *ngIf="director.length > 0">
-            <strong>Director:</strong> {{ director[0].name }}
+          <p *ngIf="directorName">
+            <strong>Director:</strong> {{ directorName }}
           </p>
 
           <!-- Movie Overview -->
@@ -46,7 +46,7 @@
             <div class="user-score-container flex align-items-center">
               <span class="score-label mr-2">User Score</span>
               <p-chip
-                label="{{ getVotePercentage(movie.vote_average) + '%' }}"
+                label="{{ getVotePercentage(movie.vote_average ?? 0) + '%' }}"
                 class="custom-chip"
                 styleClass="p-chip-lg flex align-items-center justify-content-center"
               ></p-chip>
@@ -84,7 +84,7 @@
               ></i>
             </p>
             <p><strong>Budget:</strong></p>
-            <p>{{ formatNumber(movie.budget) }}</p>
+            <p>{{ formatNumber(movie.budget ?? 0) }}</p>
           </p-card>
         </div>
         <div class="col-6 text-center">
@@ -96,7 +96,7 @@
               ></i>
             </p>
             <p><strong>Revenue:</strong></p>
-            <p>{{ formatNumber(movie.revenue) }}</p>
+            <p>{{ formatNumber(movie.revenue ?? 0) }}</p>
           </p-card>
         </div>
       </div>

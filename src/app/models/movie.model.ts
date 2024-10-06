@@ -1,14 +1,34 @@
-export interface Movie {
+export interface HomepageMovie {
   movieId: string;
   title: string;
-  year: string;
-  ageRating: string;
-  imageUrl: string;
-  genre: string;
   description: string;
-  duration: string;
+  imageUrl: string;
   actors: string[];
-  director: string;
   rating: number;
+  year: string;
+  director: string;
+  duration: string;
+  genre: string;
+  backgroundUrl: string;
+  ageRating: string;
   trailerUrl?: string;
+}
+
+export interface ApiMovie {
+  backdrop_path?: string;
+  poster_path?: string;
+  title?: string;
+  release_date?: string;
+  genres?: { id: number; name: string }[];
+  runtime?: number;
+  tagline?: string;
+  overview?: string;
+  vote_average?: number;
+  budget?: number;
+  revenue?: number;
+}
+
+export interface MovieCredits {
+  cast?: { name: string; character: string; known_for_department: string }[];
+  crew?: { name: string; job: string }[];
 }
