@@ -4,15 +4,28 @@ import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { ImageModule } from 'primeng/image';
 import { TruncatePipe } from '../truncate.pipe';
+import { RouterModule, Router } from '@angular/router';
+import { Movie } from '../models/movie.model';
 
 @Component({
   selector: 'app-movie-card',
   standalone: true,
-  imports: [CommonModule, CardModule, ButtonModule, ImageModule, TruncatePipe],
+  imports: [
+    CommonModule,
+    CardModule,
+    ButtonModule,
+    ImageModule,
+    TruncatePipe,
+    RouterModule,
+  ],
   templateUrl: './movie-card.component.html',
   styleUrls: ['./movie-card.component.css'],
 })
 export class MovieCardComponent {
+  constructor(private router: Router) {
+    this.router = router;
+  }
+
   wordLimit = 3000;
   isExpanded = true;
   showDetails = false;
@@ -29,9 +42,11 @@ export class MovieCardComponent {
   buyTicket() {
     // Implement buy ticket logic here
     console.log('Buy ticket clicked for', this.movie.title);
+    // Redirect to ticket booking page
+    this.router.navigate(['/tickets', this.movie.title]);
   }
 
-  @Input() movie: any;
+  @Input() movie!: Movie;
 
   seeTrailer(url: string) {
     window.open(url, '_blank');
