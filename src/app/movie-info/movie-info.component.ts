@@ -15,6 +15,8 @@ import { CardModule } from 'primeng/card';
 import { PanelModule } from 'primeng/panel';
 import { DialogModule } from 'primeng/dialog';
 import { ApiMovie, MovieCredits } from '../models/movie.model';
+import { Actor } from '../models/actor.model';
+import { Review } from '../models/review.model';
 
 @Component({
   standalone: true,
@@ -41,15 +43,15 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
   movie: ApiMovie = {};
   credits: MovieCredits = {};
   directorName: string = 'Unknown';
-  actors: any[] = [];
-  reviews: any[] = [];
+  actors: Actor[] = [];
+  reviews: Review[] = [];
   recommendations: any[] = [];
   blackBarsColor: string = '#000000';
   maxContentLength = 300;
   visibleReviews = 1;
   initialVisibleReviews = 1;
   reviewsExpanded: boolean = false;
-  fullCast: any[] = [];
+  fullCast: Actor[] = [];
   isFullCastDialogVisible: boolean = false; // Whether to show the full cast modal
   private routeSub: Subscription = new Subscription();
 

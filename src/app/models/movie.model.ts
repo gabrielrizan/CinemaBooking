@@ -1,3 +1,5 @@
+import { Actor } from './actor.model';
+
 export interface HomepageMovie {
   movieId: string;
   title: string;
@@ -29,6 +31,6 @@ export interface ApiMovie {
 }
 
 export interface MovieCredits {
-  cast?: { name: string; character: string; known_for_department: string }[];
+  cast?: Actor[];
   crew?: { name: string; job: string }[];
 }
