@@ -45,7 +45,7 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
   directorName: string = 'Unknown';
   actors: Actor[] = [];
   reviews: Review[] = [];
-  recommendations: any[] = [];
+  recommendations: ApiMovie[] = [];
   blackBarsColor: string = '#000000';
   maxContentLength = 300;
   visibleReviews = 1;
@@ -123,7 +123,7 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
     this.multiSearchService.getMovieReviews(movieId).subscribe(
       (data) => {
         // Add 'showFullContent' property to each review
-        this.reviews = data.results.map((review: any) => ({
+        this.reviews = data.results.map((review: Review) => ({
           ...review,
           showFullContent: false,
         }));
@@ -147,13 +147,11 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
     );
   }
 
-  processMovieDetails(details: any): void {
+  processMovieDetails(details: ApiMovie): void {
     this.movie = details;
-
     // Construct the full image URL
     const imageUrl = `https://image.tmdb.org/t/p/w1280${this.movie.backdrop_path}`;
 
-    // Extract the dominant color
     this.colorExtract
       .getDominantColor(imageUrl)
       .then((color) => {
@@ -215,7 +213,7 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
     this.reviewsExpanded = false;
   }
 
-  toggleReviewContent(review: any): void {
+  toggleReviewContent(review: Review): void {
     review.showFullContent = !review.showFullContent;
   }
 

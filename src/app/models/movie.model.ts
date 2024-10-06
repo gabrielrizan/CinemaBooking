@@ -34,3 +34,4 @@ export interface MovieCredits {
   cast?: Actor[];
   crew?: { name: string; job: string }[];
 }
+
