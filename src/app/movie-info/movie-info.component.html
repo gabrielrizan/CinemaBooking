@@ -5,7 +5,7 @@
   <div class="content-wrapper">
     <!-- Movie Header Section -->
     <div
-      class="movie-container blurred-background "
+      class="movie-container blurred-background"
       [ngStyle]="{
         'background-image':
           'linear-gradient(to left, rgba(0,0,0,0.7) 50%, ' +
@@ -294,7 +294,7 @@
         <ng-template pTemplate="item" let-movie>
           <div
             class="recommendation-card"
-            [routerLink]="['/movie-info', movie.id]"
+            [routerLink]="['/movie-info', mediaType, movie.id]"
           >
             <div class="recommendation-image-container">
               <img

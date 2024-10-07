@@ -88,7 +88,7 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
       this.movieId = params.get('id');
       this.mediaType = params.get('mediaType');
       if (this.movieId) {
-        // Prevent reset if details are already loaded
+        this.fetchMovieDetails(this.movieId, this.mediaType);
         this.fetchMovieCredits(this.movieId);
         this.fetchMovieReviews(this.movieId);
         this.fetchMovieRecommendations(this.movieId);
@@ -155,15 +155,30 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
     }
   }
 
-  fetchMovieDetails(movieId: string): void {
-    this.multiSearchService.getMovieDetails(movieId).subscribe(
-      (details) => {
-        this.processMovieDetails(details);
-      },
-      (error) => {
-        console.error('Error fetching movie details:', error);
-      }
-    );
+  fetchMovieDetails(movieId: string, mediaType: string | null): void {
+    if (mediaType === 'movie') {
+      this.multiSearchService.getMovieDetails(movieId).subscribe(
+        (details) => {
+          this.processMovieDetails(details);
+          // Store movie details
+          this.sharedService.setMovieOrTvDetails(details);
+        },
+        (error) => {
+          console.error('Error fetching movie details:', error);
+        }
+      );
+    } else if (mediaType === 'tv') {
+      this.multiSearchService.getTvDetails(movieId).subscribe(
+        (details) => {
+          this.processMovieDetails(details);
+          // Store TV show details
+          this.sharedService.setMovieOrTvDetails(details);
+        },
+        (error) => {
+          console.error('Error fetching TV show details:', error);
+        }
+      );
+    }
   }
 
   fetchMovieCredits(movieId: string): void {
