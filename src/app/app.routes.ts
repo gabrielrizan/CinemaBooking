@@ -34,7 +34,7 @@ export const routes: Routes = [
     component: BigsearchComponent,
   },
   {
-    path: 'movie-info/:id',
+    path: 'movie-info/:mediaType/:id',
     component: MovieInfoComponent,
   },
   {

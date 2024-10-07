@@ -35,3 +35,6 @@ export interface MovieCredits {
   crew?: { name: string; job: string }[];
 }
 
+export interface MovieDetails {}
+
+export interface TvDetails {}

@@ -95,9 +95,8 @@ export class SearchCardComponent implements OnInit {
     }
 
     this.shared.setCredits(this.credits); // Set the movie credits
-    console.log(this.credits);
     this.shared.setMovieOrTvDetails(details); // Set the movie/TV details
-    this.router.navigate(['/movie-info', movieId]);
+    this.router.navigate(['/movie-info', this.movie.media_type, movieId]);
     this.shared.triggerSearchBlur(); // Trigger the search blur event
   }
 
@@ -107,23 +106,23 @@ export class SearchCardComponent implements OnInit {
 
   getKnobValueColor(vote: number): string {
     if (vote >= 8.5) {
-      return '#50CD7B'; // Vibrant green for the best ratings (above 8.5)
+      return '#50CD7B';
     } else if (vote >= 8) {
-      return '#66FF00'; // Light green for very good ratings (8 - 8.5)
+      return '#66FF00';
     } else if (vote >= 7) {
-      return '#FFFF00'; // Yellow for good ratings (7 - 8)
+      return '#FFFF00';
     } else if (vote >= 6) {
-      return '#FFCC00'; // Orange-yellow for moderate ratings (6 - 7)
+      return '#FFCC00';
     } else if (vote >= 5) {
-      return '#FF9900'; // Orange for average ratings (5 - 6)
+      return '#FF9900';
     } else if (vote >= 4) {
-      return '#FF6600'; // Darker orange for below average ratings (4 - 5)
+      return '#FF6600';
     } else if (vote >= 3) {
-      return '#FF3300'; // Red-orange for poor ratings (3 - 4)
+      return '#FF3300';
     } else if (vote >= 2) {
-      return '#FF0000'; // Vibrant red for bad ratings (2 - 3)
+      return '#FF0000';
     } else {
-      return '#990000'; // Dark red for very bad ratings (below 2)
+      return '#990000';
     }
   }
 

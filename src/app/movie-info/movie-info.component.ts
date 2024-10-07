@@ -1,5 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import {
+  ActivatedRoute,
+  Router,
+  RouterModule,
+  RouterState,
+} from '@angular/router';
 import { MultiSearchService } from '../multi-search.service';
 import { ColorExtractionService } from '../services/color-extraction.service';
 import { Subscription } from 'rxjs';
@@ -17,6 +22,7 @@ import { DialogModule } from 'primeng/dialog';
 import { ApiMovie, MovieCredits } from '../models/movie.model';
 import { Actor } from '../models/actor.model';
 import { Review } from '../models/review.model';
+import { SharedService } from '../shared.service';
 
 @Component({
   standalone: true,
@@ -54,23 +60,34 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
   fullCast: Actor[] = [];
   isFullCastDialogVisible: boolean = false; // Whether to show the full cast modal
   private routeSub: Subscription = new Subscription();
+  mediaType: string | null = null;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private multiSearchService: MultiSearchService,
-    private colorExtract: ColorExtractionService
+    private colorExtract: ColorExtractionService,
+    public sharedService: SharedService,
+    private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    // Subscribe to route parameter changes
+    // Load stored details from localStorage if available
+
+    this.sharedService.loadStoredMovieOrTvDetails();
+    this.sharedService.loadStoredMovieCredits();
+
+    this.sharedService.movieOrTvDetails$.subscribe((details) => {
+      if (details) {
+        this.processMovieDetails(details);
+      }
+    });
+
     this.routeSub = this.route.paramMap.subscribe((params) => {
       this.movieId = params.get('id');
-      console.log('Movie ID from route:', this.movieId);
-
+      this.mediaType = params.get('mediaType');
       if (this.movieId) {
-        this.resetComponentState();
-        this.fetchMovieDetails(this.movieId);
+        // Prevent reset if details are already loaded
         this.fetchMovieCredits(this.movieId);
         this.fetchMovieReviews(this.movieId);
         this.fetchMovieRecommendations(this.movieId);
@@ -78,23 +95,14 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
         console.error('Movie ID is missing in route parameters.');
       }
     });
-  }
 
+    this.cd.detectChanges();
+  }
   ngOnDestroy(): void {
     // Unsubscribe to prevent memory leaks
     if (this.routeSub) {
       this.routeSub.unsubscribe();
     }
-  }
-
-  resetComponentState(): void {
-    this.movie = {};
-    this.credits = {};
-    this.actors = [];
-    this.reviews = [];
-    this.recommendations = [];
-    this.blackBarsColor = '#000000';
-    this.visibleReviews = 1;
   }
 
   fetchMovieDetails(movieId: string): void {
@@ -127,7 +135,6 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
           ...review,
           showFullContent: false,
         }));
-        console.log('Reviews:', this.reviews);
       },
       (error) => {
         console.error('Error fetching movie reviews:', error);
@@ -139,7 +146,6 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
     this.multiSearchService.getMovieRecommendations(movieId).subscribe(
       (data) => {
         this.recommendations = data.results;
-        console.log('Recommendations:', this.recommendations);
       },
       (error) => {
         console.error('Error fetching movie recommendations:', error);
@@ -163,6 +169,8 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
         // Fallback color
         this.blackBarsColor = '#000000';
       });
+
+    this.cd.detectChanges();
   }
 
   processMovieCredits(credits: MovieCredits): void {

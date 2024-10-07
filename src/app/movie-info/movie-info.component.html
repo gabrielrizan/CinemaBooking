@@ -1,4 +1,7 @@
-<p-card class="movie-card">
+<p-card
+  class="movie-card"
+  *ngIf="sharedService.movieOrTvDetails$ | async as movie"
+>
   <div class="content-wrapper">
     <!-- Movie Header Section -->
     <div
@@ -9,7 +12,7 @@
           movie.backdrop_path +
           ')',
         'background-size': 'cover',
-        'background-position': 'center',
+        'background-position': 'left',
         'background-repeat': 'no-repeat'
       }"
     >
@@ -24,21 +27,39 @@
           />
         </div>
         <div class="movie-info">
-          <h1 class="movie-title mt-0">{{ movie.title }}</h1>
+          <h1 class="movie-title mt-0">{{ movie.title ?? movie.name }}</h1>
           <p class="movie-meta">
-            {{ movie.release_date }} |
-            <span *ngFor="let genre of movie.genres; let last = last"
-              >{{ genre.name }}<span *ngIf="!last">, </span></span
-            >
-            | {{ movie.runtime }}m
-          </p>
-          <p *ngIf="directorName">
-            <strong>Director:</strong> {{ directorName }}
+            {{ movie.release_date ?? movie.first_air_date }} |
+            <span *ngFor="let genre of movie.genres; let last = last">
+              {{ genre.name }}<span *ngIf="!last">, </span>
+            </span>
           </p>
 
-          <!-- Movie Overview -->
+          <!-- Conditionally render TV-specific details -->
+          <ng-container *ngIf="mediaType === 'tv'">
+            <p><strong>Seasons:</strong> {{ movie.number_of_seasons }}</p>
+            <p><strong>Episodes:</strong> {{ movie.number_of_episodes }}</p>
+            <p>
+              <strong>Status:</strong> {{ movie.status }}
+              <!-- Ongoing, Ended, etc. -->
+            </p>
+            <p><strong>First Aired:</strong> {{ movie.first_air_date }}</p>
+            <p *ngIf="movie.last_episode_to_air">
+              <strong>Last Episode Aired:</strong>
+              {{ movie.last_episode_to_air.air_date }}
+            </p>
+          </ng-container>
+
+          <!-- Conditionally render Movie-specific details -->
+          <ng-container *ngIf="mediaType === 'movie'">
+            <p *ngIf="directorName">
+              <strong>Director:</strong> {{ directorName }}
+            </p>
+            <p><strong>Runtime:</strong> {{ movie.runtime }} minutes</p>
+          </ng-container>
+
+          <!-- Movie/TV Overview -->
           <p class="movie-overview">{{ movie.tagline }}</p>
-
           <p class="movie-description">{{ movie.overview }}</p>
 
           <!-- User Score Section -->
@@ -72,35 +93,37 @@
       </div>
     </div>
 
-    <!-- Movie Financial Info -->
-    <div class="movie-financial-info mt-4">
-      <div class="grid align-center justify-center financial-container">
-        <div class="col-6 text-center">
-          <p-card class="financial-card">
-            <p>
-              <i
-                class="pi pi-dollar"
-                style="font-size: 2rem; color: #2196f3"
-              ></i>
-            </p>
-            <p><strong>Budget:</strong></p>
-            <p>{{ formatNumber(movie.budget ?? 0) }}</p>
-          </p-card>
-        </div>
-        <div class="col-6 text-center">
-          <p-card class="financial-card">
-            <p>
-              <i
-                class="pi pi-chart-line"
-                style="font-size: 2rem; color: #4caf50"
-              ></i>
-            </p>
-            <p><strong>Revenue:</strong></p>
-            <p>{{ formatNumber(movie.revenue ?? 0) }}</p>
-          </p-card>
+    <!-- Movie Financial Info (Only for movies) -->
+    <ng-container *ngIf="mediaType === 'movie'">
+      <div class="movie-financial-info mt-4">
+        <div class="grid align-center justify-center financial-container">
+          <div class="col-6 text-center">
+            <p-card class="financial-card">
+              <p>
+                <i
+                  class="pi pi-dollar"
+                  style="font-size: 2rem; color: #2196f3"
+                ></i>
+              </p>
+              <p><strong>Budget:</strong></p>
+              <p>{{ formatNumber(movie.budget ?? 0) }}</p>
+            </p-card>
+          </div>
+          <div class="col-6 text-center">
+            <p-card class="financial-card">
+              <p>
+                <i
+                  class="pi pi-chart-line"
+                  style="font-size: 2rem; color: #4caf50"
+                ></i>
+              </p>
+              <p><strong>Revenue:</strong></p>
+              <p>{{ formatNumber(movie.revenue ?? 0) }}</p>
+            </p-card>
+          </div>
         </div>
       </div>
-    </div>
+    </ng-container>
 
     <!-- Actors Section -->
     <h2 class="mt-4">Cast</h2>
@@ -188,6 +211,7 @@
         </div>
       </div>
     </p-dialog>
+
     <!-- Reviews Section -->
     <div class="reviews-section mt-4">
       <h2>Reviews</h2>
@@ -240,7 +264,6 @@
           (click)="loadMoreReviews()"
           class="p-button-text"
         ></button>
-
         <button
           *ngIf="reviewsExpanded"
           pButton
