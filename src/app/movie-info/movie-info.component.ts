@@ -80,7 +80,7 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
 
     this.sharedService.movieOrTvDetails$.subscribe((details) => {
       if (details) {
-        this.processMovieDetails(details);
+        this.processDetails(details);
       }
     });
 
@@ -88,10 +88,10 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
       this.movieId = params.get('id');
       this.mediaType = params.get('mediaType');
       if (this.movieId) {
-        this.fetchMovieDetails(this.movieId, this.mediaType);
-        this.fetchMovieCredits(this.movieId);
-        this.fetchMovieReviews(this.movieId);
-        this.fetchMovieRecommendations(this.movieId);
+        this.fetchDetails(this.movieId, this.mediaType);
+        this.fetchCredits(this.movieId);
+        this.fetchReviews(this.movieId);
+        this.fetchRecommendations(this.movieId);
       } else {
         console.error('Movie ID is missing in route parameters.');
       }
@@ -104,25 +104,6 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
     if (this.routeSub) {
       this.routeSub.unsubscribe();
     }
-  }
-
-  hexToRGBA(hex: string, alpha: number): string {
-    let c: any;
-    if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
-      c = hex.substring(1).split('');
-      if (c.length === 3) {
-        c = [c[0], c[0], c[1], c[1], c[2], c[2]];
-      }
-      c = '0x' + c.join('');
-      return (
-        'rgba(' +
-        [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',') +
-        ',' +
-        alpha +
-        ')'
-      );
-    }
-    throw new Error('Invalid HEX color: ' + hex);
   }
 
   darkenColor(hexColor: string, alpha: number): string {
@@ -155,70 +136,105 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
     }
   }
 
-  fetchMovieDetails(movieId: string, mediaType: string | null): void {
+  fetchDetails(movieId: string, mediaType: string | null): void {
     if (mediaType === 'movie') {
-      this.multiSearchService.getMovieDetails(movieId).subscribe(
-        (details) => {
-          this.processMovieDetails(details);
+      this.multiSearchService.getMovieDetails(movieId).subscribe({
+        next: (details) => {
+          this.processDetails(details);
           // Store movie details
           this.sharedService.setMovieOrTvDetails(details);
         },
-        (error) => {
+        error: (error) => {
           console.error('Error fetching movie details:', error);
-        }
-      );
+        },
+      });
     } else if (mediaType === 'tv') {
-      this.multiSearchService.getTvDetails(movieId).subscribe(
-        (details) => {
-          this.processMovieDetails(details);
+      this.multiSearchService.getTvDetails(movieId).subscribe({
+        next: (details) => {
+          this.processDetails(details);
           // Store TV show details
           this.sharedService.setMovieOrTvDetails(details);
         },
-        (error) => {
+        error: (error) => {
           console.error('Error fetching TV show details:', error);
-        }
-      );
+        },
+      });
     }
   }
 
-  fetchMovieCredits(movieId: string): void {
-    this.multiSearchService.getMovieCredits(movieId).subscribe(
-      (credits) => {
-        this.processMovieCredits(credits);
-      },
-      (error) => {
-        console.error('Error fetching movie credits:', error);
-      }
-    );
+  fetchCredits(movieId: string): void {
+    if (this.mediaType === 'movie') {
+      this.multiSearchService.getMovieCredits(movieId).subscribe({
+        next: (credits) => {
+          this.processCredits(credits);
+        },
+        error: (error) => {
+          console.error('Error fetching movie credits:', error);
+        },
+      });
+    } else if (this.mediaType === 'tv') {
+      this.multiSearchService.getTvCredits(movieId).subscribe({
+        next: (credits) => {
+          this.processCredits(credits);
+        },
+        error: (error) => {
+          console.error('Error fetching TV credits:', error);
+        },
+      });
+    }
   }
 
-  fetchMovieReviews(movieId: string): void {
-    this.multiSearchService.getMovieReviews(movieId).subscribe(
-      (data) => {
-        // Add 'showFullContent' property to each review
-        this.reviews = data.results.map((review: Review) => ({
-          ...review,
-          showFullContent: false,
-        }));
-      },
-      (error) => {
-        console.error('Error fetching movie reviews:', error);
-      }
-    );
+  fetchReviews(movieId: string): void {
+    if (this.mediaType === 'movie') {
+      this.multiSearchService.getMovieReviews(movieId).subscribe({
+        next: (data) => {
+          this.reviews = data.results.map((review: Review) => ({
+            ...review,
+            showFullContent: false,
+          }));
+        },
+        error: (error) => {
+          console.error('Error fetching movie reviews:', error);
+        },
+      });
+    } else if (this.mediaType === 'tv') {
+      this.multiSearchService.getTvReviews(movieId).subscribe({
+        next: (data) => {
+          this.reviews = data.results.map((review: Review) => ({
+            ...review,
+            showFullContent: false,
+          }));
+        },
+        error: (error) => {
+          console.error('Error fetching TV reviews:', error);
+        },
+      });
+    }
   }
 
-  fetchMovieRecommendations(movieId: string): void {
-    this.multiSearchService.getMovieRecommendations(movieId).subscribe(
-      (data) => {
-        this.recommendations = data.results;
-      },
-      (error) => {
-        console.error('Error fetching movie recommendations:', error);
-      }
-    );
+  fetchRecommendations(movieId: string): void {
+    if (this.mediaType === 'movie') {
+      this.multiSearchService.getMovieRecommendations(movieId).subscribe({
+        next: (data) => {
+          this.recommendations = data.results;
+        },
+        error: (error) => {
+          console.error('Error fetching movie recommendations:', error);
+        },
+      });
+    } else if (this.mediaType === 'tv') {
+      this.multiSearchService.getTvRecommendations(movieId).subscribe({
+        next: (data) => {
+          this.recommendations = data.results;
+        },
+        error: (error) => {
+          console.error('Error fetching TV recommendations:', error);
+        },
+      });
+    }
   }
 
-  processMovieDetails(details: ApiMovie): void {
+  processDetails(details: ApiMovie): void {
     this.movie = details;
 
     const imageUrl = `https://image.tmdb.org/t/p/w1280${this.movie.backdrop_path}`;
@@ -243,7 +259,7 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
     this.cd.detectChanges();
   }
 
-  processMovieCredits(credits: MovieCredits): void {
+  processCredits(credits: MovieCredits): void {
     this.credits = credits;
     this.directorName =
       credits.crew?.find((crewMember) => crewMember.job === 'Director')?.name ||

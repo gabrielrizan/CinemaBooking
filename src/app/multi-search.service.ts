@@ -106,4 +106,34 @@ export class MultiSearchService {
     // Return the HTTP request as an Observable
     return this.http.get<any>(this.tvGenreUrl, { headers });
   }
+
+  getTvCredits(tvId: string): Observable<any> {
+    const header = new HttpHeaders({
+      Authorization: environment.bearer,
+    });
+
+    return this.http.get<any>(`${this.tvUrl}/${tvId}/credits`, {
+      headers: header,
+    });
+  }
+
+  getTvReviews(tvId: string): Observable<any> {
+    const header = new HttpHeaders({
+      Authorization: environment.bearer,
+    });
+
+    return this.http.get<any>(`${this.tvUrl}/${tvId}/reviews`, {
+      headers: header,
+    });
+  }
+
+  getTvRecommendations(tvId: string): Observable<any> {
+    const header = new HttpHeaders({
+      Authorization: environment.bearer,
+    });
+
+    return this.http.get<any>(`${this.tvUrl}/${tvId}/recommendations`, {
+      headers: header,
+    });
+  }
 }
