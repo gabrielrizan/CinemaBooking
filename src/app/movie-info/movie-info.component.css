@@ -15,13 +15,26 @@
 /* Movie Container */
 .movie-container {
   position: relative;
-  color: #fff;
-  border-radius: 10px;
-  overflow: hidden;
+  z-index: 1; /* Ensure content is above the background image */
+  display: flex;
+  flex-wrap: wrap;
+  padding: 2rem;
+}
+
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1; /* Ensure it sits behind the content */
+  /* The background-image and filter styles are applied via [ngStyle] in your template */
 }
 
 /* Movie Content */
 .movie-content {
+  position: relative;
+  z-index: 1; /* Ensure content is above the background image */
   display: flex;
   flex-wrap: wrap;
   padding: 2rem;
@@ -277,6 +290,26 @@
 
 .reviews-load-more button {
   font-size: 1rem;
+}
+
+.blurred-background {
+  position: relative;
+  overflow: hidden;
+}
+
+.blurred-background::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: inherit;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(2px);
+  z-index: -1; /* Place the blurred image behind other content */
 }
 
 /* Responsive Adjustments */

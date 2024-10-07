@@ -5,15 +5,18 @@
   <div class="content-wrapper">
     <!-- Movie Header Section -->
     <div
-      class="movie-container"
+      class="movie-container blurred-background "
       [ngStyle]="{
         'background-image':
-          'linear-gradient(to right, rgba(31, 31, 31, 0.95) 150px, rgba(31, 31, 31, 0.84) 100%), url(https://image.tmdb.org/t/p/w1280' +
+          'linear-gradient(to left, rgba(0,0,0,0.7) 50%, ' +
+          darkenedBlackBarsColor +
+          ' 74%), url(https://image.tmdb.org/t/p/w1280' +
           movie.backdrop_path +
           ')',
         'background-size': 'cover',
-        'background-position': 'left',
-        'background-repeat': 'no-repeat'
+        'background-position': 'center',
+        'background-repeat': 'no-repeat',
+        
       }"
     >
       <!-- Movie Poster and Main Info Section -->

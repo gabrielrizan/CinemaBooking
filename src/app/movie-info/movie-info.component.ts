@@ -61,6 +61,7 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
   isFullCastDialogVisible: boolean = false; // Whether to show the full cast modal
   private routeSub: Subscription = new Subscription();
   mediaType: string | null = null;
+  darkenedBlackBarsColor: string = '#000000';
 
   constructor(
     private route: ActivatedRoute,
@@ -102,6 +103,55 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
     // Unsubscribe to prevent memory leaks
     if (this.routeSub) {
       this.routeSub.unsubscribe();
+    }
+  }
+
+  hexToRGBA(hex: string, alpha: number): string {
+    let c: any;
+    if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
+      c = hex.substring(1).split('');
+      if (c.length === 3) {
+        c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+      }
+      c = '0x' + c.join('');
+      return (
+        'rgba(' +
+        [(c >> 16) & 255, (c >> 8) & 255, c & 255].join(',') +
+        ',' +
+        alpha +
+        ')'
+      );
+    }
+    throw new Error('Invalid HEX color: ' + hex);
+  }
+
+  darkenColor(hexColor: string, alpha: number): string {
+    // alpha is between 0 (no darkening) and 1 (fully black)
+    let c: any;
+    if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hexColor)) {
+      c = hexColor.substring(1).split('');
+      if (c.length == 3) {
+        c = [c[0], c[0], c[1], c[1], c[2], c[2]];
+      }
+      c = '0x' + c.join('');
+      let r = (c >> 16) & 255;
+      let g = (c >> 8) & 255;
+      let b = c & 255;
+
+      // Apply blending with black
+      r = Math.round(r * (1 - alpha));
+      g = Math.round(g * (1 - alpha));
+      b = Math.round(b * (1 - alpha));
+
+      // Ensure values are within 0-255
+      r = Math.max(0, Math.min(255, r));
+      g = Math.max(0, Math.min(255, g));
+      b = Math.max(0, Math.min(255, b));
+
+      // Convert back to hex
+      return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    } else {
+      throw new Error('Invalid HEX color: ' + hexColor);
     }
   }
 
@@ -155,19 +205,24 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
 
   processMovieDetails(details: ApiMovie): void {
     this.movie = details;
-    // Construct the full image URL
+
     const imageUrl = `https://image.tmdb.org/t/p/w1280${this.movie.backdrop_path}`;
 
     this.colorExtract
       .getDominantColor(imageUrl)
       .then((color) => {
         this.blackBarsColor = color;
-        console.log('Dominant color:', this.blackBarsColor);
+
+        const overlayAlpha = 0.7;
+        this.darkenedBlackBarsColor = this.darkenColor(
+          this.blackBarsColor,
+          overlayAlpha
+        );
       })
       .catch((error) => {
         console.error('Error getting dominant color:', error);
-        // Fallback color
         this.blackBarsColor = '#000000';
+        this.darkenedBlackBarsColor = '#000000';
       });
 
     this.cd.detectChanges();
