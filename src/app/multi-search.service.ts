@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { BehaviorSubject, Observable, of, tap } from 'rxjs';
+import { BehaviorSubject, map, Observable, of, tap } from 'rxjs';
 import { environment } from '../environments/environment';
+import { Genres } from './models/movie.model';
 
 @Injectable({
   providedIn: 'root',
@@ -60,21 +61,23 @@ export class MultiSearchService {
     return this.http.get<any>(`${this.tvUrl}/${tvId}`, { headers: header });
   }
 
-  getMovieGenres(): Observable<any> {
+  getMovieGenres(): Observable<Genres[]> {
     if (this.cachedGenres) {
-      return of({ genres: this.cachedGenres });
+      return of(this.cachedGenres);
     }
-    // Set up the headers with the Authorization Bearer token
+
     const headers = new HttpHeaders({
       Authorization: environment.bearer,
     });
 
-    // Return the HTTP request as an Observable
-    return this.http.get<any>(this.movieGenreUrl, { headers }).pipe(
-      tap((data) => {
-        this.cachedGenres = data.genres;
-      })
-    );
+    return this.http
+      .get<{ genres: Genres[] }>(this.movieGenreUrl, { headers })
+      .pipe(
+        tap((data) => {
+          this.cachedGenres = data.genres;
+        }),
+        map((data) => data.genres) 
+      );
   }
 
   getMovieReviews(movieId: string): Observable<any> {

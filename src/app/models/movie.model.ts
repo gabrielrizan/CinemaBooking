@@ -1,4 +1,6 @@
 import { Actor } from './actor.model';
+import { Recommendation } from './recommendation.model';
+import { Review } from './review.model';
 
 export interface HomepageMovie {
   movieId: string;
@@ -30,11 +32,62 @@ export interface ApiMovie {
   revenue?: number;
 }
 
+export interface SearchMedia {
+  id?: string;
+  title?: string;
+  name?: string;
+  first_air_date?: string;
+  media_type?: string;
+  poster_path?: string;
+  backdrop_path?: string;
+  overview?: string;
+  vote_average?: number;
+  release_date?: string;
+  genre_ids?: number[];
+}
+
+export interface Genres {
+  id: number;
+  name: string;
+}
+
 export interface MovieCredits {
   cast?: Actor[];
   crew?: { name: string; job: string }[];
 }
 
-export interface MovieDetails {}
+export interface MovieDetails {
+  movieId: string;
+  title: string;
+  description: string;
+  imageUrl: string;
+  actors: Actor[];
+  rating: number;
+  year: string;
+  director: string;
+  duration: string;
+  genre: string;
+  backgroundUrl: string;
+  ageRating: string;
+  trailerUrl?: string;
+  reviews: Review[];
+  recommendations: Recommendation[];
+}
 
-export interface TvDetails {}
+export interface TvDetails {
+  tvId: string;
+  title: string;
+  description: string;
+  imageUrl: string;
+  actors: Actor[];
+  rating: number;
+  year: string;
+  director: string;
+  duration: string;
+  genre: string;
+  backgroundUrl: string;
+  ageRating: string;
+  trailerUrl?: string;
+  reviews: Review[];
+  recommendations: Recommendation[];
+}

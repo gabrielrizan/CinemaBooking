@@ -22,7 +22,7 @@ import { of } from 'rxjs';
 import { SharedService } from '../../shared.service';
 import { LoginComponent } from '../../auth/login/login.component';
 import { AuthService } from '../../services/auth.service';
-import { HomepageMovie } from '../../models/movie.model';
+import { Genres, HomepageMovie, SearchMedia } from '../../models/movie.model';
 
 @Component({
   selector: 'app-navbar',
@@ -48,7 +48,7 @@ import { HomepageMovie } from '../../models/movie.model';
   styleUrls: ['./navbar.component.css'],
 })
 export class NavbarComponent implements OnInit {
-  movies: HomepageMovie[] = [];
+  movies: SearchMedia[] = [];
   loading: boolean = true;
   error: string | null = null;
   searchTerm: string = '';
@@ -58,7 +58,7 @@ export class NavbarComponent implements OnInit {
   isSearchActive: boolean = false;
   visible: boolean = false;
   filteredMovies: HomepageMovie[] = [];
-  movieGenres: string[] = [];
+  movieGenres: Genres[] =[];
   tvGenres: string[] = [];
 
   @ViewChild('op') overlayPanel: OverlayPanel | undefined;
@@ -175,11 +175,11 @@ export class NavbarComponent implements OnInit {
       });
 
     this.movieService.getMovieGenres().subscribe((data) => {
-      this.movieGenres = data.genres;
+      this.movieGenres = data;
     });
 
     this.movieService.getTvGenres().subscribe((data) => {
-      this.tvGenres = data.genres;
+      this.tvGenres = data;
     });
 
     this.sharedService.searchBlur$.subscribe(() => {

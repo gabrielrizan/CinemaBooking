@@ -8,6 +8,7 @@ import { KnobModule } from 'primeng/knob';
 import { PanelModule } from 'primeng/panel';
 import { MultiSearchService } from '../multi-search.service';
 import { SharedService } from '../shared.service';
+import { Genres, SearchMedia } from '../models/movie.model';
 
 @Component({
   selector: 'app-search-card',
@@ -25,8 +26,8 @@ import { SharedService } from '../shared.service';
   styleUrls: ['./search-card.component.css'],
 })
 export class SearchCardComponent implements OnInit {
-  @Input() movie: any;
-  @Input() movieGenres: any[] = [];
+  @Input() movie: SearchMedia = {};
+  @Input() movieGenres: Genres[] = [];
   @Input() tvGenres: any[] = [];
   credits: any = {};
   duration: string = '';
@@ -49,7 +50,10 @@ export class SearchCardComponent implements OnInit {
     this.observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          this.getMovieOrTvDetails(this.movie.id, this.movie.media_type);
+          this.getMovieOrTvDetails(
+            this.movie.id ?? '0',
+            this.movie.media_type ?? ''
+          );
           this.observer.disconnect(); // Stop observing after data is fetched
         }
       });
@@ -101,7 +105,7 @@ export class SearchCardComponent implements OnInit {
   }
 
   get votePercentage(): number {
-    return Math.floor(this.movie.vote_average * 10);
+    return Math.floor((this.movie.vote_average ?? 0) * 10);
   }
 
   getKnobValueColor(vote: number): string {
@@ -142,7 +146,11 @@ export class SearchCardComponent implements OnInit {
     const genres =
       this.movie.media_type === 'movie' ? this.movieGenres : this.tvGenres;
 
-    if (!genreIds || genreIds.length === 0 || !genres) {
+    if (
+      !Array.isArray(genres) ||
+      !Array.isArray(genreIds) ||
+      genreIds.length === 0
+    ) {
       return 'Unknown';
     }
 

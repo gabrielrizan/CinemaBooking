@@ -1,4 +1,4 @@
-<div class="movie_card shadow-8" (click)="goToMovieDetails(movie.id)">
+<div class="movie_card shadow-8" (click)="goToMovieDetails(movie.id ?? '')">
   <div
     class="blur_back"
     [ngStyle]="{
@@ -45,8 +45,8 @@
           [valueTemplate]="'{value}%'"
           [showValue]="true"
           [strokeWidth]="12"
-          [valueColor]="getKnobValueColor(movie.vote_average)"
-          [rangeColor]="getKnobRangeColor(movie.vote_average)"
+          [valueColor]="getKnobValueColor((movie.vote_average ?? 0) * 10)"
+          [rangeColor]="getKnobRangeColor((movie.vote_average ?? 0) * 10)"
           [textColor]="'#FFFFFF'"
           [ariaLabel]="
             'Movie
