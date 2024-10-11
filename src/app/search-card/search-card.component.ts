@@ -28,7 +28,7 @@ import { Genres, SearchMedia } from '../models/movie.model';
 export class SearchCardComponent implements OnInit {
   @Input() movie: SearchMedia = {};
   @Input() movieGenres: Genres[] = [];
-  @Input() tvGenres: any[] = [];
+  @Input() tvGenres: Genres[] = [];
   credits: any = {};
   duration: string = '';
   movieDetails: any = {};

@@ -40,6 +40,9 @@
 
           <!-- Conditionally render TV-specific details -->
           <ng-container *ngIf="mediaType === 'tv'">
+            <p>
+              <strong>Creator: {{ directorName }}</strong>
+            </p>
             <p><strong>Seasons:</strong> {{ movie.number_of_seasons }}</p>
             <p><strong>Episodes:</strong> {{ movie.number_of_episodes }}</p>
             <p>

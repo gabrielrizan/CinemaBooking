@@ -76,7 +76,7 @@ export class MultiSearchService {
         tap((data) => {
           this.cachedGenres = data.genres;
         }),
-        map((data) => data.genres) 
+        map((data) => data.genres)
       );
   }
 
@@ -100,14 +100,23 @@ export class MultiSearchService {
     });
   }
 
-  getTvGenres(): Observable<any> {
-    // Set up the headers with the Authorization Bearer token
+  getTvGenres(): Observable<Genres[]> {
+    if (this.cachedGenres) {
+      return of(this.cachedGenres);
+    }
+
     const headers = new HttpHeaders({
       Authorization: environment.bearer,
     });
 
-    // Return the HTTP request as an Observable
-    return this.http.get<any>(this.tvGenreUrl, { headers });
+    return this.http
+      .get<{ genres: Genres[] }>(this.tvGenreUrl, { headers })
+      .pipe(
+        tap((data) => {
+          this.cachedGenres = data.genres;
+        }),
+        map((data) => data.genres)
+      );
   }
 
   getTvCredits(tvId: string): Observable<any> {

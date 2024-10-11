@@ -261,9 +261,15 @@ export class MovieInfoComponent implements OnInit, OnDestroy {
 
   processCredits(credits: MovieCredits): void {
     this.credits = credits;
-    this.directorName =
-      credits.crew?.find((crewMember) => crewMember.job === 'Director')?.name ||
-      'Unknown';
+    if (this.mediaType === 'movie') {
+      this.directorName =
+        credits.crew?.find((crewMember) => crewMember.job === 'Director')
+          ?.name || 'Unknown';
+    } else if (this.mediaType === 'tv') {
+      this.directorName =
+        this.movie.created_by?.map((creator) => creator.name).join(', ') ||
+        'Unknown';
+    }
     this.actors =
       credits.cast
         ?.filter((castMember) => castMember.known_for_department === 'Acting')

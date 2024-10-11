@@ -30,6 +30,7 @@ export interface ApiMovie {
   vote_average?: number;
   budget?: number;
   revenue?: number;
+  created_by?: { name: string }[];
 }
 
 export interface SearchMedia {

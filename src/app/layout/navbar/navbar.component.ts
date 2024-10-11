@@ -58,8 +58,8 @@ export class NavbarComponent implements OnInit {
   isSearchActive: boolean = false;
   visible: boolean = false;
   filteredMovies: HomepageMovie[] = [];
-  movieGenres: Genres[] =[];
-  tvGenres: string[] = [];
+  movieGenres: Genres[] = [];
+  tvGenres: Genres[] = [];
 
   @ViewChild('op') overlayPanel: OverlayPanel | undefined;
 
