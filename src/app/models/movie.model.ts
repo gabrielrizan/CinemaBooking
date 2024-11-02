@@ -92,3 +92,14 @@ export interface TvDetails {
   reviews: Review[];
   recommendations: Recommendation[];
 }
+
+export interface Movie {
+  title: string;
+  poster: string;
+  showtimes: string[];
+  format: string; // '2D', '3D', 'IMAX'
+  runtime: number; // in minutes
+  genre: string;
+  rating: string; // e.g., 'AG', 'AP 12'
+  languageInfo: string; // e.g., 'GR:(DUB :RO)'
+}

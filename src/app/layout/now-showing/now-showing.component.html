@@ -1,0 +1,49 @@
+<div class="p-grid p-justify-center">
+  <div *ngFor="let movie of movies" class="p-col-12 p-md-10 p-lg-8">
+    <p-card styleClass="p-mb-3">
+      <div class="p-grid">
+        <!-- Poster on the Left -->
+        <div class="p-col-12 p-md-3">
+          <img
+            [src]="movie.poster"
+            alt="{{ movie.title }} poster"
+            class="p-shadow-3"
+            style="width: 100%"
+          />
+        </div>
+
+        <!-- Details on the Right -->
+        <div class="p-col-12 p-md-9">
+          <!-- Title, Genre, and Runtime -->
+          <div class="p-text-bold p-mb-2">
+            <h3>{{ movie.title }}</h3>
+            <div class="p-mb-1">
+              <span class="p-badge p-badge-info p-mr-2">{{
+                movie.rating
+              }}</span>
+              {{ movie.genre }} | {{ movie.runtime }} min
+            </div>
+          </div>
+
+          <!-- Format and Showtimes -->
+          <div class="p-text-bold p-mb-2">{{ movie.format }}</div>
+          <div class="p-d-flex p-ai-center">
+            <a
+              *ngFor="let time of movie.showtimes"
+              href="#"
+              class="p-button p-button-rounded p-button-secondary p-mr-2"
+              title="Book for {{ time }}"
+            >
+              {{ time }}
+            </a>
+          </div>
+
+          <!-- Language Info (e.g., Dubbed Language) -->
+          <div class="p-mt-2">
+            {{ movie.languageInfo }}
+          </div>
+        </div>
+      </div>
+    </p-card>
+  </div>
+</div>
