@@ -1,11 +1,11 @@
 <div class="grid container mx-auto">
-  <div *ngFor="let movie of movies" class="col-12 md-10 lg-8">
+  <div *ngFor="let movie of movies" class="col-12 md-10 lg-8 max-h-29rem">
     <p-card styleClass="mb-3">
       <div class="grid">
-        <div class="col-9">
-          <p-image src="good-will-hunting-poster.jpg" width="250" alt="" />
+        <div class="col-3 flex justify-content-center align-items-center">
+          <p-image [src]="movie.poster" width="125" alt="" />
         </div>
-        <div class="col-3">
+        <div class="col-9">
           <div class="text-bold mb-2">
             <h3>{{ movie.title }}</h3>
             <div class="mb-1">
@@ -13,17 +13,28 @@
               {{ movie.genre }} | {{ movie.runtime }} min
             </div>
           </div>
-          <div class="text-bold mb-2">{{ movie.format }}</div>
-          <div class="d-flex ai-center">
-            <a
-              *ngFor="let time of movie.showtimes"
-              href="#"
-              class="p-button p-button-rounded p-button-secondary p-mr-2"
-              title="Book for {{ time }}"
-            >
-              {{ time }}
-            </a>
+
+          <!-- Format Display with Divider -->
+          <div class="text-bold mb-2">
+            <ng-container *ngFor="let format of movie.format; let i = index">
+            </ng-container>
           </div>
+
+          <!-- Showtimes for Each Format -->
+          <div *ngFor="let format of movie.format" class="mb-2">
+            <div class="text-bold mb-2">{{ format }}</div>
+            <div class="d-flex ai-center">
+              <a
+                *ngFor="let time of movie.showtimes[format]"
+                href="#"
+                class="p-button p-button-rounded mr-2 no-underline"
+                title="Book for {{ time }}"
+              >
+                {{ time }}
+              </a>
+            </div>
+          </div>
+
           <div class="p-mt-2">
             {{ movie.languageInfo }}
           </div>

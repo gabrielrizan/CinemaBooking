@@ -96,8 +96,8 @@ export interface TvDetails {
 export interface Movie {
   title: string;
   poster: string;
-  showtimes: string[];
-  format: string; // '2D', '3D', 'IMAX'
+  showtimes: { [key: string]: string[] }; // Allows '2D', '3D', 'IMAX', etc.
+  format: string[]; // '2D', '3D', 'IMAX'
   runtime: number; // in minutes
   genre: string;
   rating: string; // e.g., 'AG', 'AP 12'
