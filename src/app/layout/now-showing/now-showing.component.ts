@@ -4,11 +4,12 @@ import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
 import { BadgeModule } from 'primeng/badge';
 import { CommonModule } from '@angular/common';
+import { ImageModule } from 'primeng/image';
 
 @Component({
   selector: 'app-now-showing',
   standalone: true,
-  imports: [CardModule, DividerModule, BadgeModule, CommonModule],
+  imports: [CardModule, DividerModule, BadgeModule, CommonModule, ImageModule],
   templateUrl: './now-showing.component.html',
   styleUrl: './now-showing.component.css',
 })
