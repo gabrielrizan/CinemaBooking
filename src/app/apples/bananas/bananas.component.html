@@ -1,1 +1,55 @@
-<app-apples [apple]="apple"></app-apples>
+<div class="cinema-container">
+  <div class="screen">
+    <span>Ecran</span>
+  </div>
+
+  <div class="seat-map">
+    <ng-container *ngFor="let row of seatRows; let rowIndex = index">
+      <div class="row">
+        <span class="row-label">{{ getRowLabel(rowIndex) }}</span>
+        <div class="seat-row">
+          <ng-container *ngFor="let seat of row; let seatIndex = index">
+            <button
+              class="seat p-button p-component"
+              [ngClass]="{
+                selected: selectedSeats.includes(seat),
+                reserved: seat.reserved,
+                vip: seat.vip,
+                wheelchair: seat.wheelchair
+              }"
+              [disabled]="seat.reserved"
+              (click)="toggleSeatSelection(seat)"
+            >
+              <i
+                class="pi"
+                [ngClass]="{
+                  'pi-chair': !seat.wheelchair,
+                  'pi-wheelchair': seat.wheelchair
+                }"
+              ></i>
+            </button>
+          </ng-container>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <div class="seat-legend">
+    <h4>Legend</h4>
+    <div class="legend-item">
+      <i class="pi pi-chair"></i> <span>Available</span>
+    </div>
+    <div class="legend-item reserved">
+      <i class="pi pi-chair"></i> <span>Reserved</span>
+    </div>
+    <div class="legend-item selected">
+      <i class="pi pi-chair"></i> <span>Selected</span>
+    </div>
+    <div class="legend-item vip">
+      <i class="pi pi-chair"></i> <span>VIP</span>
+    </div>
+    <div class="legend-item wheelchair">
+      <i class="pi pi-wheelchair"></i> <span>Wheelchair</span>
+    </div>
+  </div>
+</div>

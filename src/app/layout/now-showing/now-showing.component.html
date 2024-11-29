@@ -29,6 +29,14 @@
                 href="#"
                 class="p-button p-button-rounded mr-2 no-underline"
                 title="Book for {{ time }}"
+                [routerLink]="['/select-tickets']"
+                [queryParams]="{
+                  title: movie.title,
+                  format: format,
+                  showtime: time,
+                  languageInfo: movie.languageInfo,
+                  poster: movie.poster
+                }"
               >
                 {{ time }}
               </a>

@@ -1,0 +1,177 @@
+<div class="container">
+  <p-card class="ticket-card">
+    <p-stepper>
+      <!-- Step 1: Select Tickets -->
+      <p-stepperPanel header="Select Tickets">
+        <ng-template pTemplate="content" let-nextCallback="nextCallback">
+          <div class="flex flex-wrap md:flex-nowrap align-items-start gap-5">
+            <!-- Poster Image -->
+            <div class="poster-container">
+              <img
+                [src]="poster"
+                alt="{{ title }}"
+                class="movie-poster rounded shadow-2 w-20rem"
+              />
+            </div>
+            <!-- Ticket Selection Section -->
+            <div class="ticket-section w-full">
+              <h3 class="text-center text-primary font-bold mb-3">
+                Select Tickets
+              </h3>
+              <p class="text-secondary text-center mb-4">
+                <strong>{{ title }}</strong> - Showtime:
+                <span class="text-info">{{ showtime }}</span>
+              </p>
+
+              <div
+                class="ticket-category mb-3 flex justify-content-between align-items-center border-bottom-1 pb-3"
+                *ngFor="let category of ticketCategories"
+              >
+                <label
+                  for="{{ category }}"
+                  class="font-medium text-lg capitalize"
+                  >{{ category }}</label
+                >
+                <p-dropdown
+                  [(ngModel)]="ticketCounts[category]"
+                  [options]="ticketOptions"
+                  placeholder="Select quantity"
+                  inputId="{{ category }}"
+                ></p-dropdown>
+              </div>
+
+              <div class="flex pt-4 justify-content-end">
+                <p-button
+                  label="Next"
+                  icon="pi pi-arrow-right"
+                  iconPos="right"
+                  class="p-button-success"
+                  (onClick)="nextCallback.emit()"
+                ></p-button>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </p-stepperPanel>
+
+      <!-- Step 2: Select Seats -->
+      <p-stepperPanel header="Select Seats">
+        <ng-template
+          pTemplate="content"
+          let-prevCallback="prevCallback"
+          let-nextCallback="nextCallback"
+        >
+          <div class="flex flex-column align-items-center mb-5">
+            <h3 class="text-center text-primary font-bold mb-3">
+              Select Seats
+            </h3>
+            <p class="text-secondary mb-4">
+              Click on available seats to select them. Occupied seats are
+              disabled.
+            </p>
+
+            <!-- Seat Selection Grid -->
+            <div class="p-grid w-full md:w-8 justify-content-center">
+              <!-- Loop through seatRows to create rows -->
+              <div
+                *ngFor="let row of seatRows; let rowIndex = index"
+                class="p-row w-full mb-2 justify-content-center"
+              >
+                <!-- Loop through each seat in the current row -->
+                <div
+                  *ngFor="let seat of row; let seatIndex = index"
+                  class="p-col-fixed text-center p-1"
+                  style="width: 3rem"
+                >
+                  >
+                  <p-button
+                    [label]="seat.label"
+                    [ngClass]="{
+                      'p-button-success': seat.selected,
+                      'p-button-danger': seat.occupied,
+                      'p-button-secondary': !seat.selected && !seat.occupied
+                    }"
+                    (onClick)="toggleSeatSelection(rowIndex, seatIndex)"
+                    [disabled]="seat.occupied"
+                  >
+                    ></p-button
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="flex pt-4 justify-content-between w-full md:w-8">
+              <p-button
+                label="Back"
+                icon="pi pi-arrow-left"
+                class="p-button-outlined p-button-secondary"
+                (onClick)="prevCallback.emit()"
+              ></p-button>
+              <p-button
+                label="Next"
+                icon="pi pi-arrow-right"
+                iconPos="right"
+                class="p-button-success"
+                (onClick)="nextCallback.emit()"
+              ></p-button>
+            </div>
+          </div>
+        </ng-template>
+      </p-stepperPanel>
+
+      <!-- Step 3: Payment -->
+      <p-stepperPanel header="Payment">
+        <ng-template
+          pTemplate="content"
+          let-prevCallback="prevCallback"
+          let-nextCallback="nextCallback"
+        >
+          <div class="flex flex-column align-items-center mb-5">
+            <h3 class="text-center text-primary font-bold mb-3">Payment</h3>
+            <p class="text-secondary mb-4">Payment interface will go here.</p>
+
+            <div class="flex pt-4 justify-content-between w-full">
+              <p-button
+                label="Back"
+                icon="pi pi-arrow-left"
+                class="p-button-outlined p-button-secondary"
+                (onClick)="prevCallback.emit()"
+              ></p-button>
+              <p-button
+                label="Next"
+                icon="pi pi-arrow-right"
+                iconPos="right"
+                class="p-button-success"
+                (onClick)="nextCallback.emit()"
+              ></p-button>
+            </div>
+          </div>
+        </ng-template>
+      </p-stepperPanel>
+
+      <!-- Step 4: Confirmation -->
+      <p-stepperPanel header="Confirmation">
+        <ng-template pTemplate="content" let-prevCallback="prevCallback">
+          <div class="flex flex-column align-items-center mb-5">
+            <h3 class="text-center text-primary font-bold mb-3">
+              Confirmation
+            </h3>
+            <p class="text-secondary mb-4">
+              Confirmation message and details will go here.
+            </p>
+
+            <div class="flex pt-4 justify-content-start">
+              <p-button
+                label="Back"
+                icon="pi pi-arrow-left"
+                class="p-button-outlined p-button-secondary"
+                (onClick)="prevCallback.emit()"
+              ></p-button>
+            </div>
+          </div>
+        </ng-template>
+      </p-stepperPanel>
+    </p-stepper>
+  </p-card>
+</div>

@@ -7,6 +7,7 @@ import { BigsearchComponent } from './bigsearch/bigsearch.component';
 import { MovieInfoComponent } from './movie-info/movie-info.component';
 import { TicketsaleComponent } from './ticketsale/ticketsale.component';
 import { NowShowingComponent } from './layout/now-showing/now-showing.component';
+import { TicketSelectionComponent } from './layout/ticket-selection/ticket-selection.component';
 
 export const routes: Routes = [
   {
@@ -45,5 +46,9 @@ export const routes: Routes = [
   {
     path: 'movies/now-showing',
     component: NowShowingComponent,
+  },
+  {
+    path: 'select-tickets',
+    component: TicketSelectionComponent,
   },
 ];

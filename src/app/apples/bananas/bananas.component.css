@@ -1,0 +1,111 @@
+.cinema-container {
+  max-width: 800px;
+  margin: auto;
+  text-align: center;
+  background-color: #2d2d2d;
+  color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.screen {
+  width: 90%;
+  margin: 0 auto;
+  padding: 10px 0;
+  background: linear-gradient(to bottom, #777, #444);
+  border-radius: 5px;
+  color: #fff;
+  font-weight: bold;
+}
+
+.seat-map {
+  margin: 20px 0;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.row-label {
+  width: 30px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.seat-row {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.seat {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: lightgray;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.seat:hover {
+  background-color: lightblue;
+}
+
+.seat.selected {
+  background-color: green;
+  color: white;
+}
+
+.seat.reserved {
+  background-color: red;
+  color: white;
+  cursor: not-allowed;
+}
+
+.seat.vip {
+  background-color: gold;
+  color: black;
+}
+
+.seat.wheelchair {
+  background-color: blue;
+  color: white;
+}
+
+.seat-legend {
+  text-align: left;
+  margin-top: 20px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin: 5px 0;
+}
+
+.legend-item i {
+  margin-right: 10px;
+}
+
+.legend-item.reserved i {
+  color: red;
+}
+
+.legend-item.selected i {
+  color: green;
+}
+
+.legend-item.vip i {
+  color: gold;
+}
+
+.legend-item.wheelchair i {
+  color: blue;
+}
