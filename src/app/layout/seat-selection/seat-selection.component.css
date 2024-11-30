@@ -8,26 +8,32 @@
 
 .cinema-seat-icon:hover {
   transform: scale(1.2);
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
 /* Available Seat - Red (Default) */
 .cinema-seat-icon.available {
-  filter: none; /* No additional coloring needed */
+  filter: none; /* Default red, no additional styling */
 }
 
 /* Reserved Seat - Light Gray */
 .cinema-seat-icon.reserved {
   filter: grayscale(1) brightness(1.5); /* Light Gray */
   cursor: not-allowed;
-  pointer-events: none; /* Block selection */
+  pointer-events: none;
 }
 
-/* Selected Seat - Highlight */
+/* Selected Seat */
 .cinema-seat-icon.selected {
   filter: brightness(1.5) hue-rotate(200deg); /* Bright Blue */
-  outline: 2px solid #2196f3;
-  outline-offset: 2px;
+  position: relative; /* For unified border */
+}
+
+/* Grouped Selected Seats - Unified Border */
+.selected-group {
+  position: absolute;
+  border: 2px solid #2196f3;
+  z-index: 1;
+  background: transparent;
 }
 
 /* Empty Space for Gaps */
@@ -61,6 +67,11 @@
 /* Legend - Reserved */
 .legend-icon.reserved {
   filter: grayscale(1) brightness(1.5); /* Light Gray */
+}
+
+/* Legend - Selected */
+.legend-icon.selected {
+  filter: brightness(1.5) hue-rotate(200deg); /* Bright Blue */
 }
 
 /* Screen Styling */

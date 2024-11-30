@@ -7,6 +7,7 @@ import { CardModule } from 'primeng/card';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { StepperModule } from 'primeng/stepper';
+import { SeatSelectionComponent } from '../seat-selection/seat-selection.component';
 
 type TicketCategory = 'adult' | 'student' | 'child'; // Define the specific type
 @Component({
@@ -20,6 +21,7 @@ type TicketCategory = 'adult' | 'student' | 'child'; // Define the specific type
     StepperModule,
     ButtonModule,
     DropdownModule,
+    SeatSelectionComponent,
   ],
   templateUrl: './ticket-selection.component.html',
   styleUrl: './ticket-selection.component.css',

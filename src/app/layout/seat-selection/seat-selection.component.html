@@ -13,11 +13,12 @@
     <!-- Seat Map -->
     <div class="seat-map flex flex-column gap-3">
       <ng-container *ngFor="let row of seatRows; let rowIndex = index">
-        <div class="row flex align-items-center gap-2">
+        <div class="row flex align-items-center gap-2 position-relative">
           <span class="row-label font-bold">{{ getRowLabel(rowIndex) }}</span>
           <div
-            class="seat-row flex justify-content-center align-items-center gap-2"
+            class="seat-row flex justify-content-center align-items-center gap-2 position-relative"
           >
+            <!-- Seats -->
             <ng-container *ngFor="let seat of row; let seatIndex = index">
               <ng-container *ngIf="seat; else emptySpacePlaceholder">
                 <img
@@ -53,6 +54,10 @@
     <div class="legend-item flex align-items-center gap-2">
       <img src="cinemaseat.png" alt="Reserved" class="legend-icon reserved" />
       <span>Taken</span>
+    </div>
+    <div class="legend-item flex align-items-center gap-2">
+      <img src="cinemaseat.png" alt="Selected" class="legend-icon selected" />
+      <span>Selected</span>
     </div>
   </div>
 </div>

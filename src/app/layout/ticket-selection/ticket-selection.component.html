@@ -61,47 +61,11 @@
           let-prevCallback="prevCallback"
           let-nextCallback="nextCallback"
         >
-          <div class="flex flex-column align-items-center mb-5">
-            <h3 class="text-center text-primary font-bold mb-3">
-              Select Seats
-            </h3>
-            <p class="text-secondary mb-4">
-              Click on available seats to select them. Occupied seats are
-              disabled.
-            </p>
+          <div class="flex flex-column gap-5">
+            <app-seat-selection></app-seat-selection>
 
-            <!-- Seat Selection Grid -->
-            <div class="p-grid w-full md:w-8 justify-content-center">
-              <!-- Loop through seatRows to create rows -->
-              <div
-                *ngFor="let row of seatRows; let rowIndex = index"
-                class="p-row w-full mb-2 justify-content-center"
-              >
-                <!-- Loop through each seat in the current row -->
-                <div
-                  *ngFor="let seat of row; let seatIndex = index"
-                  class="p-col-fixed text-center p-1"
-                  style="width: 3rem"
-                >
-                  >
-                  <p-button
-                    [label]="seat.label"
-                    [ngClass]="{
-                      'p-button-success': seat.selected,
-                      'p-button-danger': seat.occupied,
-                      'p-button-secondary': !seat.selected && !seat.occupied
-                    }"
-                    (onClick)="toggleSeatSelection(rowIndex, seatIndex)"
-                    [disabled]="seat.occupied"
-                  >
-                    ></p-button
-                  >
-                </div>
-              </div>
-            </div>
-
-            <!-- Navigation Buttons -->
-            <div class="flex pt-4 justify-content-between w-full md:w-8">
+            <!-- Next Button -->
+            <div class="flex pt-4 justify-content-between">
               <p-button
                 label="Back"
                 icon="pi pi-arrow-left"
