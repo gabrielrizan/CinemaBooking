@@ -11,25 +11,25 @@
     </div>
 
     <!-- Seat Map -->
-    <div class="seat-map flex flex-column gap-3">
+    <div class="seat-map flex flex-column align-items-center gap-3">
       <ng-container *ngFor="let row of seatRows; let rowIndex = index">
         <div class="row flex align-items-center gap-2">
           <span class="row-label font-bold">{{ getRowLabel(rowIndex) }}</span>
-          <div
-            class="seat-row flex justify-content-center align-items-center gap-2"
-          >
+          <div class="seat-row flex justify-content-center gap-2">
             <ng-container *ngFor="let seat of row; let seatIndex = index">
               <ng-container *ngIf="seat; else emptySpacePlaceholder">
                 <img
-                  [src]="'cinemaseat.png'"
+                  [src]="
+                    seat.reserved
+                      ? 'cinema-occupied.svg'
+                      : selectedSeats.includes(seat)
+                      ? 'cinema-selected.svg'
+                      : 'cinema-available.svg'
+                  "
                   [alt]="seat.label"
                   class="cinema-seat-icon"
-                  [ngClass]="{
-                    available: !seat.reserved,
-                    reserved: seat.reserved,
-                    selected: selectedSeats.includes(seat)
-                  }"
-                  [class.disabled]="seat.reserved"
+                  [class.reserved]="seat.reserved"
+                  [class.selected]="selectedSeats.includes(seat)"
                   (click)="!seat.reserved && toggleSeatSelection(seat)"
                 />
               </ng-container>
@@ -47,12 +47,16 @@
   <div class="seat-legend flex flex-column align-items-start gap-4">
     <h4>Legend</h4>
     <div class="legend-item flex align-items-center gap-2">
-      <img src="cinemaseat.png" alt="Available" class="legend-icon available" />
+      <img src="cinema-available.svg" alt="Available" class="legend-icon" />
       <span>Available</span>
     </div>
     <div class="legend-item flex align-items-center gap-2">
-      <img src="cinemaseat.png" alt="Reserved" class="legend-icon reserved" />
+      <img src="cinema-occupied.svg" alt="Reserved" class="legend-icon" />
       <span>Taken</span>
+    </div>
+    <div class="legend-item flex align-items-center gap-2">
+      <img src="cinema-selected.svg" alt="Selected" class="legend-icon" />
+      <span>Selected</span>
     </div>
   </div>
 </div>
