@@ -3,44 +3,60 @@
   width: 40px;
   height: 40px;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s;
 }
 
 .cinema-seat-icon:hover {
-  transform: scale(1.2);
+  transform: scale(1.2); /* Applies to non-reserved seats */
 }
 
-/* Available Seat - Red (Default) */
-.cinema-seat-icon.available {
-  filter: none; /* Default red, no additional styling */
-}
-
-/* Reserved Seat - Light Gray */
+/* Reserved Seat */
 .cinema-seat-icon.reserved {
-  filter: grayscale(1) brightness(1.5); /* Light Gray */
-  cursor: not-allowed;
-  pointer-events: none;
+  cursor: not-allowed; /* Display the blocked cursor */
 }
 
-/* Selected Seat */
-.cinema-seat-icon.selected {
-  filter: brightness(1.5) hue-rotate(200deg); /* Bright Blue */
-  position: relative; /* For unified border */
+.cinema-seat-icon.reserved:hover {
+  transform: none; /* Explicitly block hover scaling */
 }
 
-/* Grouped Selected Seats - Unified Border */
-.selected-group {
-  position: absolute;
-  border: 2px solid #2196f3;
-  z-index: 1;
-  background: transparent;
-}
-
-/* Empty Space for Gaps */
 .empty-space {
   width: 40px;
   height: 40px;
   display: block;
+}
+
+.screen {
+  max-width: 1000px;
+  height: 20px;
+  background-color: #aaaaaa; /* Light Gray */
+  border-radius: 10px;
+  margin: 10px auto;
+}
+
+/* Row and Seat Map Alignment */
+.seat-map {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.seat-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.row-label {
+  width: 30px;
+  text-align: center;
 }
 
 /* Legend Styling */
@@ -51,34 +67,18 @@
 .legend-icon {
   width: 30px;
   height: 30px;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s;
 }
 
 .legend-icon:hover {
   transform: scale(1.2);
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
-/* Legend - Available */
-.legend-icon.available {
-  filter: none; /* Default red */
+.progress-indicator {
+  width: 100%;
 }
 
-/* Legend - Reserved */
-.legend-icon.reserved {
-  filter: grayscale(1) brightness(1.5); /* Light Gray */
-}
-
-/* Legend - Selected */
-.legend-icon.selected {
-  filter: brightness(1.5) hue-rotate(200deg); /* Bright Blue */
-}
-
-/* Screen Styling */
-.screen {
-  max-width: 1000px;
-  height: 20px;
-  background-color: #aaaaaa; /* Light Gray */
-  border-radius: 10px;
-  margin: 10px auto;
+.progress-indicator .text-primary {
+  margin-top: 0.5rem;
+  font-size: 1rem;
 }

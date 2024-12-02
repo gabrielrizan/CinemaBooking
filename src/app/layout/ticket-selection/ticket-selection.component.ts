@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -33,13 +33,17 @@ export class TicketSelectionComponent {
   format: string = '';
   showtime: string = '';
   languageInfo: string = '';
+  totalTickets: number = 0;
   poster: string = '';
   ticketCounts: Record<TicketCategory, number> = {
     adult: 0,
     student: 0,
     child: 0,
   }; // Use the type for ticketCounts
-
+  ticketOptions = Array.from({ length: 10 }, (_, i) => ({
+    label: `${i}`,
+    value: i,
+  }));
   seatRows = [
     [
       { label: 'A1', occupied: false, selected: false },
@@ -61,15 +65,7 @@ export class TicketSelectionComponent {
     ],
   ];
 
-  ticketOptions = [
-    { label: '0', value: 0 },
-    { label: '1', value: 1 },
-    { label: '2', value: 2 },
-    { label: '3', value: 3 },
-    { label: '4', value: 4 },
-    { label: '5', value: 5 },
-  ];
-  ticketCategories: TicketCategory[] = ['adult', 'student', 'child']; // Use the type for ticketCategories
+  ticketCategories: TicketCategory[] = ['adult', 'student', 'child'];
 
   constructor(private route: ActivatedRoute) {
     this.movieId = this.route.snapshot.paramMap.get('movieId') ?? '';
@@ -91,6 +87,13 @@ export class TicketSelectionComponent {
     if (!seat.occupied) {
       seat.selected = !seat.selected;
     }
+  }
+
+  updateTotalTickets() {
+    this.totalTickets = Object.values(this.ticketCounts).reduce(
+      (sum, count) => sum + (count || 0),
+      0
+    );
   }
 
   proceedToPayment() {

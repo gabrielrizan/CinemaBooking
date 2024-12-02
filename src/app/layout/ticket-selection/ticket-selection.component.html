@@ -37,6 +37,7 @@
                   [options]="ticketOptions"
                   placeholder="Select quantity"
                   inputId="{{ category }}"
+                  (ngModelChange)="updateTotalTickets()"
                 ></p-dropdown>
               </div>
 
@@ -62,7 +63,7 @@
           let-nextCallback="nextCallback"
         >
           <div class="flex flex-column gap-5">
-            <app-seat-selection></app-seat-selection>
+            <app-seat-selection [maxSeats]="totalTickets"></app-seat-selection>
 
             <!-- Next Button -->
             <div class="flex pt-4 justify-content-between">
