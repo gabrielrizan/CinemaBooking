@@ -89,7 +89,7 @@ export class SeatSelectionComponent {
       }
       this.selectionChange.emit(this.selectedSeats); // Emit updated selection
     } else {
-      this.showLimitReachedToast(); // Use the toast notification instead of alert
+      this.showLimitReachedToast(); 
     }
   }
 
