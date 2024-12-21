@@ -8,6 +8,11 @@ import { DropdownModule } from 'primeng/dropdown';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { StepperModule } from 'primeng/stepper';
 import { SeatSelectionComponent } from '../seat-selection/seat-selection.component';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+import { PanelModule } from 'primeng/panel';
+import { ChipModule } from 'primeng/chip';
+import { TagModule } from 'primeng/tag';
 
 type TicketCategory = 'adult' | 'student' | 'child';
 
@@ -29,6 +34,9 @@ interface TicketPrice {
     ButtonModule,
     DropdownModule,
     SeatSelectionComponent,
+    PanelModule,
+    ChipModule,
+    TagModule,
   ],
   templateUrl: './ticket-selection.component.html',
   styleUrl: './ticket-selection.component.css',
@@ -88,7 +96,7 @@ export class TicketSelectionComponent {
 
   ticketCategories: TicketCategory[] = ['adult', 'student', 'child'];
 
-  constructor(private route: ActivatedRoute) {
+  constructor(private route: ActivatedRoute, private http: HttpClient) {
     this.movieId = this.route.snapshot.paramMap.get('movieId') ?? '';
     this.selectedShowtime = this.route.snapshot.paramMap.get('showtime') ?? '';
   }
@@ -140,8 +148,47 @@ export class TicketSelectionComponent {
     );
   }
 
+  incrementTicket(category: TicketCategory): void {
+    if (this.ticketCounts[category] < 10) {
+      this.ticketCounts[category]++;
+      this.updateTotalTickets();
+    }
+  }
+
+  decrementTicket(category: TicketCategory): void {
+    if (this.ticketCounts[category] > 0) {
+      this.ticketCounts[category]--;
+      this.updateTotalTickets();
+    }
+  }
+
+  selectedSeatsValid: boolean = false;
+
+  onSeatsSelected(seats: string[]) {
+    this.selectedSeatsValid = seats.length === this.totalTickets;
+  }
+
   proceedToPayment() {
-    // Add logic for proceeding to payment
-    console.log('Total cost:', this.totalCost);
+    const body = {
+      ticketCounts: this.ticketCounts,
+      prices: {
+        adult: 'price_1QYDq5J1irMsiTTCHMxUaICo',
+        student: 'price_1QYDpJJ1irMsiTTCg9PqWgfk',
+        child: 'price_1QYDjpJ1irMsiTTCHGNU5hHk',
+      },
+    };
+
+    this.http
+      .post('http://127.0.0.1:8000/api/payments/create-checkout-session/', body)
+      .subscribe(
+        (response: any) => {
+          if (response.url) {
+            window.location.href = response.url; // Redirect to Stripe Checkout
+          }
+        },
+        (error) => {
+          console.error('Error creating checkout session', error);
+        }
+      );
   }
 }

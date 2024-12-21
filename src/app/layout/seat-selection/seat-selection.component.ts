@@ -18,6 +18,7 @@ export class SeatSelectionComponent {
   selectedSeats: any[] = [];
   @Input() maxSeats: number = 0; // Maximum seats allowed to select
   @Output() selectionChange = new EventEmitter<any[]>(); // Emit selected seats
+  @Output() seatsSelected = new EventEmitter<string[]>();
 
   constructor(private messageService: MessageService) {
     // Inject MessageService here
@@ -87,9 +88,12 @@ export class SeatSelectionComponent {
       } else {
         this.selectedSeats.splice(index, 1);
       }
-      this.selectionChange.emit(this.selectedSeats); // Emit updated selection
+
+      // Emit both events
+      this.selectionChange.emit(this.selectedSeats);
+      this.seatsSelected.emit(this.selectedSeats.map((seat) => seat.label));
     } else {
-      this.showLimitReachedToast(); 
+      this.showLimitReachedToast();
     }
   }
 
