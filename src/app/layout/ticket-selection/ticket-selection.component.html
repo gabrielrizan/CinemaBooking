@@ -1,369 +1,381 @@
 <div class="container mx-auto p-4">
   <p-card class="ticket-card shadow-3">
-    <p-stepper class="mb-3">
-      <!-- Step 1: Select Tickets -->
-      <p-stepperPanel header="Select Tickets">
-        <ng-template pTemplate="content" let-nextCallback="nextCallback">
-          <div class="grid p-4">
-            <!-- Left Column: Movie Info & Ticket Selection -->
-            <div class="col-12 lg:col-8">
-              <div class="surface-card p-4 border-round shadow-2">
-                <!-- Movie Info Section -->
-                <div class="mb-5">
-                  <h2 class="text-2xl font-bold mb-3 text-900">{{ title }}</h2>
-                  <div class="flex gap-3 flex-wrap">
-                    <p-tag
-                      severity="info"
-                      [value]="showtime"
-                      icon="pi pi-clock"
-                    ></p-tag>
-                    <p-tag
-                      severity="info"
-                      [value]="format"
-                      icon="pi pi-video"
-                    ></p-tag>
-                    <p-tag
-                      severity="info"
-                      [value]="languageInfo"
-                      icon="pi pi-volume-up"
-                    ></p-tag>
-                  </div>
-                </div>
+    <p-stepper [value]="currentStep" class="mb-3">
+      <p-step-list>
+        <p-step [value]="1">Select Tickets</p-step>
+        <p-step [value]="2">Select Seats</p-step>
+        <p-step [value]="3">Payment</p-step>
+        <p-step [value]="4">Confirmation</p-step>
+      </p-step-list>
 
-                <!-- Ticket Selection Section -->
-                <div class="flex flex-column gap-3">
-                  <div
-                    *ngFor="let category of ticketCategories"
-                    class="surface-ground p-3 border-round"
-                  >
-                    <div
-                      class="flex justify-content-between align-items-center"
-                    >
-                      <div class="flex flex-column gap-2">
-                        <h3 class="text-xl font-medium m-0">
-                          {{ category | titlecase }} Ticket
-                        </h3>
-                        <p class="text-600 text-sm m-0">
-                          {{ getTicketDescription(category) }}
-                        </p>
-                        <span class="text-primary font-medium"
-                          >${{ getTicketPrice(category).toFixed(2) }}</span
-                        >
-                      </div>
-                      <div
-                        class="flex align-items-center gap-2 surface-card p-2 border-round"
-                      >
-                        <button
-                          pButton
-                          icon="pi pi-minus"
-                          class="p-button-rounded p-button-text p-button-sm"
-                          (click)="decrementTicket(category)"
-                          [disabled]="ticketCounts[category] === 0"
-                        ></button>
-                        <span class="font-medium text-xl px-4">{{
-                          ticketCounts[category]
-                        }}</span>
-                        <button
-                          pButton
-                          icon="pi pi-plus"
-                          class="p-button-rounded p-button-text p-button-sm"
-                          (click)="incrementTicket(category)"
-                          [disabled]="ticketCounts[category] === 10"
-                        ></button>
-                      </div>
+      <p-step-panels>
+        <!-- Step 1: Select Tickets -->
+        <p-step-panel [value]="1">
+          <ng-template #content let-activateCallback="activateCallback">
+            <div class="grid p-4">
+              <!-- Left Column: Movie Info & Ticket Selection -->
+              <div class="col-12 lg:col-8">
+                <div class="surface-card p-4 border-round shadow-2">
+                  <!-- Movie Info Section -->
+                  <div class="mb-5">
+                    <h2 class="text-2xl font-bold mb-3 text-900">
+                      {{ title }}
+                    </h2>
+                    <div class="flex gap-3 flex-wrap">
+                      <p-tag
+                        severity="info"
+                        [value]="showtime"
+                        icon="pi pi-clock"
+                      ></p-tag>
+                      <p-tag
+                        severity="info"
+                        [value]="format"
+                        icon="pi pi-video"
+                      ></p-tag>
+                      <p-tag
+                        severity="info"
+                        [value]="languageInfo"
+                        icon="pi pi-volume-up"
+                      ></p-tag>
                     </div>
                   </div>
-                </div>
 
-                <!-- Order Summary -->
-                <div
-                  *ngIf="totalTickets > 0"
-                  class="surface-ground p-4 border-round mt-4"
-                >
-                  <h3 class="text-xl font-medium mb-3">Order Summary</h3>
+                  <!-- Ticket Selection Section -->
                   <div class="flex flex-column gap-3">
-                    <div *ngFor="let category of ticketCategories">
-                      <div
-                        *ngIf="ticketCounts[category] > 0"
-                        class="flex justify-content-between py-2"
-                      >
-                        <span class="text-600">
-                          {{ category | titlecase }} ×
-                          {{ ticketCounts[category] }}
-                        </span>
-                        <span class="text-900 font-medium">
-                          ${{
-                            (
-                              getTicketPrice(category) * ticketCounts[category]
-                            ).toFixed(2)
-                          }}
-                        </span>
-                      </div>
-                    </div>
                     <div
-                      class="flex justify-content-between py-3 border-top-1 surface-border"
+                      *ngFor="let category of ticketCategories"
+                      class="surface-ground p-3 border-round"
                     >
-                      <span class="text-900 font-bold text-xl">Total</span>
-                      <span class="text-primary font-bold text-xl">
-                        ${{ totalCost.toFixed(2) }}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Action Button -->
-                <div class="flex justify-content-end mt-4">
-                  <p-button
-                    label="Continue to Payment"
-                    icon="pi pi-arrow-right"
-                    iconPos="right"
-                    [disabled]="totalTickets === 0"
-                    (onClick)="nextCallback.emit()"
-                    styleClass="p-button-raised"
-                  ></p-button>
-                </div>
-              </div>
-            </div>
-
-            <!-- Right Column: Movie Poster -->
-            <div class="col-12 lg:col-4">
-              <div class="surface-card p-4 border-round shadow-2">
-                <img
-                  [src]="poster"
-                  [alt]="title"
-                  class="w-full border-round shadow-1"
-                  style="object-fit: cover"
-                />
-              </div>
-            </div>
-          </div>
-        </ng-template>
-      </p-stepperPanel>
-      <!-- Step 2: Select Seats -->
-      <p-stepperPanel header="Select Seats">
-        <ng-template
-          pTemplate="content"
-          let-prevCallback="prevCallback"
-          let-nextCallback="nextCallback"
-        >
-          <div class="surface-card p-4 border-round shadow-2">
-            <!-- Header Section -->
-            <div class="text-center mb-5">
-              <h2 class="text-2xl font-bold text-900 mb-2">
-                Select Your Seats
-              </h2>
-              <p class="text-600 mb-3">
-                Please select {{ totalTickets }} seat(s)
-              </p>
-              <p-tag
-                severity="info"
-                [value]="'Screen 1'"
-                icon="pi pi-desktop"
-                class="mr-2"
-              ></p-tag>
-              <p-tag
-                severity="warning"
-                [value]="showtime"
-                icon="pi pi-clock"
-              ></p-tag>
-            </div>
-
-            <!-- Seat Selection Area -->
-            <div class="surface-ground p-4 border-round mb-4">
-              <app-seat-selection
-                [maxSeats]="totalTickets"
-                class="flex justify-content-center"
-                (seatsSelected)="onSeatsSelected($event)"
-              ></app-seat-selection>
-            </div>
-
-            <!-- Navigation Buttons -->
-            <div class="flex justify-content-between mt-4">
-              <p-button
-                label="Back to Tickets"
-                icon="pi pi-arrow-left"
-                severity="secondary"
-                (onClick)="prevCallback.emit()"
-                class="p-button-outlined"
-              ></p-button>
-              <p-button
-                label="Continue to Payment"
-                icon="pi pi-arrow-right"
-                iconPos="right"
-                severity="primary"
-                (onClick)="nextCallback.emit()"
-                [disabled]="!selectedSeatsValid"
-              ></p-button>
-            </div>
-          </div>
-        </ng-template>
-      </p-stepperPanel>
-
-      <p-stepperPanel header="Payment">
-        <ng-template pTemplate="content" let-prevCallback="prevCallback">
-          <div class="surface-card p-4 border-round shadow-2 max-w-4xl mx-auto">
-            <h2 class="text-2xl font-bold mb-6 text-center text-primary">
-              Review & Payment
-            </h2>
-
-            <div class="grid">
-              <!-- Movie Poster -->
-              <div class="col-12 md:col-3">
-                <img
-                  [src]="poster"
-                  class="w-full h-auto max-h-48 object-cover rounded-lg shadow-md"
-                  [alt]="title"
-                />
-              </div>
-
-              <!-- Order Summary -->
-              <div class="col-12 md:col-9">
-                <div class="surface-ground p-4 border-round">
-                  <h3 class="text-xl font-semibold mb-2">{{ title }}</h3>
-
-                  <!-- Movie Info -->
-                  <div class="flex flex-wrap gap-4 mb-4 text-600">
-                    <div class="flex align-items-center gap-2">
-                      <i class="pi pi-clock"></i>
-                      <span>{{ showtime }}</span>
-                    </div>
-                    <div class="flex align-items-center gap-2">
-                      <i class="pi pi-video"></i>
-                      <span>{{ format }}</span>
-                    </div>
-                    <div class="flex align-items-center gap-2">
-                      <i class="pi pi-volume-up"></i>
-                      <span>{{ languageInfo }}</span>
-                    </div>
-                  </div>
-
-                  <h3 class="text-lg font-semibold mb-3">Order Details</h3>
-                  <div class="flex flex-column gap-3">
-                    <div *ngFor="let category of ticketCategories">
                       <div
-                        *ngIf="ticketCounts[category] > 0"
-                        class="flex justify-content-between p-3 surface-card border-round"
+                        class="flex justify-content-between align-items-center"
                       >
-                        <div>
-                          <span class="font-medium text-lg">{{
-                            category === "student"
-                              ? "Student Ticket"
-                              : (category | titlecase)
-                          }}</span>
-                          <div class="text-600 text-sm mt-1">
+                        <div class="flex flex-column gap-2">
+                          <h3 class="text-xl font-medium m-0">
+                            {{ category | titlecase }} Ticket
+                          </h3>
+                          <p class="text-600 text-sm m-0">
                             {{ getTicketDescription(category) }}
-                          </div>
+                          </p>
+                          <span class="text-primary font-medium">
+                            ${{ getTicketPrice(category).toFixed(2) }}
+                          </span>
                         </div>
-                        <div class="text-right">
-                          <div class="text-primary font-medium">
+                        <div
+                          class="flex align-items-center gap-2 surface-card p-2 border-round"
+                        >
+                          <button
+                            pButton
+                            icon="pi pi-minus"
+                            class="p-button-rounded p-button-text p-button-sm"
+                            (click)="decrementTicket(category)"
+                            [disabled]="ticketCounts[category] === 0"
+                          ></button>
+                          <span class="font-medium text-xl px-4">{{
+                            ticketCounts[category]
+                          }}</span>
+                          <button
+                            pButton
+                            icon="pi pi-plus"
+                            class="p-button-rounded p-button-text p-button-sm"
+                            (click)="incrementTicket(category)"
+                            [disabled]="ticketCounts[category] === 10"
+                          ></button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Order Summary -->
+                  <div
+                    *ngIf="totalTickets > 0"
+                    class="surface-ground p-4 border-round mt-4"
+                  >
+                    <h3 class="text-xl font-medium mb-3">Order Summary</h3>
+                    <div class="flex flex-column gap-3">
+                      <div *ngFor="let category of ticketCategories">
+                        <div
+                          *ngIf="ticketCounts[category] > 0"
+                          class="flex justify-content-between py-2"
+                        >
+                          <span class="text-600"
+                            >{{ category | titlecase }} ×
+                            {{ ticketCounts[category] }}</span
+                          >
+                          <span class="text-900 font-medium">
                             ${{
                               (
                                 getTicketPrice(category) *
                                 ticketCounts[category]
                               ).toFixed(2)
                             }}
-                          </div>
-                          <div class="text-600 text-sm">
-                            {{ ticketCounts[category] }} × ${{
-                              getTicketPrice(category)
-                            }}
-                          </div>
+                          </span>
                         </div>
+                      </div>
+                      <div
+                        class="flex justify-content-between py-3 border-top-1 surface-border"
+                      >
+                        <span class="text-900 font-bold text-xl">Total</span>
+                        <span class="text-primary font-bold text-xl">
+                          ${{ totalCost.toFixed(2) }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Action Button -->
+                  <div class="flex justify-content-end mt-4">
+                    <p-button
+                      label="Continue to Seats"
+                      icon="pi pi-arrow-right"
+                      iconPos="right"
+                      [disabled]="totalTickets === 0"
+                      (onClick)="activateCallback(2)"
+                      styleClass="p-button-raised"
+                    ></p-button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right Column: Movie Poster -->
+              <div class="col-12 lg:col-4">
+                <div class="surface-card p-4 border-round shadow-2">
+                  <img
+                    [src]="poster"
+                    [alt]="title"
+                    class="w-full border-round shadow-1"
+                    style="object-fit: cover"
+                  />
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </p-step-panel>
+
+        <!-- Step 2: Select Seats -->
+        <p-step-panel [value]="2">
+          <ng-template #content let-activateCallback="activateCallback">
+            <div class="surface-card p-4 border-round shadow-2">
+              <!-- Header Section -->
+              <div class="text-center mb-5">
+                <h2 class="text-2xl font-bold text-900 mb-2">
+                  Select Your Seats
+                </h2>
+                <p class="text-600 mb-3">
+                  Please select {{ totalTickets }} seat(s)
+                </p>
+                <p-tag
+                  severity="info"
+                  [value]="'Screen 1'"
+                  icon="pi pi-desktop"
+                  class="mr-2"
+                ></p-tag>
+                <p-tag
+                  severity="warn"
+                  [value]="showtime"
+                  icon="pi pi-clock"
+                ></p-tag>
+              </div>
+
+              <!-- Seat Selection Area -->
+              <div class="surface-ground p-4 border-round mb-4">
+                <app-seat-selection
+                  [maxSeats]="totalTickets"
+                  class="flex justify-content-center"
+                  (seatsSelected)="onSeatsSelected($event)"
+                ></app-seat-selection>
+              </div>
+
+              <!-- Navigation Buttons -->
+              <div class="flex justify-content-between mt-4">
+                <p-button
+                  label="Back to Tickets"
+                  icon="pi pi-arrow-left"
+                  severity="secondary"
+                  (onClick)="activateCallback(1)"
+                  class="p-button-outlined"
+                ></p-button>
+                <p-button
+                  label="Continue to Payment"
+                  icon="pi pi-arrow-right"
+                  iconPos="right"
+                  severity="primary"
+                  (onClick)="activateCallback(3)"
+                  [disabled]="!selectedSeatsValid"
+                ></p-button>
+              </div>
+            </div>
+          </ng-template>
+        </p-step-panel>
+
+        <!-- Step 3: Payment -->
+        <p-step-panel [value]="3">
+          <ng-template #content let-activateCallback="activateCallback">
+            <div
+              class="surface-card p-4 border-round shadow-2 max-w-4xl mx-auto"
+            >
+              <h2 class="text-2xl font-bold mb-6 text-center text-primary">
+                Review & Payment
+              </h2>
+
+              <div class="grid">
+                <!-- Movie Poster -->
+                <div class="col-12 md:col-3">
+                  <img
+                    [src]="poster"
+                    class="w-full h-auto max-h-48 object-cover rounded-lg shadow-md"
+                    [alt]="title"
+                  />
+                </div>
+
+                <!-- Order Summary -->
+                <div class="col-12 md:col-9">
+                  <div class="surface-ground p-4 border-round">
+                    <h3 class="text-xl font-semibold mb-2">{{ title }}</h3>
+
+                    <!-- Movie Info -->
+                    <div class="flex flex-wrap gap-4 mb-4 text-600">
+                      <div class="flex align-items-center gap-2">
+                        <i class="pi pi-clock"></i>
+                        <span>{{ showtime }}</span>
+                      </div>
+                      <div class="flex align-items-center gap-2">
+                        <i class="pi pi-video"></i>
+                        <span>{{ format }}</span>
+                      </div>
+                      <div class="flex align-items-center gap-2">
+                        <i class="pi pi-volume-up"></i>
+                        <span>{{ languageInfo }}</span>
                       </div>
                     </div>
 
+                    <h3 class="text-lg font-semibold mb-3">Order Details</h3>
+                    <div class="flex flex-column gap-3">
+                      <div *ngFor="let category of ticketCategories">
+                        <div
+                          *ngIf="ticketCounts[category] > 0"
+                          class="flex justify-content-between p-3 surface-card border-round"
+                        >
+                          <div>
+                            <span class="font-medium text-lg">{{
+                              category | titlecase
+                            }}</span>
+                            <div class="text-600 text-sm mt-1">
+                              {{ getTicketDescription(category) }}
+                            </div>
+                          </div>
+                          <div class="text-right">
+                            <div class="text-primary font-medium">
+                              ${{
+                                (
+                                  getTicketPrice(category) *
+                                  ticketCounts[category]
+                                ).toFixed(2)
+                              }}
+                            </div>
+                            <div class="text-600 text-sm">
+                              {{ ticketCounts[category] }} × ${{
+                                getTicketPrice(category)
+                              }}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div
+                        class="flex justify-content-between p-3 surface-card border-round mt-4"
+                      >
+                        <span class="text-xl font-bold">Total</span>
+                        <span class="text-2xl font-bold text-primary"
+                          >${{ totalCost.toFixed(2) }}</span
+                        >
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Action Buttons -->
+                  <div class="flex justify-content-between mt-6">
+                    <p-button
+                      label="Back"
+                      icon="pi pi-arrow-left"
+                      severity="secondary"
+                      (onClick)="activateCallback(2)"
+                    ></p-button>
+                    <p-button
+                      label="Proceed to Payment"
+                      icon="pi pi-credit-card"
+                      severity="success"
+                      (onClick)="proceedToPayment()"
+                      class="font-semibold"
+                    ></p-button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </p-step-panel>
+
+        <!-- Step 4: Confirmation -->
+        <p-step-panel [value]="4">
+          <ng-template #content>
+            <div class="surface-card p-4 border-round shadow-2">
+              <div
+                class="flex flex-column align-items-center max-w-30rem mx-auto"
+              >
+                <i class="pi pi-check-circle text-6xl text-success mb-4"></i>
+                <h3 class="text-2xl text-primary font-bold mb-4">
+                  Order Confirmed!
+                </h3>
+
+                <div class="surface-ground p-4 border-round w-full mb-4">
+                  <h4 class="text-xl mb-3">Order Summary</h4>
+                  <div class="flex flex-column gap-3">
                     <div
-                      class="flex justify-content-between p-3 surface-card border-round mt-4"
+                      class="flex justify-content-between"
+                      *ngFor="let category of ticketCategories"
                     >
-                      <span class="text-xl font-bold">Total</span>
-                      <span class="text-2xl font-bold text-primary"
+                      <span *ngIf="ticketCounts[category] > 0" class="text-600">
+                        {{ category | titlecase }} ({{
+                          ticketCounts[category]
+                        }})
+                      </span>
+                      <span *ngIf="ticketCounts[category] > 0" class="text-900">
+                        ${{
+                          (
+                            getTicketPrice(category) * ticketCounts[category]
+                          ).toFixed(2)
+                        }}
+                      </span>
+                    </div>
+                    <div
+                      class="flex justify-content-between font-bold border-top-1 surface-border pt-3"
+                    >
+                      <span>Total Amount Paid</span>
+                      <span class="text-primary"
                         >${{ totalCost.toFixed(2) }}</span
                       >
                     </div>
                   </div>
                 </div>
 
-                <!-- Action Buttons -->
-                <div class="flex justify-content-between mt-6">
-                  <p-button
-                    label="Back"
-                    icon="pi pi-arrow-left"
-                    severity="secondary"
-                    (onClick)="prevCallback.emit()"
-                  ></p-button>
-                  <p-button
-                    label="Proceed to Payment"
-                    icon="pi pi-credit-card"
-                    severity="success"
-                    (onClick)="proceedToPayment()"
-                    class="font-semibold"
-                  ></p-button>
-                </div>
+                <p class="text-600 text-center mb-4">
+                  Thank you for your purchase! Your tickets have been confirmed.
+                  An email with your tickets has been sent to your registered
+                  email address.
+                </p>
+
+                <p-button
+                  label="Complete Payment"
+                  icon="pi pi-check"
+                  iconPos="right"
+                  severity="success"
+                  (onClick)="proceedToPayment()"
+                  [disabled]="totalTickets === 0"
+                ></p-button>
               </div>
             </div>
-          </div>
-        </ng-template>
-      </p-stepperPanel>
-
-      <!-- Step 4: Confirmation -->
-      <p-stepperPanel header="Confirmation">
-        <ng-template pTemplate="content">
-          <div class="surface-card p-4 border-round shadow-2">
-            <div
-              class="flex flex-column align-items-center max-w-30rem mx-auto"
-            >
-              <i class="pi pi-check-circle text-6xl text-success mb-4"></i>
-              <h3 class="text-2xl text-primary font-bold mb-4">
-                Order Confirmed!
-              </h3>
-
-              <div class="surface-ground p-4 border-round w-full mb-4">
-                <h4 class="text-xl mb-3">Order Summary</h4>
-                <div class="flex flex-column gap-3">
-                  <div
-                    class="flex justify-content-between"
-                    *ngFor="let category of ticketCategories"
-                  >
-                    <span *ngIf="ticketCounts[category] > 0" class="text-600">
-                      {{ category | titlecase }} ({{ ticketCounts[category] }})
-                    </span>
-                    <span *ngIf="ticketCounts[category] > 0" class="text-900">
-                      ${{
-                        (
-                          getTicketPrice(category) * ticketCounts[category]
-                        ).toFixed(2)
-                      }}
-                    </span>
-                  </div>
-                  <div
-                    class="flex justify-content-between font-bold border-top-1 surface-border pt-3"
-                  >
-                    <span>Total Amount Paid</span>
-                    <span class="text-primary"
-                      >${{ totalCost.toFixed(2) }}</span
-                    >
-                  </div>
-                </div>
-              </div>
-
-              <p class="text-600 text-center mb-4">
-                Thank you for your purchase! Your tickets have been confirmed.
-                An email with your tickets has been sent to your registered
-                email address.
-              </p>
-
-              <p-button
-                label="Complete Payment"
-                icon="pi pi-check"
-                iconPos="right"
-                severity="success"
-                (onClick)="proceedToPayment()"
-                [disabled]="totalTickets === 0"
-              ></p-button>
-            </div>
-          </div>
-        </ng-template>
-      </p-stepperPanel>
+          </ng-template>
+        </p-step-panel>
+      </p-step-panels>
     </p-stepper>
   </p-card>
 </div>

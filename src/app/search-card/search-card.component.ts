@@ -11,19 +11,18 @@ import { SharedService } from '../shared.service';
 import { Genres, SearchMedia } from '../models/movie.model';
 
 @Component({
-  selector: 'app-search-card',
-  standalone: true,
-  imports: [
-    PanelModule,
-    FormsModule,
-    CommonModule,
-    RouterModule,
-    CardModule,
-    ButtonModule,
-    KnobModule,
-  ],
-  templateUrl: './search-card.component.html',
-  styleUrls: ['./search-card.component.css'],
+    selector: 'app-search-card',
+    imports: [
+        PanelModule,
+        FormsModule,
+        CommonModule,
+        RouterModule,
+        CardModule,
+        ButtonModule,
+        KnobModule,
+    ],
+    templateUrl: './search-card.component.html',
+    styleUrls: ['./search-card.component.css']
 })
 export class SearchCardComponent implements OnInit {
   @Input() movie: SearchMedia = {};

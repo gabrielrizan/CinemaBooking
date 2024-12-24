@@ -5,12 +5,11 @@ import { ProgressBarModule } from 'primeng/progressbar';
 import { ToastModule } from 'primeng/toast';
 
 @Component({
-  selector: 'app-seat-selection',
-  standalone: true,
-  imports: [CommonModule, ProgressBarModule, ToastModule],
-  templateUrl: './seat-selection.component.html',
-  styleUrls: ['./seat-selection.component.css'],
-  providers: [MessageService], // Register the MessageService
+    selector: 'app-seat-selection',
+    imports: [CommonModule, ProgressBarModule, ToastModule],
+    templateUrl: './seat-selection.component.html',
+    styleUrls: ['./seat-selection.component.css'],
+    providers: [MessageService]
 })
 export class SeatSelectionComponent {
   private toastCooldown = false; // Cooldown state to prevent spamming

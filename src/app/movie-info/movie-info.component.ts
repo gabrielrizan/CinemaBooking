@@ -25,24 +25,23 @@ import { Review } from '../models/review.model';
 import { SharedService } from '../shared.service';
 
 @Component({
-  standalone: true,
-  selector: 'app-movie-info',
-  templateUrl: './movie-info.component.html',
-  styleUrls: ['./movie-info.component.css'],
-  imports: [
-    ButtonModule,
-    ChipModule,
-    CommonModule,
-    AccordionModule,
-    CarouselModule,
-    TooltipModule,
-    RouterModule,
-    FieldsetModule,
-    AvatarModule,
-    CardModule,
-    PanelModule,
-    DialogModule,
-  ],
+    selector: 'app-movie-info',
+    templateUrl: './movie-info.component.html',
+    styleUrls: ['./movie-info.component.css'],
+    imports: [
+        ButtonModule,
+        ChipModule,
+        CommonModule,
+        AccordionModule,
+        CarouselModule,
+        TooltipModule,
+        RouterModule,
+        FieldsetModule,
+        AvatarModule,
+        CardModule,
+        PanelModule,
+        DialogModule,
+    ]
 })
 export class MovieInfoComponent implements OnInit, OnDestroy {
   movieId: string | null = '';

@@ -3,23 +3,20 @@ import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { ImageModule } from 'primeng/image';
-import { TruncatePipe } from '../truncate.pipe';
 import { RouterModule, Router } from '@angular/router';
 import { HomepageMovie } from '../models/movie.model';
 
 @Component({
-  selector: 'app-movie-card',
-  standalone: true,
-  imports: [
-    CommonModule,
-    CardModule,
-    ButtonModule,
-    ImageModule,
-    TruncatePipe,
-    RouterModule,
-  ],
-  templateUrl: './movie-card.component.html',
-  styleUrls: ['./movie-card.component.css'],
+    selector: 'app-movie-card',
+    imports: [
+        CommonModule,
+        CardModule,
+        ButtonModule,
+        ImageModule,
+        RouterModule,
+    ],
+    templateUrl: './movie-card.component.html',
+    styleUrls: ['./movie-card.component.css']
 })
 export class MovieCardComponent {
   constructor(private router: Router) {

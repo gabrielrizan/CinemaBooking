@@ -24,7 +24,6 @@ interface TicketPrice {
 
 @Component({
   selector: 'app-ticket-selection',
-  standalone: true,
   imports: [
     InputNumberModule,
     FormsModule,
@@ -42,6 +41,8 @@ interface TicketPrice {
   styleUrl: './ticket-selection.component.css',
 })
 export class TicketSelectionComponent {
+  currentStep: number = 1; // Initialize the current step
+
   movieId: string;
   selectedShowtime: string;
   title: string = '';
@@ -95,6 +96,8 @@ export class TicketSelectionComponent {
   ];
 
   ticketCategories: TicketCategory[] = ['adult', 'student', 'child'];
+
+  selectedSeatsValid: boolean = false;
 
   constructor(private route: ActivatedRoute, private http: HttpClient) {
     this.movieId = this.route.snapshot.paramMap.get('movieId') ?? '';
@@ -161,8 +164,6 @@ export class TicketSelectionComponent {
       this.updateTotalTickets();
     }
   }
-
-  selectedSeatsValid: boolean = false;
 
   onSeatsSelected(seats: string[]) {
     this.selectedSeatsValid = seats.length === this.totalTickets;

@@ -15,7 +15,6 @@ import { FormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { MultiSearchService } from '../../multi-search.service';
-import { SignupComponent } from '../../auth/signup/signup.component';
 import { SearchCardComponent } from '../../search-card/search-card.component';
 import { BigsearchComponent } from '../../bigsearch/bigsearch.component';
 import { of } from 'rxjs';
@@ -23,10 +22,10 @@ import { SharedService } from '../../shared.service';
 import { LoginComponent } from '../../auth/login/login.component';
 import { AuthService } from '../../services/auth.service';
 import { Genres, HomepageMovie, SearchMedia } from '../../models/movie.model';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
-  standalone: true,
   imports: [
     CommonModule,
     FormsModule,
@@ -40,9 +39,9 @@ import { Genres, HomepageMovie, SearchMedia } from '../../models/movie.model';
     DividerModule,
     DialogModule,
     TieredMenuModule,
-    SignupComponent, // Assuming this is a standalone component
     SearchCardComponent, // Assuming this is a standalone component
     LoginComponent, // Assuming this is a standalone component
+    RouterModule,
   ],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
@@ -220,8 +219,14 @@ export class NavbarComponent implements OnInit {
     const query = (event.target as HTMLInputElement).value.toLowerCase();
     this.searchSubject.next(query); // Emit the query to the searchSubject
   }
+  isDarkMode: boolean = false;
 
-  // showSignUpForm() {
-  //   this.visible = true;
-  // }
+  toggleDarkMode(): void {
+    this.isDarkMode = !this.isDarkMode;
+    const element = document.querySelector('html');
+    element?.classList.toggle('dark-mode');
+    // showSignUpForm() {
+    //   this.visible = true;
+    // }
+  }
 }

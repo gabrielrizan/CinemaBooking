@@ -1,10 +1,11 @@
-<!-- Inner container to limit content width and center it -->
 <div class="navbar-content mx-auto mb-4">
   <p-menubar [model]="items">
+    <!-- Start Section -->
     <ng-template pTemplate="start">
       <img src="cinema-logo.png" width="70px" alt="Cinema Logo" />
     </ng-template>
 
+    <!-- Menu Items -->
     <ng-template pTemplate="item" let-item let-root="root">
       <a
         pRipple
@@ -35,8 +36,19 @@
       </a>
     </ng-template>
 
+    <!-- End Section -->
     <ng-template pTemplate="end">
-      <div class="flex align-items-center gap-2">
+      <div class="flex align-items-center gap-3">
+        <!-- Dark Mode Toggle -->
+        <p-button
+          class="p-button-rounded p-button-icon-only"
+          [icon]="isDarkMode ? 'pi pi-sun' : 'pi pi-moon'"
+          pTooltip="Toggle Dark Mode"
+          tooltipPosition="bottom"
+          (click)="toggleDarkMode()"
+        ></p-button>
+
+        <!-- Search Input -->
         <input
           type="text"
           pInputText
@@ -46,6 +58,8 @@
           (focus)="onSearchFocus()"
           (input)="onSearchChange($event)"
         />
+
+        <!-- User Avatar -->
         <p-avatar
           icon="pi pi-user"
           styleClass="mr-2 size-large transition-duration-150 transform-scale-100 hover:transform-scale-105"
@@ -59,7 +73,7 @@
     </ng-template>
   </p-menubar>
 
-  <!-- Expanded search bar with additional content -->
+  <!-- Expanded Search Bar -->
   <p-dialog
     [(visible)]="isSearchActive"
     [modal]="true"
@@ -114,7 +128,7 @@
     </div>
   </p-dialog>
 
-  <!-- Overlay for search -->
+  <!-- Overlay for Search -->
   <div
     *ngIf="isSearchActive"
     class="blur-overlay"

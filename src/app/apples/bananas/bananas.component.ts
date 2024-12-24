@@ -1,19 +1,11 @@
 import { Component, Input } from '@angular/core';
-import { ApplesComponent } from '../apples.component';
 import { ButtonModule } from 'primeng/button';
 import { StepperModule } from 'primeng/stepper';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-bananas',
-  standalone: true,
-  imports: [
-    ApplesComponent,
-    ButtonModule,
-    StepperModule,
-    CommonModule,
-    ButtonModule,
-  ],
+  imports: [ButtonModule, StepperModule, CommonModule, ButtonModule],
   templateUrl: './bananas.component.html',
   styleUrls: ['./bananas.component.css'],
 })

@@ -14,23 +14,22 @@ import { MenuItem, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 
 @Component({
-  selector: 'app-login',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    OverlayPanelModule,
-    ButtonModule,
-    InputTextModule,
-    DividerModule,
-    TieredMenuModule,
-    DialogModule,
-    SignupComponent,
-    ToastModule,
-  ],
-  providers: [MessageService],
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
+    selector: 'app-login',
+    imports: [
+        CommonModule,
+        FormsModule,
+        OverlayPanelModule,
+        ButtonModule,
+        InputTextModule,
+        DividerModule,
+        TieredMenuModule,
+        DialogModule,
+        SignupComponent,
+        ToastModule,
+    ],
+    providers: [MessageService],
+    templateUrl: './login.component.html',
+    styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
   visible = false;

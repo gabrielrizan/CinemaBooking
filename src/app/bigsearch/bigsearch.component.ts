@@ -4,24 +4,21 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
-import { SearchCardComponent } from '../search-card/search-card.component';
 import { popResultSelector } from 'rxjs/internal/util/args';
 import { DialogModule } from 'primeng/dialog';
 
 @Component({
-  selector: 'app-bigsearch',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    InputTextModule,
-    CardModule,
-    ButtonModule,
-    SearchCardComponent,
-    DialogModule,
-  ],
-  templateUrl: './bigsearch.component.html',
-  styleUrls: ['./bigsearch.component.css'],
+    selector: 'app-bigsearch',
+    imports: [
+        CommonModule,
+        FormsModule,
+        InputTextModule,
+        CardModule,
+        ButtonModule,
+        DialogModule,
+    ],
+    templateUrl: './bigsearch.component.html',
+    styleUrls: ['./bigsearch.component.css']
 })
 export class BigsearchComponent {
   visible: boolean = false;
