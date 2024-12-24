@@ -13,11 +13,11 @@
             class="movie-image relative"
           />
         </div>
-        <div class="col-12 md:col-9">
+        <div class="col-12 md:col-6">
           <div class="mb-3">
             <h3 class="text-xl font-bold mb-2">{{ movie.title }}</h3>
             <div class="flex align-items-center gap-2 mb-2">
-              <p-tag [value]="movie.rating" severity="info" />
+              <p-tag [value]="movie.rating" severity="info"></p-tag>
               <span class="text-500"
                 >{{ movie.genre }} | {{ movie.runtime }} min</span
               >
@@ -39,15 +39,39 @@
                   languageInfo: movie.languageInfo,
                   poster: movie.poster
                 }"
-              />
+              ></p-button>
             </div>
           </div>
 
-          <div class="text-500 mt-3">
-            {{ movie.languageInfo }}
-          </div>
+          <div class="text-500 mt-3">{{ movie.languageInfo }}</div>
+        </div>
+        <div
+          class="col-12 md:col-3 flex justify-content-center align-items-start"
+        >
+          <p-button
+            label="More Info"
+            icon="pi pi-info-circle"
+            class="p-button-text"
+            (click)="showDialog(movie)"
+          ></p-button>
         </div>
       </div>
     </p-card>
   </div>
+
+  <p-dialog
+    header="Movie Details"
+    [(visible)]="dialogVisible"
+    [modal]="true"
+    [style]="{ width: '50vw' }"
+    (onHide)="hideDialog()"
+  >
+    <div *ngIf="selectedMovie">
+      <h3>{{ selectedMovie.title }}</h3>
+      <p><strong>Synopsis:</strong> {{ selectedMovie.synopsis }}</p>
+      <p><strong>Director:</strong> {{ selectedMovie.director }}</p>
+      <p><strong>Cast:</strong> {{ selectedMovie.cast?.join(", ") }}</p>
+      <p><strong>Release Date:</strong> {{ selectedMovie.releaseDate }}</p>
+    </div>
+  </p-dialog>
 </div>
