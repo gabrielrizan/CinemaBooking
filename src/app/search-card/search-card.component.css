@@ -25,7 +25,7 @@
   background-size: cover;
   background-position: center;
   filter: blur(2px);
-  opacity: 0.6;
+  opacity: 0.85;
   z-index: 0;
 }
 
@@ -153,4 +153,22 @@
   justify-content: center;
   align-items: center;
   min-height: 300px; /* Adjust based on your card's minimum height */
+}
+
+/* Light mode specific styles */
+:host-context(:not(.dark-mode)) .info_section {
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0.65) 0%,
+    rgba(255, 255, 255, 0.45) 100%
+  );
+}
+
+/* Dark mode specific styles */
+:host-context(.dark-mode) .info_section {
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
 }
