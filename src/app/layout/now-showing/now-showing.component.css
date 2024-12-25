@@ -1,7 +1,16 @@
-.container {
-  max-width: 800px;
+.now-showing-container {
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.movie-image {
-  bottom: -24px;
+.format-section {
+  background: var(--surface-ground);
+  border-radius: var(--border-radius);
+}
+
+/* Dialog Styles */
+:host ::ng-deep .movie-details-dialog {
+  .p-dialog-header {
+    background: var(--surface-section);
+  }
 }

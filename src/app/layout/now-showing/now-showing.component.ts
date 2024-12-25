@@ -166,4 +166,30 @@ export class NowShowingComponent {
         return 'bg-blue-500';
     }
   }
+
+  getRatingSeverity(
+    rating: string
+  ):
+    | 'success'
+    | 'secondary'
+    | 'info'
+    | 'warn'
+    | 'danger'
+    | 'contrast'
+    | undefined {
+    switch (rating) {
+      case 'G':
+        return 'success';
+      case 'PG':
+        return 'info';
+      case 'PG-13':
+        return 'warn';
+      case 'R':
+        return 'danger';
+      case 'NC-17':
+        return 'danger';
+      default:
+        return 'secondary';
+    }
+  }
 }

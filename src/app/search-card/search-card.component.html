@@ -1,72 +1,78 @@
 <div class="movie_card shadow-8" (click)="goToMovieDetails(movie.id ?? '')">
-  <div
-    class="blur_back"
-    [ngStyle]="{
-      'background-image':
-        'url(https://image.tmdb.org/t/p/w1280' + movie.backdrop_path + ')'
-    }"
-  ></div>
-  <div
-    class="info_section p-d-flex p-flex-column p-p-3 justify-content-between"
-  >
-    <div class="movie_header p-d-flex">
-      <img
-        class="locandina relative"
-        [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
-        alt="Movie Poster"
-      />
-      <div class="movie_info">
-        <h1 class="mb-4">
-          {{ movie.title ? movie.title : movie.name }}
-          <span class="font-italic text-600 text-2xl">
-            ({{
-              movie.release_date
-                ? (movie.release_date | date : "yyyy")
-                : (movie.first_air_date | date : "yyyy")
-            }})
-          </span>
-        </h1>
-        <!-- <h4>
-          {{ movie.director }}
-        </h4> -->
-        <span class="minutes p-tag p-tag-rounded p-tag-secondary mb-4">{{
-          duration
-        }}</span>
-        <p class="type mt-2 font-italic mt-4">
-          {{ getGenres(movie.genre_ids) }}
-        </p>
+  <div *ngIf="isLoading" class="loading-spinner">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
 
-        <p-knob
-          [(ngModel)]="votePercentage"
-          [readonly]="true"
-          [size]="60"
-          [max]="100"
-          [step]="1"
-          [valueTemplate]="'{value}%'"
-          [showValue]="true"
-          [strokeWidth]="12"
-          [valueColor]="getKnobValueColor((movie.vote_average ?? 0) * 10)"
-          [rangeColor]="getKnobRangeColor((movie.vote_average ?? 0) * 10)"
-          [textColor]="'#FFFFFF'"
-          [ariaLabel]="
-            'Movie
-          Rating'
-          "
-          tabindex="0"
-          class="absolute right-0 top-0"
-        ></p-knob>
+  <ng-container *ngIf="!isLoading">
+    <div
+      class="blur_back"
+      [ngStyle]="{
+        'background-image':
+          'url(https://image.tmdb.org/t/p/w1280' + movie.backdrop_path + ')'
+      }"
+    ></div>
+    <div
+      class="info_section p-d-flex p-flex-column p-p-3 justify-content-between"
+    >
+      <div class="movie_header p-d-flex">
+        <img
+          class="locandina relative"
+          [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
+          alt="Movie Poster"
+        />
+        <div class="movie_info">
+          <h1 class="mb-4">
+            {{ movie.title ? movie.title : movie.name }}
+            <span class="font-italic text-600 text-2xl">
+              ({{
+                movie.release_date
+                  ? (movie.release_date | date : "yyyy")
+                  : (movie.first_air_date | date : "yyyy")
+              }})
+            </span>
+          </h1>
+          <!-- <h4>
+            {{ movie.director }}
+          </h4> -->
+          <span class="minutes p-tag p-tag-rounded p-tag-secondary mb-4">{{
+            duration
+          }}</span>
+          <p class="type mt-2 font-italic mt-4">
+            {{ getGenres(movie.genre_ids) }}
+          </p>
+
+          <p-knob
+            [(ngModel)]="votePercentage"
+            [readonly]="true"
+            [size]="60"
+            [max]="100"
+            [step]="1"
+            [valueTemplate]="'{value}%'"
+            [showValue]="true"
+            [strokeWidth]="12"
+            [valueColor]="getKnobValueColor((movie.vote_average ?? 0) * 10)"
+            [rangeColor]="getKnobRangeColor((movie.vote_average ?? 0) * 10)"
+            [textColor]="'#FFFFFF'"
+            [ariaLabel]="
+              'Movie
+            Rating'
+            "
+            tabindex="0"
+            class="absolute right-0 top-0"
+          ></p-knob>
+        </div>
+      </div>
+
+      <div class="movie_desc p-mt-3">
+        <p class="text">{{ movie.overview }}</p>
+      </div>
+      <div class="movie_social p-mt-3">
+        <ul class="p-d-flex">
+          <li><i class="pi pi-share-alt p-pr-3"></i></li>
+          <li><i class="pi pi-heart p-pr-3"></i></li>
+          <li><i class="pi pi-comments"></i></li>
+        </ul>
       </div>
     </div>
-
-    <div class="movie_desc p-mt-3">
-      <p class="text">{{ movie.overview }}</p>
-    </div>
-    <div class="movie_social p-mt-3">
-      <ul class="p-d-flex">
-        <li><i class="pi pi-share-alt p-pr-3"></i></li>
-        <li><i class="pi pi-heart p-pr-3"></i></li>
-        <li><i class="pi pi-comments"></i></li>
-      </ul>
-    </div>
-  </div>
+  </ng-container>
 </div>

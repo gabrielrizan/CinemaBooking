@@ -25,6 +25,120 @@
 
 .navbar-content {
   max-width: 1500px;
-  /* align-items: center; */
-  /* margin: 0 auto; */
+  background: var(--surface-card);
+  border-radius: var(--border-radius);
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  box-shadow: var(--card-shadow);
+  transition: all 0.2s ease-in-out;
+}
+
+/* PrimeNG Menubar customization */
+:host ::ng-deep .p-menubar {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+:host ::ng-deep .p-menubar .p-menubar-root-list {
+  gap: 0.5rem;
+}
+
+:host ::ng-deep .p-menubar .p-menuitem-link {
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--border-radius);
+  transition: all 0.2s ease;
+}
+
+:host ::ng-deep .p-menubar .p-menuitem-link:hover {
+  background: var(--surface-hover);
+}
+
+:host ::ng-deep .p-menubar .p-menuitem-icon {
+  color: var(--text-color-secondary);
+}
+
+:host ::ng-deep .p-menubar .p-menuitem-text {
+  color: var(--text-color);
+}
+
+.search-input {
+  min-width: 250px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  min-width: 300px;
+  box-shadow: var(--focus-ring);
+}
+
+.dark-mode-toggle {
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.dark-mode-toggle:hover {
+  background-color: var(--surface-hover);
+}
+
+.dark-mode-toggle i {
+  font-size: 1.2rem;
+  color: var(--text-color);
+  transition: transform 0.3s ease;
+}
+
+.dark-mode-toggle:hover i {
+  transform: rotate(12deg);
+}
+
+/* Search Dialog Styling */
+:host ::ng-deep .p-dialog .search-input {
+  background: var(--surface-ground);
+  border: 1px solid var(--surface-border);
+  padding: 1rem 1.5rem;
+  font-size: 1.1rem;
+}
+
+:host ::ng-deep .p-dialog .search-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 1px var(--primary-color);
+}
+
+/* Avatar styling */
+:host ::ng-deep .p-avatar {
+  transition: transform 0.2s ease;
+}
+
+:host ::ng-deep .p-avatar:hover {
+  transform: scale(1.05);
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  .search-input {
+    min-width: 200px;
+  }
+
+  .search-input:focus {
+    min-width: 240px;
+  }
+
+  :host ::ng-deep .p-menubar .p-menubar-button {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+  }
+
+  :host ::ng-deep .p-menubar .p-menubar-button:hover {
+    background: var(--surface-hover);
+  }
 }

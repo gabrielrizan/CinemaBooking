@@ -9,20 +9,22 @@ import { PanelModule } from 'primeng/panel';
 import { MultiSearchService } from '../multi-search.service';
 import { SharedService } from '../shared.service';
 import { Genres, SearchMedia } from '../models/movie.model';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
-    selector: 'app-search-card',
-    imports: [
-        PanelModule,
-        FormsModule,
-        CommonModule,
-        RouterModule,
-        CardModule,
-        ButtonModule,
-        KnobModule,
-    ],
-    templateUrl: './search-card.component.html',
-    styleUrls: ['./search-card.component.css']
+  selector: 'app-search-card',
+  imports: [
+    PanelModule,
+    FormsModule,
+    CommonModule,
+    RouterModule,
+    CardModule,
+    ButtonModule,
+    KnobModule,
+    ProgressSpinnerModule,
+  ],
+  templateUrl: './search-card.component.html',
+  styleUrls: ['./search-card.component.css'],
 })
 export class SearchCardComponent implements OnInit {
   @Input() movie: SearchMedia = {};
@@ -33,6 +35,7 @@ export class SearchCardComponent implements OnInit {
   movieDetails: any = {};
   tvDetails: any = {};
   private observer!: IntersectionObserver;
+  isLoading: boolean = true;
 
   constructor(
     private multiSearchService: MultiSearchService,
@@ -67,6 +70,7 @@ export class SearchCardComponent implements OnInit {
       this.multiSearchService.getMovieDetails(id).subscribe((data) => {
         this.duration = data.runtime ? `${data.runtime} min` : 'N/A';
         this.movieDetails = data;
+        this.isLoading = false;
       });
       this.multiSearchService.getMovieCredits(id).subscribe((credits) => {
         this.credits = credits;
@@ -77,6 +81,7 @@ export class SearchCardComponent implements OnInit {
           ? `~${data.last_episode_to_air.runtime} min on average`
           : 'N/A';
         this.tvDetails = data;
+        this.isLoading = false;
       });
     }
   }

@@ -40,13 +40,16 @@
     <ng-template pTemplate="end">
       <div class="flex align-items-center gap-3">
         <!-- Dark Mode Toggle -->
-        <p-button
-          class="p-button-rounded p-button-icon-only"
-          [icon]="isDarkMode ? 'pi pi-sun' : 'pi pi-moon'"
-          pTooltip="Toggle Dark Mode"
-          tooltipPosition="bottom"
+        <button
+          class="dark-mode-toggle"
           (click)="toggleDarkMode()"
-        ></p-button>
+          [pTooltip]="
+            isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'
+          "
+          tooltipPosition="bottom"
+        >
+          <i [class]="isDarkMode ? 'pi pi-sun' : 'pi pi-moon'"></i>
+        </button>
 
         <!-- Search Input -->
         <input

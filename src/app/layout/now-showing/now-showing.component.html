@@ -1,77 +1,147 @@
-<div class="grid container mx-auto">
-  <div *ngFor="let movie of movies" class="col-12">
-    <p-card styleClass="mb-3 shadow-2">
-      <div class="grid">
-        <div
-          class="col-12 md:col-3 flex justify-content-center align-items-start"
-        >
-          <p-image
-            [src]="movie.poster"
-            width="150"
-            [preview]="true"
-            alt="Movie poster"
-            class="movie-image relative"
-          />
-        </div>
-        <div class="col-12 md:col-6">
-          <div class="mb-3">
-            <h3 class="text-xl font-bold mb-2">{{ movie.title }}</h3>
-            <div class="flex align-items-center gap-2 mb-2">
-              <p-tag [value]="movie.rating" severity="info"></p-tag>
-              <span class="text-500"
-                >{{ movie.genre }} | {{ movie.runtime }} min</span
+<div class="now-showing-container mx-auto">
+  <h1 class="text-3xl font-bold mb-4 text-center">Now Showing</h1>
+
+  <div class="grid">
+    <div *ngFor="let movie of movies" class="col-12">
+      <p-card styleClass="movie-card mb-4">
+        <div class="grid">
+          <!-- Poster Section -->
+          <div
+            class="col-12 md:col-3 flex align-items-start justify-content-center p-3"
+          >
+            <p-image
+              [src]="movie.poster"
+              [alt]="movie.title + ' poster'"
+              [preview]="true"
+              class="w-full md:w-10"
+              imageClass="w-full border-round shadow-2"
+            ></p-image>
+          </div>
+
+          <!-- Movie Details Section -->
+          <div class="col-12 md:col-6 movie-details">
+            <div class="mb-3">
+              <h2 class="text-2xl font-bold mb-2">{{ movie.title }}</h2>
+              <div class="flex align-items-center gap-2 mb-3">
+                <p-tag
+                  [value]="movie.rating"
+                  [severity]="getRatingSeverity(movie.rating)"
+                ></p-tag>
+                <span class="text-500">{{ movie.runtime }} min</span>
+                <span class="separator">•</span>
+                <span class="text-500">{{ movie.genre }}</span>
+              </div>
+              <p class="language-info text-500 mb-3">
+                {{ movie.languageInfo }}
+              </p>
+            </div>
+
+            <!-- Showtimes Section -->
+            <div class="showtimes-container">
+              <div
+                *ngFor="let format of movie.format"
+                class="format-section mb-3 p-3"
               >
+                <!-- Format Label with Icon -->
+                <div class="flex align-items-center mb-2">
+                  <i
+                    class="pi mr-2"
+                    [ngClass]="format === '2D' ? 'pi-video' : 'pi-cube'"
+                  ></i>
+                  <span class="font-semibold">{{ format }}</span>
+                </div>
+                <!-- Showtimes Buttons -->
+                <div class="flex flex-wrap gap-2">
+                  <p-button
+                    *ngFor="let time of movie.showtimes[format]"
+                    [label]="time"
+                    styleClass="p-button-rounded"
+                    [routerLink]="['/select-tickets']"
+                    [queryParams]="{
+                      title: movie.title,
+                      format: format,
+                      showtime: time,
+                      languageInfo: movie.languageInfo,
+                      poster: movie.poster
+                    }"
+                  ></p-button>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div *ngFor="let format of movie.format" class="mb-3">
-            <div class="font-semibold mb-2">{{ format }}</div>
-            <div class="flex flex-wrap gap-2">
-              <p-button
-                *ngFor="let time of movie.showtimes[format]"
-                [label]="time"
-                styleClass="p-button-rounded p-button-outlined"
-                [routerLink]="['/select-tickets']"
-                [queryParams]="{
-                  title: movie.title,
-                  format: format,
-                  showtime: time,
-                  languageInfo: movie.languageInfo,
-                  poster: movie.poster
-                }"
-              ></p-button>
-            </div>
+          <!-- Action Buttons Section -->
+          <div
+            class="col-12 md:col-3 action-buttons flex flex-column align-items-center gap-3"
+          >
+            <p-button
+              label="Movie Details"
+              icon="pi pi-info-circle"
+              styleClass="p-button-outlined w-full"
+              (click)="showDialog(movie)"
+            ></p-button>
+            <p-button
+              label="Book Tickets"
+              icon="pi pi-ticket"
+              styleClass="p-button-raised w-full"
+              [routerLink]="['/select-tickets']"
+              [queryParams]="{
+                title: movie.title,
+                format: movie.format[0],
+                showtime: movie.showtimes[movie.format[0]][0],
+                languageInfo: movie.languageInfo,
+                poster: movie.poster
+              }"
+            ></p-button>
           </div>
-
-          <div class="text-500 mt-3">{{ movie.languageInfo }}</div>
         </div>
-        <div
-          class="col-12 md:col-3 flex justify-content-center align-items-start"
-        >
-          <p-button
-            label="More Info"
-            icon="pi pi-info-circle"
-            class="p-button-text"
-            (click)="showDialog(movie)"
-          ></p-button>
-        </div>
-      </div>
-    </p-card>
+      </p-card>
+    </div>
   </div>
 
+  <!-- Enhanced Movie Details Dialog -->
   <p-dialog
-    header="Movie Details"
     [(visible)]="dialogVisible"
     [modal]="true"
+    [dismissableMask]="true"
+    [closeOnEscape]="true"
+    styleClass="movie-details-dialog"
+    [breakpoints]="{ '960px': '75vw', '640px': '90vw' }"
     [style]="{ width: '50vw' }"
-    (onHide)="hideDialog()"
   >
-    <div *ngIf="selectedMovie">
-      <h3>{{ selectedMovie.title }}</h3>
-      <p><strong>Synopsis:</strong> {{ selectedMovie.synopsis }}</p>
-      <p><strong>Director:</strong> {{ selectedMovie.director }}</p>
-      <p><strong>Cast:</strong> {{ selectedMovie.cast?.join(", ") }}</p>
-      <p><strong>Release Date:</strong> {{ selectedMovie.releaseDate }}</p>
+    <ng-template pTemplate="header">
+      <div class="dialog-header">
+        <h2>{{ selectedMovie?.title }}</h2>
+      </div>
+    </ng-template>
+
+    <div *ngIf="selectedMovie" class="movie-dialog-content">
+      <div class="grid">
+        <div class="col-12 md:col-4">
+          <img
+            [src]="selectedMovie.poster"
+            [alt]="selectedMovie.title"
+            class="w-full rounded-lg shadow-lg"
+          />
+        </div>
+        <div class="col-12 md:col-8">
+          <p class="mb-3">
+            <strong>Synopsis:</strong> {{ selectedMovie.synopsis }}
+          </p>
+          <p class="mb-2">
+            <strong>Director:</strong> {{ selectedMovie.director }}
+          </p>
+          <p class="mb-2">
+            <strong>Cast:</strong> {{ selectedMovie.cast?.join(", ") }}
+          </p>
+          <p class="mb-2">
+            <strong>Release Date:</strong> {{ selectedMovie.releaseDate }}
+          </p>
+          <p class="mb-2">
+            <strong>Runtime:</strong> {{ formatRuntime(selectedMovie.runtime) }}
+          </p>
+        </div>
+      </div>
     </div>
   </p-dialog>
 </div>

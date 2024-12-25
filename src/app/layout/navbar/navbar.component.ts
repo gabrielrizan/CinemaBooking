@@ -23,6 +23,7 @@ import { LoginComponent } from '../../auth/login/login.component';
 import { AuthService } from '../../services/auth.service';
 import { Genres, HomepageMovie, SearchMedia } from '../../models/movie.model';
 import { RouterModule } from '@angular/router';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-navbar',
@@ -42,6 +43,7 @@ import { RouterModule } from '@angular/router';
     SearchCardComponent, // Assuming this is a standalone component
     LoginComponent, // Assuming this is a standalone component
     RouterModule,
+    TooltipModule,
   ],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
