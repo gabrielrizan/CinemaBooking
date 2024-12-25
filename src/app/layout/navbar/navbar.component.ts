@@ -147,6 +147,12 @@ export class NavbarComponent implements OnInit {
         icon: 'pi pi-info-circle',
         routerLink: ['/about'],
       },
+      {
+        label: 'My Movies',
+        icon: 'pi pi-video',
+        routerLink: '/my-movies',
+        visible: true,
+      },
     ];
 
     this.searchSubject

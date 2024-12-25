@@ -1,0 +1,98 @@
+<div class="my-movies-container">
+  <p-tabView>
+    <!-- Active Tickets Tab -->
+    <p-tabPanel header="Active Tickets">
+      <div class="grid">
+        <div
+          *ngFor="let movie of upcomingMovies"
+          class="col-12 md:col-6 lg:col-4"
+        >
+          <p-card [header]="movie.title" styleClass="h-full">
+            <ng-template pTemplate="header">
+              <img
+                [src]="movie.poster"
+                alt="Movie Poster"
+                class="w-full h-15rem object-cover"
+              />
+            </ng-template>
+
+            <div class="flex flex-column gap-3">
+              <div class="flex align-items-center gap-2">
+                <i class="pi pi-calendar"></i>
+                <span>{{ movie.date | date : "mediumDate" }}</span>
+              </div>
+
+              <div class="flex align-items-center gap-2">
+                <i class="pi pi-clock"></i>
+                <span>{{ movie.showtime }}</span>
+              </div>
+
+              <div class="flex align-items-center gap-2">
+                <i class="pi pi-ticket"></i>
+                <span>Seats: {{ movie.seats.join(", ") }}</span>
+              </div>
+
+              <p-tag
+                [value]="movie.status"
+                [severity]="getStatusSeverity(movie.status)"
+              >
+              </p-tag>
+            </div>
+
+            <ng-template pTemplate="footer">
+              <div class="flex justify-content-between">
+                <p-button
+                  label="View Details"
+                  icon="pi pi-eye"
+                  styleClass="p-button-outlined"
+                >
+                </p-button>
+                <p-button
+                  label="Cancel"
+                  icon="pi pi-times"
+                  severity="danger"
+                  (onClick)="cancelTicket(movie.ticketId)"
+                >
+                </p-button>
+              </div>
+            </ng-template>
+          </p-card>
+        </div>
+      </div>
+    </p-tabPanel>
+
+    <!-- Past Movies Tab -->
+    <p-tabPanel header="Movie History">
+      <div class="grid">
+        <div *ngFor="let movie of pastMovies" class="col-12 md:col-6 lg:col-4">
+          <p-card [header]="movie.title" styleClass="h-full">
+            <ng-template pTemplate="header">
+              <img
+                [src]="movie.poster"
+                alt="Movie Poster"
+                class="w-full h-15rem object-cover"
+              />
+            </ng-template>
+
+            <div class="flex flex-column gap-3">
+              <div class="flex align-items-center gap-2">
+                <i class="pi pi-calendar"></i>
+                <span>{{ movie.date | date : "mediumDate" }}</span>
+              </div>
+
+              <div class="flex align-items-center gap-2">
+                <i class="pi pi-clock"></i>
+                <span>{{ movie.showtime }}</span>
+              </div>
+
+              <div class="flex align-items-center gap-2">
+                <i class="pi pi-ticket"></i>
+                <span>Seats: {{ movie.seats.join(", ") }}</span>
+              </div>
+            </div>
+          </p-card>
+        </div>
+      </div>
+    </p-tabPanel>
+  </p-tabView>
+</div>
