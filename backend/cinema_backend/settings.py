@@ -95,7 +95,11 @@ DATABASES = {
 
 DJOSER = {
     'LOGIN_FIELD': 'email',
-    'user_create': 'account.serializers.CustomUserCreateSerializer',  # Use correct key 'SERIALIZERS'
+    'SERIALIZERS': {
+        'user_create': 'account.serializers.UserCreateSerializer',
+        'user': 'account.serializers.CustomUserSerializer',
+        'current_user': 'account.serializers.CustomUserSerializer',
+    },
 }
 
 # Password validation

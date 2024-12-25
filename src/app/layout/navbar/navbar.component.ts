@@ -65,6 +65,7 @@ export class NavbarComponent implements OnInit {
   @ViewChild('op') overlayPanel: OverlayPanel | undefined;
 
   private searchSubject = new Subject<string>(); // Subject to handle the search input
+  userFirstName: string = '';
 
   constructor(
     private movieService: MultiSearchService,
@@ -194,9 +195,34 @@ export class NavbarComponent implements OnInit {
     });
 
     this.authService.isLoggedIn$.subscribe((loggedIn) => {
-      this.isLoggedIn = loggedIn; // Update the isLoggedIn flag in the component
-      console.log('Component log in status:', this.isLoggedIn);
+      this.isLoggedIn = loggedIn;
+      if (loggedIn) {
+        this.loadUserDetails();
+      } else {
+        this.userFirstName = '';
+      }
     });
+  }
+
+  private loadUserDetails() {
+    this.authService.getUserDetails().subscribe({
+      next: (user) => {
+        this.userFirstName = user.firstname;
+        // Update menu items to show user name
+        this.updateMenuItems();
+      },
+      error: (error) => {
+        console.error('Error loading user details:', error);
+      }
+    });
+  }
+
+  private updateMenuItems() {
+    // Update the account menu item to show user name
+    const accountItem = this.items?.find(item => item.label === 'My Account');
+    if (accountItem) {
+      accountItem.label = `Hi, ${this.userFirstName}`;
+    }
   }
 
   logout() {

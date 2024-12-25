@@ -1,5 +1,6 @@
-from djoser.serializers import UserCreateSerializer
+from djoser.serializers import UserCreateSerializer, UserSerializer
 from account.models import User
+from rest_framework import serializers
 
 class UserCreateSerializer(UserCreateSerializer):
     password = serializers.CharField(write_only=True)  # Explicitly handle password
@@ -18,3 +19,7 @@ class UserCreateSerializer(UserCreateSerializer):
     def create(self, validated_data):
         validated_data.pop('re_password', None)
         return super().create(validated_data)
+
+class CustomUserSerializer(UserSerializer):
+    class Meta(UserSerializer.Meta):
+        fields = ('email', 'firstname', 'lastname', 'dob')

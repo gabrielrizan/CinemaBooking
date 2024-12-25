@@ -14,28 +14,29 @@ import { MenuItem, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 
 @Component({
-    selector: 'app-login',
-    imports: [
-        CommonModule,
-        FormsModule,
-        OverlayPanelModule,
-        ButtonModule,
-        InputTextModule,
-        DividerModule,
-        TieredMenuModule,
-        DialogModule,
-        SignupComponent,
-        ToastModule,
-    ],
-    providers: [MessageService],
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.css']
+  selector: 'app-login',
+  imports: [
+    CommonModule,
+    FormsModule,
+    OverlayPanelModule,
+    ButtonModule,
+    InputTextModule,
+    DividerModule,
+    TieredMenuModule,
+    DialogModule,
+    SignupComponent,
+    ToastModule,
+  ],
+  providers: [MessageService],
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
   visible = false;
   username = '';
   password = '';
   isLoggedIn: boolean = false; // Set this based on your actual authentication logic
+  userFirstName: string = '';
 
   @ViewChild('op') overlayPanel!: OverlayPanel;
 
@@ -45,7 +46,45 @@ export class LoginComponent {
     private cdr: ChangeDetectorRef,
     private messageService: MessageService
   ) {
-    this.isLoggedIn = this.authService.isTokenValid(); // Check if the user is already logged in
+    this.isLoggedIn = this.authService.isTokenValid();
+    this.authService.userDetails$.subscribe((user) => {
+      if (user) {
+        this.userFirstName = user.firstname;
+        this.updateLoggedInItems();
+      }
+    });
+  }
+
+  private updateLoggedInItems() {
+    this.loggedInItems = [
+      {
+        label: `Hi, ${this.userFirstName}`,
+        disabled: true,
+        styleClass: 'font-bold',
+      },
+      { separator: true },
+      {
+        label: 'My Account',
+        icon: 'pi pi-user',
+        routerLink: ['/my-account'],
+      },
+      {
+        label: 'My Tickets',
+        icon: 'pi pi-ticket',
+        routerLink: ['/my-tickets'],
+      },
+      {
+        label: 'My Searches',
+        icon: 'pi pi-history',
+        routerLink: ['/my-searches'],
+      },
+      { separator: true },
+      {
+        label: 'Logout',
+        icon: 'pi pi-sign-out',
+        command: () => this.logout(),
+      },
+    ];
   }
 
   togglePanel(event: Event) {
