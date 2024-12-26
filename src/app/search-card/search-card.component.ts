@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, AfterViewInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -10,6 +10,7 @@ import { MultiSearchService } from '../multi-search.service';
 import { SharedService } from '../shared.service';
 import { Genres, SearchMedia } from '../models/movie.model';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-search-card',
@@ -25,11 +26,13 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
   ],
   templateUrl: './search-card.component.html',
   styleUrls: ['./search-card.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
-export class SearchCardComponent implements OnInit {
+export class SearchCardComponent implements OnInit, AfterViewInit {
   @Input() movie: SearchMedia = {};
   @Input() movieGenres: Genres[] = [];
   @Input() tvGenres: Genres[] = [];
+  isComponentMounted: boolean = false;
   credits: any = {};
   duration: string = '';
   movieDetails: any = {};
@@ -45,7 +48,15 @@ export class SearchCardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.setUpIntersectionObserver();
+    // Don't set up observer here anymore
+  }
+
+  ngAfterViewInit() {
+    // Move the observer setup here
+    setTimeout(() => {
+      this.isComponentMounted = true;  // Set the flag after a small delay
+      this.setUpIntersectionObserver();
+    }, 0);
   }
 
   setUpIntersectionObserver(): void {

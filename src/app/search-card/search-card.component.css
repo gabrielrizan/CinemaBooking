@@ -32,9 +32,14 @@
 .info_section {
   position: relative;
   z-index: 2;
-  color: var(--text-color);
+  color: white;
   padding: 20px;
-  backdrop-filter: blur(2px); /* To give a frosted glass effect */
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.4) 100%
+  );
+  backdrop-filter: blur(2px);
 }
 
 .movie_header {
@@ -60,11 +65,12 @@
   font-size: 2rem;
   margin: 0;
   font-weight: bold;
+  color: white;
 }
 
 .movie_info h4 {
   font-size: 1.2rem;
-  color: var(--text-secondary-color);
+  color: rgba(255, 255, 255, 0.8);
   margin: 10px 0;
 }
 
@@ -76,13 +82,13 @@
 
 .type {
   font-size: 1rem;
-  color: var(--text-secondary-color);
+  color: rgba(255, 255, 255, 0.7);
   margin-top: 5px;
 }
 
 .movie_desc {
   margin-top: 20px;
-  color: var(--text-color-secondary);
+  color: rgba(255, 255, 255, 0.9);
   font-size: 1rem;
   line-height: 1.6;
 }
@@ -100,7 +106,7 @@
 }
 
 .movie_social li {
-  color: var(--text-secondary-color);
+  color: rgba(255, 255, 255, 0.7);
   cursor: pointer;
   transition: color 0.3s;
 }
@@ -153,22 +159,4 @@
   justify-content: center;
   align-items: center;
   min-height: 300px; /* Adjust based on your card's minimum height */
-}
-
-/* Light mode specific styles */
-:host-context(:not(.dark-mode)) .info_section {
-  background: linear-gradient(
-    to right,
-    rgba(255, 255, 255, 0.65) 0%,
-    rgba(255, 255, 255, 0.45) 100%
-  );
-}
-
-/* Dark mode specific styles */
-:host-context(.dark-mode) .info_section {
-  background: linear-gradient(
-    to right,
-    rgba(0, 0, 0, 0.8) 0%,
-    rgba(0, 0, 0, 0.4) 100%
-  );
 }

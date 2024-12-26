@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TicketService } from '../services/ticket.service';
 import { CardModule } from 'primeng/card';
 import { TabViewModule } from 'primeng/tabview';
 import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
+import { AuthService } from '../services/auth.service';
+import { Subscription } from 'rxjs';
 
 interface Ticket {
   id: string;
@@ -23,15 +25,38 @@ interface Ticket {
   imports: [CommonModule, CardModule, TabViewModule, TagModule, ButtonModule],
   standalone: true,
 })
-export class MyMoviesComponent implements OnInit {
+export class MyMoviesComponent implements OnInit, OnDestroy {
   tickets: Ticket[] = [];
   upcomingMovies: Ticket[] = [];
   pastMovies: Ticket[] = [];
+  private authSubscription!: Subscription;
 
-  constructor(private ticketService: TicketService) {}
+  constructor(
+    private ticketService: TicketService,
+    private authService: AuthService
+  ) {}
 
   ngOnInit() {
-    this.loadTickets();
+    // Subscribe to auth state changes
+    this.authSubscription = this.authService.isLoggedIn$.subscribe(
+      (isLoggedIn) => {
+        if (isLoggedIn) {
+          this.loadTickets();
+        } else {
+          // Clear tickets when logged out
+          this.tickets = [];
+          this.upcomingMovies = [];
+          this.pastMovies = [];
+        }
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    // Clean up subscription
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
   }
 
   loadTickets() {

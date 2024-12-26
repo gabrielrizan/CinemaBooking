@@ -9,6 +9,7 @@ import { TicketsaleComponent } from './ticketsale/ticketsale.component';
 import { NowShowingComponent } from './layout/now-showing/now-showing.component';
 import { TicketSelectionComponent } from './layout/ticket-selection/ticket-selection.component';
 import { MyMoviesComponent } from './my-movies/my-movies.component';
+import { authGuard } from './layout/guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -55,5 +56,6 @@ export const routes: Routes = [
   {
     path: 'my-movies',
     component: MyMoviesComponent,
+    canActivate: [authGuard]
   },
 ];

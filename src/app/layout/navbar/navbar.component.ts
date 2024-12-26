@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
 import { BadgeModule } from 'primeng/badge';
@@ -12,7 +12,7 @@ import { DividerModule } from 'primeng/divider';
 import { DialogModule } from 'primeng/dialog';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { FormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { MultiSearchService } from '../../multi-search.service';
 import { SearchCardComponent } from '../../search-card/search-card.component';
@@ -48,7 +48,7 @@ import { TooltipModule } from 'primeng/tooltip';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
   movies: SearchMedia[] = [];
   loading: boolean = true;
   error: string | null = null;
@@ -66,6 +66,7 @@ export class NavbarComponent implements OnInit {
 
   private searchSubject = new Subject<string>(); // Subject to handle the search input
   userFirstName: string = '';
+  private authSubscription!: Subscription;
 
   constructor(
     private movieService: MultiSearchService,
@@ -74,6 +75,13 @@ export class NavbarComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.authSubscription = this.authService.isLoggedIn$.subscribe(
+      (isLoggedIn) => {
+        this.isLoggedIn = isLoggedIn;
+        this.updateMenuItems(); // This will update the navbar immediately
+      }
+    );
+
     this.items = [
       {
         label: 'Home',
@@ -151,8 +159,8 @@ export class NavbarComponent implements OnInit {
       {
         label: 'My Movies',
         icon: 'pi pi-video',
-        routerLink: '/my-movies',
-        visible: true,
+        routerLink: ['/my-movies'],
+        visible: this.isLoggedIn,
       },
     ];
 
@@ -283,5 +291,11 @@ export class NavbarComponent implements OnInit {
     // showSignUpForm() {
     //   this.visible = true;
     // }
+  }
+
+  ngOnDestroy() {
+    if (this.authSubscription) {
+      this.authSubscription.unsubscribe();
+    }
   }
 }
