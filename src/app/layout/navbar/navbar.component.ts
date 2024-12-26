@@ -213,21 +213,42 @@ export class NavbarComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading user details:', error);
-      }
+      },
     });
   }
 
   private updateMenuItems() {
-    // Update the account menu item to show user name
-    const accountItem = this.items?.find(item => item.label === 'My Account');
-    if (accountItem) {
-      accountItem.label = `Hi, ${this.userFirstName}`;
+    if (this.isLoggedIn) {
+      // Show protected menu items
+      this.items = this.items?.map((item) => {
+        if (item.label === 'My Movies') {
+          return { ...item, visible: true };
+        }
+        return item;
+      });
+    } else {
+      // Hide protected menu items
+      this.items = this.items?.map((item) => {
+        if (item.label === 'My Movies') {
+          return { ...item, visible: false };
+        }
+        return item;
+      });
+    }
+
+    // Update user name if logged in
+    if (this.isLoggedIn && this.userFirstName) {
+      const accountItem = this.items?.find(
+        (item) => item.label === 'My Account'
+      );
+      if (accountItem) {
+        accountItem.label = `Hi, ${this.userFirstName}`;
+      }
     }
   }
 
   logout() {
-    // Implement your logout logic here
-    this.isLoggedIn = false;
+    this.authService.logout(); // Use the service's logout method
     this.overlayPanel?.hide();
   }
 

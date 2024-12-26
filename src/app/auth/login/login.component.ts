@@ -155,7 +155,7 @@ export class LoginComponent {
     this.messageService.add({
       severity: 'success',
       summary: 'Success',
-      detail: 'Logged out successfully',
+      detail: 'Logged out',
     });
   }
 

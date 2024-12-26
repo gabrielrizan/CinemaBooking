@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { jwtDecode } from 'jwt-decode';
+import { Router } from '@angular/router';
 
 interface UserDetails {
   email: string;
@@ -33,7 +34,7 @@ export class AuthService {
   isLoggedIn$ = this.isLoggedInSubject.asObservable();
   userDetails$ = this.userDetailsSubject.asObservable();
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router) {
     this.setLoginStatus(this.isTokenValid());
     if (this.isTokenValid()) {
       this.loadUserDetails();
@@ -76,6 +77,10 @@ export class AuthService {
     localStorage.removeItem('refresh_token');
     this.setLoginStatus(false);
     this.userDetailsSubject.next(null);
+    this.router.navigate(['/home']).then(() => {
+      // Optional: Show a logout success message
+      // If you have a message service, you can use it here
+    });
   }
 
   isTokenValid(): boolean {
