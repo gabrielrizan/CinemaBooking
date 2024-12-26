@@ -16,6 +16,7 @@ import { TagModule } from 'primeng/tag';
 import { TicketService } from '../../services/ticket.service';
 import { loadStripe } from '@stripe/stripe-js';
 import { AuthService } from '../../services/auth.service';
+import { MessageService } from 'primeng/api';
 
 type TicketCategory = 'adult' | 'student' | 'child';
 
@@ -48,6 +49,7 @@ interface TicketResponse {
   ],
   templateUrl: './ticket-selection.component.html',
   styleUrl: './ticket-selection.component.css',
+  providers: [MessageService],
 })
 export class TicketSelectionComponent implements OnInit {
   currentStep: number = 1; // Initialize the current step
@@ -113,7 +115,8 @@ export class TicketSelectionComponent implements OnInit {
     private route: ActivatedRoute,
     private http: HttpClient,
     private ticketService: TicketService,
-    private authService: AuthService
+    private authService: AuthService,
+    private messageService: MessageService
   ) {
     this.movieId = this.route.snapshot.paramMap.get('movieId') ?? '';
     this.selectedShowtime = this.route.snapshot.paramMap.get('showtime') ?? '';
@@ -126,6 +129,21 @@ export class TicketSelectionComponent implements OnInit {
       this.showtime = params['showtime'];
       this.languageInfo = params['languageInfo'];
       this.poster = params['poster'];
+
+      // Handle payment error
+      if (params['error'] === 'payment_cancelled') {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Payment Failed',
+          detail: 'Your payment was cancelled or failed. Please try again.',
+        });
+        this.currentStep = 3; // Go back to payment step
+      }
+
+      // Check for success parameter in URL
+      if (params['success'] === 'true') {
+        this.currentStep = 4; // Move to confirmation step
+      }
     });
   }
 
@@ -184,7 +202,16 @@ export class TicketSelectionComponent implements OnInit {
     this.selectedSeats = seats;
     this.selectedSeatsValid = seats.length === this.totalTickets;
   }
-
+  onActiveIndexChange(event: any) {
+    // Prevent navigation if trying to skip steps
+    if (event > this.currentStep) {
+      return;
+    }
+    // Allow moving backwards or to the next immediate step
+    if (event <= this.currentStep) {
+      this.currentStep = event;
+    }
+  }
   async proceedToPayment() {
     console.log('Original showtime:', this.showtime);
     console.log('Original movieId:', this.movieId); // Debug movieId
@@ -247,23 +274,28 @@ export class TicketSelectionComponent implements OnInit {
         .subscribe(
           (response: any) => {
             if (response.url) {
-              // Open in new window and store reference
               const stripeWindow = window.open(response.url, '_blank');
-              
-              // Listen for messages from Stripe
+
               window.addEventListener('message', async (event) => {
                 if (event.data === 'stripe-payment-success') {
-                  // Update ticket status
-                  await this.ticketService.updateTicketStatus(ticketResponse.id, 'COMPLETED');
+                  await this.ticketService.updateTicketStatus(
+                    ticketResponse.id,
+                    'COMPLETED'
+                  );
                   stripeWindow?.close();
-                  // Optionally redirect to my-movies page
-                  window.location.href = '/my-movies';
+                  this.currentStep = 4; // Move to confirmation step instead of redirecting
                 }
               });
             }
           },
           (error) => {
             console.error('Error creating checkout session', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Payment Failed',
+              detail:
+                'There was an error processing your payment. Please try again.',
+            });
           }
         );
     } catch (error: any) {

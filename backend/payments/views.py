@@ -18,7 +18,7 @@ def create_checkout_session(request):
         line_items = []
         for category, quantity in data['ticketCounts'].items():
             if quantity > 0:
-                price_id = data['prices'][category]  # Define price IDs for ticket categories
+                price_id = data['prices'][category]
                 line_items.append({
                     'price': price_id,
                     'quantity': quantity,
@@ -29,8 +29,8 @@ def create_checkout_session(request):
                 payment_method_types=['card'],
                 line_items=line_items,
                 mode='payment',
-                success_url=request.build_absolute_uri('/payment-success'),
-                cancel_url=request.build_absolute_uri('/payment-cancelled'),
+                success_url='http://localhost:4200/select-tickets?success=true&session_id={CHECKOUT_SESSION_ID}',
+                cancel_url='http://localhost:4200/select-tickets?error=payment_cancelled',
                 metadata={
                     'ticket_id': data.get('ticketId')
                 }

@@ -1,6 +1,6 @@
 <div class="container mx-auto p-4">
   <p-card class="ticket-card shadow-3">
-    <p-stepper [value]="currentStep" class="mb-3">
+    <p-stepper [value]="currentStep" [linear]="true" (activeIndexChange)="onActiveIndexChange($event)" class="mb-3">
       <p-step-list>
         <p-step [value]="1">Select Tickets</p-step>
         <p-step [value]="2">Select Seats</p-step>
