@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -13,6 +13,9 @@ import { environment } from '../../../environments/environment';
 import { PanelModule } from 'primeng/panel';
 import { ChipModule } from 'primeng/chip';
 import { TagModule } from 'primeng/tag';
+import { TicketService } from '../../services/ticket.service';
+import { loadStripe } from '@stripe/stripe-js';
+import { AuthService } from '../../services/auth.service';
 
 type TicketCategory = 'adult' | 'student' | 'child';
 
@@ -20,6 +23,12 @@ interface TicketPrice {
   category: TicketCategory;
   price: number;
   description?: string;
+}
+
+interface TicketResponse {
+  id: string;
+  movie_title: string;
+  payment_status: string;
 }
 
 @Component({
@@ -40,7 +49,7 @@ interface TicketPrice {
   templateUrl: './ticket-selection.component.html',
   styleUrl: './ticket-selection.component.css',
 })
-export class TicketSelectionComponent {
+export class TicketSelectionComponent implements OnInit {
   currentStep: number = 1; // Initialize the current step
 
   movieId: string;
@@ -98,8 +107,14 @@ export class TicketSelectionComponent {
   ticketCategories: TicketCategory[] = ['adult', 'student', 'child'];
 
   selectedSeatsValid: boolean = false;
+  selectedSeats: string[] = [];
 
-  constructor(private route: ActivatedRoute, private http: HttpClient) {
+  constructor(
+    private route: ActivatedRoute,
+    private http: HttpClient,
+    private ticketService: TicketService,
+    private authService: AuthService
+  ) {
     this.movieId = this.route.snapshot.paramMap.get('movieId') ?? '';
     this.selectedShowtime = this.route.snapshot.paramMap.get('showtime') ?? '';
   }
@@ -166,30 +181,94 @@ export class TicketSelectionComponent {
   }
 
   onSeatsSelected(seats: string[]) {
+    this.selectedSeats = seats;
     this.selectedSeatsValid = seats.length === this.totalTickets;
   }
 
-  proceedToPayment() {
-    const body = {
-      ticketCounts: this.ticketCounts,
-      prices: {
-        adult: 'price_1QYDq5J1irMsiTTCHMxUaICo',
-        student: 'price_1QYDpJJ1irMsiTTCg9PqWgfk',
-        child: 'price_1QYDjpJ1irMsiTTCHGNU5hHk',
-      },
+  async proceedToPayment() {
+    console.log('Original showtime:', this.showtime);
+    console.log('Original movieId:', this.movieId); // Debug movieId
+
+    let formattedShowtime;
+    try {
+      const [hours, minutes] = this.showtime.split(':');
+      const date = new Date();
+      date.setHours(parseInt(hours), parseInt(minutes), 0);
+      formattedShowtime = date.toISOString();
+    } catch (error) {
+      console.error('Date parsing error:', error);
+      formattedShowtime = new Date().toISOString();
+    }
+
+    // Ensure movieId is a valid number
+    const movieId = Number(this.movieId);
+    if (isNaN(movieId)) {
+      console.error('Invalid movie ID:', this.movieId);
+      return; // Stop execution if movie ID is invalid
+    }
+
+    const ticketData = {
+      movie_title: this.title,
+      movie_id: movieId, // Use the validated movieId
+      showtime: formattedShowtime,
+      seats: this.selectedSeats,
+      ticket_type: this.ticketCounts,
+      total_amount: this.totalCost,
+      poster: this.poster,
+      payment_status: 'PENDING',
     };
 
-    this.http
-      .post('http://127.0.0.1:8000/api/payments/create-checkout-session/', body)
-      .subscribe(
-        (response: any) => {
-          if (response.url) {
-            window.location.href = response.url; // Redirect to Stripe Checkout
-          }
+    console.log('Sending ticket data:', ticketData);
+
+    try {
+      const ticketResponse = await this.ticketService
+        .createTicket(ticketData)
+        .toPromise();
+
+      if (!ticketResponse || !ticketResponse.id) {
+        throw new Error('Failed to create ticket');
+      }
+
+      const body = {
+        ticketCounts: this.ticketCounts,
+        prices: {
+          adult: 'price_1QYDq5J1irMsiTTCHMxUaICo',
+          student: 'price_1QYDpJJ1irMsiTTCg9PqWgfk',
+          child: 'price_1QYDjpJ1irMsiTTCHGNU5hHk',
         },
-        (error) => {
-          console.error('Error creating checkout session', error);
-        }
-      );
+        ticketId: ticketResponse.id,
+      };
+
+      this.http
+        .post(
+          'http://127.0.0.1:8000/api/payments/create-checkout-session/',
+          body
+        )
+        .subscribe(
+          (response: any) => {
+            if (response.url) {
+              // Open in new window and store reference
+              const stripeWindow = window.open(response.url, '_blank');
+              
+              // Listen for messages from Stripe
+              window.addEventListener('message', async (event) => {
+                if (event.data === 'stripe-payment-success') {
+                  // Update ticket status
+                  await this.ticketService.updateTicketStatus(ticketResponse.id, 'COMPLETED');
+                  stripeWindow?.close();
+                  // Optionally redirect to my-movies page
+                  window.location.href = '/my-movies';
+                }
+              });
+            }
+          },
+          (error) => {
+            console.error('Error creating checkout session', error);
+          }
+        );
+    } catch (error: any) {
+      console.error('Error details:', error.error);
+      console.error('Error creating ticket:', error);
+    }
   }
 }

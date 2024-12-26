@@ -4,13 +4,13 @@
     <p-tabPanel header="Active Tickets">
       <div class="grid">
         <div
-          *ngFor="let movie of upcomingMovies"
+          *ngFor="let ticket of upcomingMovies"
           class="col-12 md:col-6 lg:col-4"
         >
-          <p-card [header]="movie.title" styleClass="h-full">
+          <p-card [header]="ticket.movie_title" styleClass="h-full">
             <ng-template pTemplate="header">
               <img
-                [src]="movie.poster"
+                [src]="ticket.poster"
                 alt="Movie Poster"
                 class="w-full h-15rem object-cover"
               />
@@ -19,22 +19,22 @@
             <div class="flex flex-column gap-3">
               <div class="flex align-items-center gap-2">
                 <i class="pi pi-calendar"></i>
-                <span>{{ movie.date | date : "mediumDate" }}</span>
-              </div>
-
-              <div class="flex align-items-center gap-2">
-                <i class="pi pi-clock"></i>
-                <span>{{ movie.showtime }}</span>
+                <span>{{ ticket.showtime | date : "medium" }}</span>
               </div>
 
               <div class="flex align-items-center gap-2">
                 <i class="pi pi-ticket"></i>
-                <span>Seats: {{ movie.seats.join(", ") }}</span>
+                <span>Seats: {{ ticket.seats.join(", ") }}</span>
+              </div>
+
+              <div class="flex align-items-center gap-2">
+                <i class="pi pi-wallet"></i>
+                <span>Total: ${{ ticket.total_amount }}</span>
               </div>
 
               <p-tag
-                [value]="movie.status"
-                [severity]="getStatusSeverity(movie.status)"
+                [value]="ticket.payment_status"
+                [severity]="getStatusSeverity(ticket.payment_status)"
               >
               </p-tag>
             </div>
@@ -51,7 +51,7 @@
                   label="Cancel"
                   icon="pi pi-times"
                   severity="danger"
-                  (onClick)="cancelTicket(movie.ticketId)"
+                  (onClick)="cancelTicket(ticket.id)"
                 >
                 </p-button>
               </div>
@@ -64,11 +64,11 @@
     <!-- Past Movies Tab -->
     <p-tabPanel header="Movie History">
       <div class="grid">
-        <div *ngFor="let movie of pastMovies" class="col-12 md:col-6 lg:col-4">
-          <p-card [header]="movie.title" styleClass="h-full">
+        <div *ngFor="let ticket of pastMovies" class="col-12 md:col-6 lg:col-4">
+          <p-card [header]="ticket.movie_title" styleClass="h-full">
             <ng-template pTemplate="header">
               <img
-                [src]="movie.poster"
+                [src]="ticket.poster"
                 alt="Movie Poster"
                 class="w-full h-15rem object-cover"
               />
@@ -77,17 +77,17 @@
             <div class="flex flex-column gap-3">
               <div class="flex align-items-center gap-2">
                 <i class="pi pi-calendar"></i>
-                <span>{{ movie.date | date : "mediumDate" }}</span>
-              </div>
-
-              <div class="flex align-items-center gap-2">
-                <i class="pi pi-clock"></i>
-                <span>{{ movie.showtime }}</span>
+                <span>{{ ticket.showtime | date : "medium" }}</span>
               </div>
 
               <div class="flex align-items-center gap-2">
                 <i class="pi pi-ticket"></i>
-                <span>Seats: {{ movie.seats.join(", ") }}</span>
+                <span>Seats: {{ ticket.seats.join(", ") }}</span>
+              </div>
+
+              <div class="flex align-items-center gap-2">
+                <i class="pi pi-wallet"></i>
+                <span>Total: ${{ ticket.total_amount }}</span>
               </div>
             </div>
           </p-card>
