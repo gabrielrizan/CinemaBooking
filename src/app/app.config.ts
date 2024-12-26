@@ -5464,9 +5464,10 @@ export const appConfig: ApplicationConfig = {
     providePrimeNG({
       theme: {
         preset: MyPreset,
-        options:{
+        options: {
           darkModeSelector: '.dark-mode',
-        }
+          cssLayer: true,
+        },
       },
     }),
   ],

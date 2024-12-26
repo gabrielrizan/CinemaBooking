@@ -1,10 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
 /* @import "primeng/resources/primeng.css"; */
 @import "primeicons/primeicons.css";
-@import "primeflex/primeflex.css";
-
-/* Order */
-@layer reset, primeng;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* @import "primeflex/primeflex.css"; */
 
 body {
   font-family: "Roboto", sans-serif;

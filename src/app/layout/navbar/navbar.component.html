@@ -1,4 +1,4 @@
-<div class="navbar-content mx-auto mb-4">
+<div class="navbar-content mx-auto mb-6">
   <p-menubar [model]="items">
     <!-- Start Section -->
     <ng-template pTemplate="start">
@@ -9,7 +9,7 @@
     <ng-template pTemplate="item" let-item let-root="root">
       <a
         pRipple
-        class="flex align-items-center p-menuitem-link"
+        class="flex items-center p-menuitem-link"
         [routerLink]="item.routerLink || []"
         *ngIf="!item.separator"
       >
@@ -22,7 +22,7 @@
         ></p-badge>
         <span
           *ngIf="item.shortcut"
-          class="ml-auto border-1 surface-border border-round surface-100 text-xs p-1"
+          class="ml-auto border border-surface rounded-border bg-surface-100 dark:bg-surface-700 text-xs p-1"
         >
           {{ item.shortcut }}
         </span>
@@ -38,7 +38,7 @@
 
     <!-- End Section -->
     <ng-template pTemplate="end">
-      <div class="flex align-items-center gap-3">
+      <div class="flex items-center gap-4">
         <!-- Dark Mode Toggle -->
         <button
           class="dark-mode-toggle"
@@ -53,6 +53,7 @@
 
         <!-- Search Input -->
         <input
+          #searchInput
           type="text"
           pInputText
           placeholder="Search"
@@ -65,7 +66,7 @@
         <!-- User Avatar -->
         <p-avatar
           icon="pi pi-user"
-          styleClass="mr-2 size-large transition-duration-150 transform-scale-100 hover:transform-scale-105"
+          styleClass="mr-2 size-large duration-150 transform-scale-100 hover:transform-scale-105"
           size="large"
           pTooltip="Click to open menu"
           tooltipPosition="bottom"
@@ -87,7 +88,9 @@
       background: 'transparent',
       'overflow-y': 'scroll',
       'scrollbar-width': 'none',
-      '-ms-overflow-style': 'none'
+      '-ms-overflow-style': 'none',
+      padding: '2rem',
+      height: '80vh'
     }"
     [style]="{
       position: 'fixed',
@@ -96,7 +99,8 @@
       right: '0',
       border: 'none',
       boxShadow: 'none',
-      background: 'transparent'
+      background: 'transparent',
+      height: '30px'
     }"
     [appendTo]="'body'"
     [baseZIndex]="1002"
@@ -107,12 +111,12 @@
     focusOnShow="true"
     [transitionOptions]="'150ms cubic-bezier(0, 0, 0.2, 1)'"
   >
-    <div class="flex flex-wrap justify-content-center">
+    <div class="flex flex-wrap justify-center">
       <input
         type="text"
         pInputText
         placeholder="Search for movies, shows, etc..."
-        class="search-input w-7 border-round-3xl relative"
+        class="search-input w-7/12 rounded-3xl relative"
         [(ngModel)]="searchTerm"
         (input)="onSearchChange($event)"
       />
@@ -121,7 +125,7 @@
         class="back-home-btn fixed"
         (click)="onSearchBlur()"
       ></p-button>
-      <div *ngFor="let movie of movies" class="w-9 mb-2">
+      <div *ngFor="let movie of movies" class="w-9/12 mb-2">
         <app-search-card
           [movie]="movie"
           [movieGenres]="movieGenres"

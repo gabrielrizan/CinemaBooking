@@ -1,21 +1,21 @@
 <div
-  class="cinema-container flex flex-row align-items-start justify-content-center gap-6"
+  class="cinema-container flex flex-row items-start justify-center gap-12"
 >
   <!-- Seat Map and Screen -->
-  <div class="cinema-map flex flex-column align-items-center gap-4">
+  <div class="cinema-map flex flex-col items-center gap-6">
     <!-- Screen -->
     <div
-      class="screen flex align-items-center justify-content-center bg-gray-300 border-round py-2 w-full mb-6"
+      class="screen flex items-center justify-center bg-gray-300 rounded-border py-2 w-full mb-12"
     >
       <span>Screen</span>
     </div>
 
     <!-- Seat Map -->
-    <div class="seat-map flex flex-column align-items-center gap-3">
+    <div class="seat-map flex flex-col items-center gap-4">
       <ng-container *ngFor="let row of seatRows; let rowIndex = index">
-        <div class="row flex align-items-center gap-2">
+        <div class="row flex items-center gap-2">
           <span class="row-label font-bold">{{ getRowLabel(rowIndex) }}</span>
-          <div class="seat-row flex justify-content-center gap-2">
+          <div class="seat-row flex justify-center gap-2">
             <ng-container *ngFor="let seat of row; let seatIndex = index">
               <ng-container *ngIf="seat; else emptySpacePlaceholder">
                 <img
@@ -44,24 +44,24 @@
   </div>
 
   <!-- Legend -->
-  <div class="seat-legend flex flex-column align-items-start gap-4">
+  <div class="seat-legend flex flex-col items-start gap-6">
     <h4>Legend</h4>
-    <div class="legend-item flex align-items-center gap-2">
+    <div class="legend-item flex items-center gap-2">
       <img src="cinema-available.svg" alt="Available" class="legend-icon" />
       <span>Available</span>
     </div>
-    <div class="legend-item flex align-items-center gap-2">
+    <div class="legend-item flex items-center gap-2">
       <img src="cinema-occupied.svg" alt="Reserved" class="legend-icon" />
       <span>Taken</span>
     </div>
-    <div class="legend-item flex align-items-center gap-2">
+    <div class="legend-item flex items-center gap-2">
       <img src="cinema-selected.svg" alt="Selected" class="legend-icon" />
       <span>Selected</span>
     </div>
 
     <!-- Progress Indicator -->
     <div
-      class="progress-indicator flex flex-column align-items-center gap-3 mt-4 w-full"
+      class="progress-indicator flex flex-col items-center gap-4 mt-6 w-full"
     >
       <p-progressBar
         [value]="(selectedSeats.length / maxSeats) * 100"

@@ -1,37 +1,37 @@
-<div class="now-showing-container mx-auto">
-  <h1 class="text-3xl font-bold mb-4 text-center">Now Showing</h1>
+<div class="now-showing-container mx-auto max-w-7xl">
+  <h1 class="text-3xl font-bold mb-6 text-center">Now Showing</h1>
 
-  <div class="grid">
-    <div *ngFor="let movie of movies" class="col-12">
-      <p-card styleClass="movie-card mb-4">
-        <div class="grid">
+  <div class="grid grid-cols-12 gap-4">
+    <div *ngFor="let movie of movies" class="col-span-12">
+      <p-card styleClass="movie-card mb-6">
+        <div class="grid grid-cols-12 gap-4">
           <!-- Poster Section -->
           <div
-            class="col-12 md:col-3 flex align-items-start justify-content-center p-3"
+            class="col-span-12 md:col-span-3 flex items-start justify-center p-4"
           >
             <p-image
               [src]="movie.poster"
               [alt]="movie.title + ' poster'"
               [preview]="true"
-              class="w-full md:w-10"
-              imageClass="w-full border-round shadow-2"
+              class="w-full md:w-10/12"
+              imageClass="w-full rounded-border shadow"
             ></p-image>
           </div>
 
           <!-- Movie Details Section -->
-          <div class="col-12 md:col-6 movie-details">
-            <div class="mb-3">
+          <div class="col-span-12 md:col-span-6 movie-details">
+            <div class="mb-4">
               <h2 class="text-2xl font-bold mb-2">{{ movie.title }}</h2>
-              <div class="flex align-items-center gap-2 mb-3">
+              <div class="flex items-center gap-2 mb-4">
                 <p-tag
                   [value]="movie.rating"
                   [severity]="getRatingSeverity(movie.rating)"
                 ></p-tag>
-                <span class="text-500">{{ movie.runtime }} min</span>
+                <span class="text-surface-500 dark:text-surface-300">{{ movie.runtime }} min</span>
                 <span class="separator">•</span>
-                <span class="text-500">{{ movie.genre }}</span>
+                <span class="text-surface-500 dark:text-surface-300">{{ movie.genre }}</span>
               </div>
-              <p class="language-info text-500 mb-3">
+              <p class="language-info text-surface-500 dark:text-surface-300 mb-4">
                 {{ movie.languageInfo }}
               </p>
             </div>
@@ -40,10 +40,10 @@
             <div class="showtimes-container">
               <div
                 *ngFor="let format of movie.format"
-                class="format-section mb-3 p-3"
+                class="format-section mb-4 p-4"
               >
                 <!-- Format Label with Icon -->
-                <div class="flex align-items-center mb-2">
+                <div class="flex items-center mb-2">
                   <i
                     class="pi mr-2"
                     [ngClass]="format === '2D' ? 'pi-video' : 'pi-cube'"
@@ -72,7 +72,7 @@
 
           <!-- Action Buttons Section -->
           <div
-            class="col-12 md:col-3 action-buttons flex flex-column align-items-center gap-3"
+            class="col-span-12 md:col-span-3 action-buttons flex flex-col items-center gap-4"
           >
             <p-button
               label="Movie Details"
@@ -116,16 +116,16 @@
     </ng-template>
 
     <div *ngIf="selectedMovie" class="movie-dialog-content">
-      <div class="grid">
-        <div class="col-12 md:col-4">
+      <div class="grid grid-cols-12 gap-4">
+        <div class="col-span-12 md:col-span-4">
           <img
             [src]="selectedMovie.poster"
             [alt]="selectedMovie.title"
             class="w-full rounded-lg shadow-lg"
           />
         </div>
-        <div class="col-12 md:col-8">
-          <p class="mb-3">
+        <div class="col-span-12 md:col-span-8">
+          <p class="mb-4">
             <strong>Synopsis:</strong> {{ selectedMovie.synopsis }}
           </p>
           <p class="mb-2">

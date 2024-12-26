@@ -1,5 +1,5 @@
-<div class="flex justify-content-center">
-  <div class="grid w-5 p-4 surface-card border-round justify-content-center">
+<div class="flex justify-center">
+  <div class="grid grid-cols-12 gap-4 w-5/12 p-6 bg-surface-0 dark:bg-surface-900 rounded-border justify-center">
     <div class="field">
       <label for="firstname" class="block mb-2 font-medium text-lg"
         >Firstname</label
@@ -8,7 +8,7 @@
         id="firstname"
         [(ngModel)]="signupForm.firstname"
         type="text"
-        class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-30rem"
+        class="text-base text-color bg-surface-0 dark:bg-surface-900 p-2 border border-solid border-surface rounded-border appearance-none outline-0 focus:border-primary w-[30rem]"
       />
     </div>
     <div class="field">
@@ -19,7 +19,7 @@
         id="lastname"
         [(ngModel)]="signupForm.lastname"
         type="text"
-        class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-30rem"
+        class="text-base text-color bg-surface-0 dark:bg-surface-900 p-2 border border-solid border-surface rounded-border appearance-none outline-0 focus:border-primary w-[30rem]"
       />
     </div>
     <div class="field">
@@ -30,7 +30,7 @@
         id="dob"
         [(ngModel)]="signupForm.dob"
         type="date"
-        class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-30rem"
+        class="text-base text-color bg-surface-0 dark:bg-surface-900 p-2 border border-solid border-surface rounded-border appearance-none outline-0 focus:border-primary w-[30rem]"
       />
     </div>
     <div class="field">
@@ -39,7 +39,7 @@
         id="email"
         [(ngModel)]="signupForm.email"
         type="email"
-        class="text-base text-color surface-overlay p-2 border-1 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-30rem"
+        class="text-base text-color bg-surface-0 dark:bg-surface-900 p-2 border border-solid border-surface rounded-border appearance-none outline-0 focus:border-primary w-[30rem]"
       />
     </div>
     <div class="field">
@@ -52,7 +52,7 @@
         [feedback]="true"
         [toggleMask]="true"
         class="w-full"
-        inputStyleClass="text-base text-color surface-overlay p-2 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-30rem"
+        inputStyleClass="text-base text-color bg-surface-0 dark:bg-surface-900 p-2 border-solid border-surface rounded-border appearance-none outline-0 focus:border-primary w-[30rem]"
       ></p-password>
     </div>
     <div class="field">
@@ -61,17 +61,17 @@
       >
       <p-password
         [(ngModel)]="signupForm.confirmPassword"
-        inputStyleClass="text-base text-color surface-overlay p-2 border-solid surface-border border-round appearance-none outline-none focus:border-primary w-30rem"
+        inputStyleClass="text-base text-color bg-surface-0 dark:bg-surface-900 p-2 border-solid border-surface rounded-border appearance-none outline-0 focus:border-primary w-[30rem]"
       >
         <ng-template pTemplate="header">
           <h6>Pick a password</h6>
         </ng-template>
       </p-password>
     </div>
-    <div class="mt-4">
+    <div class="mt-6">
       <button
         type="submit"
-        class="p-button w-full p-3 border-round"
+        class="p-button w-full p-4 rounded-border"
         (click)="onSubmit()"
       >
         Sign Up

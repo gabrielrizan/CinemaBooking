@@ -64,7 +64,8 @@
 
 .search-input {
   min-width: 250px;
-  border-radius: 20px;
+  min-height: 40px;
+  border-radius: 10px;
   transition: all 0.3s ease;
 }
 
@@ -122,6 +123,42 @@
   transform: scale(1.05);
 }
 
+:host ::ng-deep .p-dialog.p-element .p-dialog-content {
+  background: var(--surface-ground);
+  border-radius: 1rem;
+}
+
+:host ::ng-deep .p-inputtext {
+  background: var(--surface-card);
+  border: 1px solid var(--surface-border);
+  transition: all 0.3s ease;
+}
+
+:host ::ng-deep .p-inputtext:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb), 0.2);
+}
+
+:host ::ng-deep .search-results .p-card {
+  height: 100%;
+  transition: transform 0.2s ease;
+}
+
+:host ::ng-deep .search-results .p-card:hover {
+  transform: translateY(-4px);
+}
+
+.blur-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
 /* Responsive Design */
 @media screen and (max-width: 768px) {
   .search-input {

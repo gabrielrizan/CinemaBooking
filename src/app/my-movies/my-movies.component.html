@@ -2,32 +2,32 @@
   <p-tabView>
     <!-- Active Tickets Tab -->
     <p-tabPanel header="Active Tickets">
-      <div class="grid">
+      <div class="grid grid-cols-12 gap-4">
         <div
           *ngFor="let ticket of upcomingMovies"
-          class="col-12 md:col-6 lg:col-4"
+          class="col-span-12 md:col-span-6 lg:col-span-4"
         >
           <p-card [header]="ticket.movie_title" styleClass="h-full">
             <ng-template pTemplate="header">
               <img
                 [src]="ticket.poster"
                 alt="Movie Poster"
-                class="w-full h-15rem object-cover"
+                class="w-full h-60 object-cover"
               />
             </ng-template>
 
-            <div class="flex flex-column gap-3">
-              <div class="flex align-items-center gap-2">
+            <div class="flex flex-col gap-4">
+              <div class="flex items-center gap-2">
                 <i class="pi pi-calendar"></i>
                 <span>{{ ticket.showtime | date : "medium" }}</span>
               </div>
 
-              <div class="flex align-items-center gap-2">
+              <div class="flex items-center gap-2">
                 <i class="pi pi-ticket"></i>
                 <span>Seats: {{ ticket.seats.join(", ") }}</span>
               </div>
 
-              <div class="flex align-items-center gap-2">
+              <div class="flex items-center gap-2">
                 <i class="pi pi-wallet"></i>
                 <span>Total: ${{ ticket.total_amount }}</span>
               </div>
@@ -40,7 +40,7 @@
             </div>
 
             <ng-template pTemplate="footer">
-              <div class="flex justify-content-between">
+              <div class="flex justify-between">
                 <p-button
                   label="View Details"
                   icon="pi pi-eye"
@@ -63,29 +63,29 @@
 
     <!-- Past Movies Tab -->
     <p-tabPanel header="Movie History">
-      <div class="grid">
-        <div *ngFor="let ticket of pastMovies" class="col-12 md:col-6 lg:col-4">
+      <div class="grid grid-cols-12 gap-4">
+        <div *ngFor="let ticket of pastMovies" class="col-span-12 md:col-span-6 lg:col-span-4">
           <p-card [header]="ticket.movie_title" styleClass="h-full">
             <ng-template pTemplate="header">
               <img
                 [src]="ticket.poster"
                 alt="Movie Poster"
-                class="w-full h-15rem object-cover"
+                class="w-full h-60 object-cover"
               />
             </ng-template>
 
-            <div class="flex flex-column gap-3">
-              <div class="flex align-items-center gap-2">
+            <div class="flex flex-col gap-4">
+              <div class="flex items-center gap-2">
                 <i class="pi pi-calendar"></i>
                 <span>{{ ticket.showtime | date : "medium" }}</span>
               </div>
 
-              <div class="flex align-items-center gap-2">
+              <div class="flex items-center gap-2">
                 <i class="pi pi-ticket"></i>
                 <span>Seats: {{ ticket.seats.join(", ") }}</span>
               </div>
 
-              <div class="flex align-items-center gap-2">
+              <div class="flex items-center gap-2">
                 <i class="pi pi-wallet"></i>
                 <span>Total: ${{ ticket.total_amount }}</span>
               </div>

@@ -1,9 +1,3 @@
-.now-showing-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  width: 100%;
-}
-
 .format-section {
   background: var(--surface-ground);
   border-radius: var(--border-radius);

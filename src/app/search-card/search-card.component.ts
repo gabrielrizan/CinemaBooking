@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, Input, OnInit, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnInit,
+  AfterViewInit,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -54,7 +60,7 @@ export class SearchCardComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     // Move the observer setup here
     setTimeout(() => {
-      this.isComponentMounted = true;  // Set the flag after a small delay
+      this.isComponentMounted = true; // Set the flag after a small delay
       this.setUpIntersectionObserver();
     }, 0);
   }
