@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
 import { BadgeModule } from 'primeng/badge';
@@ -63,7 +63,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
   tvGenres: Genres[] = [];
 
   @ViewChild('op') overlayPanel: OverlayPanel | undefined;
-  @ViewChild('searchInput') searchInput!: ElementRef;
 
   private searchSubject = new Subject<string>(); // Subject to handle the search input
   userFirstName: string = '';
@@ -261,12 +260,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.overlayPanel?.hide();
   }
 
-
-  clearSearch() {
-    this.searchTerm = '';
-    this.movies = [];
-    this.searchInput.nativeElement.focus();
-  }
+  // clearSearch() {
+  //   this.searchTerm = '';
+  //   this.movies = [];
+  //   this.searchInput.nativeElement.focus();
+  // }
 
   // logIn() {
   //   // Handle log in logic

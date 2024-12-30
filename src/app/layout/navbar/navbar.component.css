@@ -62,16 +62,20 @@
   color: var(--text-color);
 }
 
+/* Navbar Search Input */
 .search-input {
   min-width: 250px;
-  min-height: 40px;
-  border-radius: 10px;
+  height: 45px;
+  border-radius: 25px;
+  padding: 0 20px;
+  font-size: 1rem;
   transition: all 0.3s ease;
+  background: var(--surface-ground);
 }
 
 .search-input:focus {
   min-width: 300px;
-  box-shadow: var(--focus-ring);
+  box-shadow: 0 0 0 2px var(--primary-color);
 }
 
 .dark-mode-toggle {
@@ -102,16 +106,45 @@
 }
 
 /* Search Dialog Styling */
-:host ::ng-deep .p-dialog .search-input {
-  background: var(--surface-ground);
-  border: 1px solid var(--surface-border);
-  padding: 1rem 1.5rem;
-  font-size: 1.1rem;
+:host ::ng-deep .p-dialog {
+  backdrop-filter: blur(10px);
+
+  .p-dialog-content {
+    border-radius: 24px;
+    padding: 2rem;
+    background: var(--surface-card);
+  }
+
+  .search-input {
+    height: 60px;
+    width: 100%;
+    font-size: 1.2rem;
+    padding: 0 30px;
+    margin-bottom: 2rem;
+    border-radius: 30px;
+    background: var(--surface-ground);
+    border: 1px solid var(--surface-border);
+    transition: all 0.3s ease;
+
+    &:focus {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+  }
 }
 
-:host ::ng-deep .p-dialog .search-input:focus {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 1px var(--primary-color);
+/* Back to Home button */
+:host ::ng-deep .back-home-btn {
+  position: absolute;
+  top: -4rem;
+  left: 50%;
+  transform: translateX(-50%);
+
+  .p-button {
+    border-radius: 25px;
+    padding: 1rem 2rem;
+    font-weight: 600;
+  }
 }
 
 /* Avatar styling */
@@ -178,4 +211,43 @@
   :host ::ng-deep .p-menubar .p-menubar-button:hover {
     background: var(--surface-hover);
   }
+}
+
+:host ::ng-deep .p-dialog .search-input {
+  background: var(--surface-ground);
+  border: 2px solid var(--primary-color);
+  padding: 1.5rem 2rem;
+  font-size: 1.5rem;
+  width: 80% !important;
+  max-width: 1000px;
+  margin-top: 2rem;
+  transform-origin: top center;
+  animation: searchBarExpand 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 50px;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb), 0.1);
+  transition: all 0.3s ease;
+}
+
+:host ::ng-deep .p-dialog .search-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 4px rgba(var(--primary-color-rgb), 0.2);
+  transform: translateY(-2px);
+}
+
+/* Add this if you want the outline to glow */
+@keyframes glowPulse {
+  0% {
+    box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb), 0.1);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(var(--primary-color-rgb), 0.2);
+  }
+  100% {
+    box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb), 0.1);
+  }
+}
+
+:host ::ng-deep .p-dialog .search-input:focus {
+  animation: glowPulse 2s infinite;
 }
