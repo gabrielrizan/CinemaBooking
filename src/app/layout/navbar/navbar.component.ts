@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, ElementRef, AfterViewInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
 import { BadgeModule } from 'primeng/badge';
@@ -48,7 +48,7 @@ import { TooltipModule } from 'primeng/tooltip';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
 })
-export class NavbarComponent implements OnInit, OnDestroy {
+export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
   movies: SearchMedia[] = [];
   loading: boolean = true;
   error: string | null = null;
@@ -63,6 +63,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   tvGenres: Genres[] = [];
 
   @ViewChild('op') overlayPanel: OverlayPanel | undefined;
+  @ViewChild('searchInput') searchInput!: ElementRef;
 
   private searchSubject = new Subject<string>(); // Subject to handle the search input
   userFirstName: string = '';
@@ -278,6 +279,12 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   onSearchFocus() {
     this.isSearchActive = true;
+    // Focus the expanded search input after dialog opens
+    setTimeout(() => {
+      if (this.searchInput?.nativeElement) {
+        this.searchInput.nativeElement.focus();
+      }
+    }, 0);
   }
 
   onSearchBlur() {
@@ -303,5 +310,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
     if (this.authSubscription) {
       this.authSubscription.unsubscribe();
     }
+  }
+
+  ngAfterViewInit() {
+    // You can add any additional initialization logic here
   }
 }

@@ -84,47 +84,58 @@
     [draggable]="false"
     [resizable]="false"
     [contentStyle]="{
-      background: 'transparent',
-      'overflow-y': 'scroll',
+      background: 'var(--p-surface-ground)',
+      'overflow-y': 'auto',
       'scrollbar-width': 'none',
       '-ms-overflow-style': 'none',
-      padding: '2rem',
-      height: '800px'
+      'padding-top': '5px',
+      height: '90vh'
     }"
     [style]="{
       position: 'fixed',
-      top: '10%',
+      top: '0',
       left: '0',
       right: '0',
+      margin: '0',
       border: 'none',
       boxShadow: 'none',
-      background: 'transparent',
-      height: '800px'
+      background: 'var(--p-surface-ground)',
+      width: '100vw',
+      height: '90vh'
     }"
     [appendTo]="'body'"
     [baseZIndex]="1002"
     [closeOnEscape]="true"
     [dismissableMask]="true"
-    showHeader="false"
-    [blockScroll]="true"
-    focusOnShow="true"
-    [transitionOptions]="'150ms cubic-bezier(0, 0, 0.2, 1)'"
+    [showHeader]="false"
   >
-    <div class="flex flex-wrap justify-center">
-      <input
-        type="text"
-        pInputText
-        placeholder="Search for movies, shows, etc..."
-        class="search-input w-7/12 rounded-3xl relative"
-        [(ngModel)]="searchTerm"
-        (input)="onSearchChange($event)"
-      />
-      <p-button
-        label="Back to Home"
-        class="back-home-btn fixed"
-        (click)="onSearchBlur()"
-      ></p-button>
-      <div *ngFor="let movie of movies" class="w-9/12 mb-2">
+    <!-- Fixed Search Container -->
+    <div class="fixed-search-container">
+      <div class="search-wrapper">
+        <div class="search-bar-container">
+          <input
+            #searchInput
+            type="text"
+            pInputText
+            placeholder="Search for movies, shows, etc..."
+            class="search-input"
+            [(ngModel)]="searchTerm"
+            (input)="onSearchChange($event)"
+            autofocus="true"
+            [attr.autofocus]="true"
+          />
+          <p-button
+            label="Back to Home"
+            class="back-home-btn"
+            (click)="onSearchBlur()"
+          ></p-button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search Results -->
+    <div class="search-results-container">
+      <div *ngFor="let movie of movies" class="mb-1">
         <app-search-card
           [movie]="movie"
           [movieGenres]="movieGenres"

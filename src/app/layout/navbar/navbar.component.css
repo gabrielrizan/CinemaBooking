@@ -122,8 +122,8 @@
     padding: 0 30px;
     margin-bottom: 2rem;
     border-radius: 30px;
-    background: var(--surface-ground);
-    border: 1px solid var(--surface-border);
+    background: var(--p-surface-ground);
+    border: 1px solid var(--p-surface-border);
     transition: all 0.3s ease;
 
     &:focus {
@@ -157,19 +157,19 @@
 }
 
 :host ::ng-deep .p-dialog.p-element .p-dialog-content {
-  background: var(--surface-ground);
+  background: var(--p-surface-ground);
   border-radius: 1rem;
 }
 
 :host ::ng-deep .p-inputtext {
-  background: var(--surface-card);
-  border: 1px solid var(--surface-border);
+  background: var(--p-surface-card);
+  border: 1px solid var(--p-surface-border);
   transition: all 0.3s ease;
 }
 
 :host ::ng-deep .p-inputtext:focus {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb), 0.2);
+  border-color: var(--p-primary-color);
+  box-shadow: 0 0 0 2px rgba(var(--p-primary-color-rgb), 0.2);
 }
 
 :host ::ng-deep .search-results .p-card {
@@ -209,7 +209,7 @@
   }
 
   :host ::ng-deep .p-menubar .p-menubar-button:hover {
-    background: var(--surface-hover);
+    background: var(--p-surface-hover);
   }
 }
 
@@ -220,34 +220,136 @@
   font-size: 1.5rem;
   width: 80% !important;
   max-width: 1000px;
-  margin-top: 2rem;
   transform-origin: top center;
   animation: searchBarExpand 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 50px;
   outline: none;
-  box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb), 0.1);
+  box-shadow: 0 0 0 2px rgba(var(--p-primary-color-rgb), 0.1);
   transition: all 0.3s ease;
 }
 
 :host ::ng-deep .p-dialog .search-input:focus {
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 4px rgba(var(--primary-color-rgb), 0.2);
+  border-color: var(--p-primary-color);
+  box-shadow: 0 0 0 4px rgba(var(--p-primary-color-rgb), 0.2);
   transform: translateY(-2px);
 }
 
 /* Add this if you want the outline to glow */
 @keyframes glowPulse {
   0% {
-    box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb), 0.1);
+    box-shadow: 0 0 0 2px rgba(var(--p-primary-color-rgb), 0.1);
   }
   50% {
-    box-shadow: 0 0 0 4px rgba(var(--primary-color-rgb), 0.2);
+    box-shadow: 0 0 0 4px rgba(var(--p-primary-color-rgb), 0.2);
   }
   100% {
-    box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb), 0.1);
+    box-shadow: 0 0 0 2px rgba(var(--p-primary-color-rgb), 0.1);
   }
 }
 
 :host ::ng-deep .p-dialog .search-input:focus {
   animation: glowPulse 2s infinite;
+}
+
+/* Fixed Search Container */
+.fixed-search-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--p-surface-ground);
+  padding: 1.5rem;
+  z-index: 1003;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.search-wrapper {
+  max-width: 1000px;
+  margin: 0 auto;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.search-bar-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  position: relative;
+}
+
+/* Enhanced Search Input */
+:host ::ng-deep .p-dialog .search-input {
+  width: 60% !important;
+  height: 60px;
+  padding: 0 2rem;
+  font-size: 1.25rem;
+  border: 3px solid var(--p-primary-color);
+  border-radius: 30px;
+  background: var(--p-surface-card);
+  box-shadow: 0 0 0 4px rgba(var(--p-primary-color-rgb), 0.1),
+    0 4px 12px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+:host ::ng-deep .p-dialog .search-input:focus {
+  border-color: var(--p-primary-color);
+  box-shadow: 0 0 0 4px rgba(var(--p-primary-color-rgb), 0.2),
+    0 8px 16px rgba(0, 0, 0, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Back Home Button - Positioned absolutely */
+:host ::ng-deep .back-home-btn {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+
+  .p-button {
+    border-radius: 20px;
+    padding: 0.5rem 1.5rem;
+    white-space: nowrap;
+  }
+}
+
+/* Search Results Container */
+.search-results-container {
+  margin-top: 80px;
+  padding: 1rem;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Scrollbar Styling */
+.search-results-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.search-results-container::-webkit-scrollbar-track {
+  background: var(--p-surface-ground);
+}
+
+.search-results-container::-webkit-scrollbar-thumb {
+  background: var(--p-primary-color);
+  border-radius: 4px;
+}
+
+/* Animation for the fixed search container */
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.fixed-search-container {
+  animation: slideDown 0.3s ease-out;
 }
