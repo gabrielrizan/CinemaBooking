@@ -3,7 +3,7 @@
 
   <div class="grid grid-cols-12 gap-4">
     <div *ngFor="let movie of movies" class="col-span-12">
-      <p-card styleClass="movie-card mb-6">
+      <p-card styleClass="movie-card mb-6 shadow-lg">
         <div class="grid grid-cols-12 gap-4">
           <!-- Poster Section -->
           <div
@@ -14,48 +14,57 @@
               [alt]="movie.title + ' poster'"
               [preview]="true"
               class="w-full md:w-10/12"
-              imageClass="w-full rounded-border shadow"
+              imageClass="w-full rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
             ></p-image>
           </div>
 
           <!-- Movie Details Section -->
-          <div class="col-span-12 md:col-span-6 movie-details">
+          <div class="col-span-12 md:col-span-6 movie-details p-4">
             <div class="mb-4">
-              <h2 class="text-2xl font-bold mb-2">{{ movie.title }}</h2>
-              <div class="flex items-center gap-2 mb-4">
+              <h2
+                class="text-2xl font-bold mb-2 hover:text-primary transition-colors duration-200"
+              >
+                {{ movie.title }}
+              </h2>
+              <div class="flex flex-wrap items-center gap-2 mb-4">
                 <p-tag
                   [value]="movie.rating"
                   [severity]="getRatingSeverity(movie.rating)"
+                  [rounded]="true"
                 ></p-tag>
-                <span class="text-surface-500 dark:text-surface-300">{{ movie.runtime }} min</span>
-                <span class="separator">•</span>
-                <span class="text-surface-500 dark:text-surface-300">{{ movie.genre }}</span>
+                <p-chip
+                  [label]="movie.runtime + ' min'"
+                  icon="pi pi-clock"
+                ></p-chip>
+                <p-chip [label]="movie.genre" icon="pi pi-film"></p-chip>
               </div>
-              <p class="language-info text-surface-500 dark:text-surface-300 mb-4">
-                {{ movie.languageInfo }}
-              </p>
+              <p-message
+                severity="info"
+                [text]="movie.languageInfo"
+                styleClass="mb-4"
+              ></p-message>
             </div>
 
             <!-- Showtimes Section -->
             <div class="showtimes-container">
               <div
                 *ngFor="let format of movie.format"
-                class="format-section mb-4 p-4"
+                class="format-section mb-4 p-4 rounded-lg"
               >
                 <!-- Format Label with Icon -->
-                <div class="flex items-center mb-2">
-                  <i
-                    class="pi mr-2"
-                    [ngClass]="format === '2D' ? 'pi-video' : 'pi-cube'"
-                  ></i>
-                  <span class="font-semibold">{{ format }}</span>
+                <div class="format-label mb-3">
+                  <span
+                    class="text-lg font-semibold bg-primary/10 text-primary px-4 py-1 rounded-full"
+                  >
+                    {{ format }}
+                  </span>
                 </div>
                 <!-- Showtimes Buttons -->
                 <div class="flex flex-wrap gap-2">
                   <p-button
                     *ngFor="let time of movie.showtimes[format]"
                     [label]="time"
-                    styleClass="p-button-rounded"
+                    size="small"
                     [routerLink]="['/select-tickets']"
                     [queryParams]="{
                       title: movie.title,
@@ -72,18 +81,19 @@
 
           <!-- Action Buttons Section -->
           <div
-            class="col-span-12 md:col-span-3 action-buttons flex flex-col items-center gap-4"
+            class="col-span-12 md:col-span-3 action-buttons flex flex-col gap-4 p-4"
           >
             <p-button
               label="Movie Details"
               icon="pi pi-info-circle"
-              styleClass="p-button-outlined w-full"
+              styleClass="p-button-outlined action-button"
               (click)="showDialog(movie)"
             ></p-button>
             <p-button
               label="Book Tickets"
               icon="pi pi-ticket"
-              styleClass="p-button-raised w-full"
+              styleClass="action-button"
+              [severity]="'primary'"
               [routerLink]="['/select-tickets']"
               [queryParams]="{
                 title: movie.title,
@@ -111,11 +121,11 @@
   >
     <ng-template pTemplate="header">
       <div class="dialog-header">
-        <h2>{{ selectedMovie?.title }}</h2>
+        <h2 class="text-2xl font-bold">{{ selectedMovie?.title }}</h2>
       </div>
     </ng-template>
 
-    <div *ngIf="selectedMovie" class="movie-dialog-content">
+    <div *ngIf="selectedMovie" class="movie-dialog-content p-4">
       <div class="grid grid-cols-12 gap-4">
         <div class="col-span-12 md:col-span-4">
           <img
@@ -125,21 +135,26 @@
           />
         </div>
         <div class="col-span-12 md:col-span-8">
-          <p class="mb-4">
-            <strong>Synopsis:</strong> {{ selectedMovie.synopsis }}
-          </p>
-          <p class="mb-2">
-            <strong>Director:</strong> {{ selectedMovie.director }}
-          </p>
-          <p class="mb-2">
-            <strong>Cast:</strong> {{ selectedMovie.cast?.join(", ") }}
-          </p>
-          <p class="mb-2">
-            <strong>Release Date:</strong> {{ selectedMovie.releaseDate }}
-          </p>
-          <p class="mb-2">
-            <strong>Runtime:</strong> {{ formatRuntime(selectedMovie.runtime) }}
-          </p>
+          <p-panel header="Synopsis" styleClass="mb-4">
+            {{ selectedMovie.synopsis }}
+          </p-panel>
+
+          <div class="grid grid-cols-2 gap-4">
+            <p-panel header="Director" styleClass="mb-4">
+              {{ selectedMovie.director }}
+            </p-panel>
+            <p-panel header="Release Date" styleClass="mb-4">
+              {{ selectedMovie.releaseDate }}
+            </p-panel>
+          </div>
+
+          <p-panel header="Cast" styleClass="mb-4">
+            <p-chip
+              *ngFor="let actor of selectedMovie.cast"
+              [label]="actor"
+              class="mr-2 mb-2"
+            ></p-chip>
+          </p-panel>
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
 import { BadgeModule } from 'primeng/badge';
@@ -10,6 +10,8 @@ import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { AccordionModule } from 'primeng/accordion';
 import { TagModule } from 'primeng/tag';
+import { MessageModule } from 'primeng/message';
+import { PanelModule } from 'primeng/panel';
 
 interface Movie {
   title: string;
@@ -41,10 +43,11 @@ interface Movie {
     ButtonModule,
     AccordionModule,
     TagModule,
+    MessageModule,
+    PanelModule,
   ],
   templateUrl: './now-showing.component.html',
   styleUrls: ['./now-showing.component.css'],
-  encapsulation: ViewEncapsulation.None,
 })
 export class NowShowingComponent {
   movies: Movie[] = [

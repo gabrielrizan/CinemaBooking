@@ -46,20 +46,20 @@
 
 :host ::ng-deep .p-menubar .p-menuitem-link {
   padding: 0.75rem 1.25rem;
-  border-radius: var(--border-radius);
+  border-radius: var(--p-border-radius);
   transition: all 0.2s ease;
 }
 
 :host ::ng-deep .p-menubar .p-menuitem-link:hover {
-  background: var(--surface-hover);
+  background: var(--p-surface-hover);
 }
 
 :host ::ng-deep .p-menubar .p-menuitem-icon {
-  color: var(--text-color-secondary);
+  color: var(--p-text-color-secondary);
 }
 
 :host ::ng-deep .p-menubar .p-menuitem-text {
-  color: var(--text-color);
+  color: var(p--text-color);
 }
 
 /* Navbar Search Input */
@@ -134,7 +134,7 @@
 }
 
 /* Back to Home button */
-:host ::ng-deep .back-home-btn {
+/* :host ::ng-deep .back-home-btn {
   position: absolute;
   top: -4rem;
   left: 50%;
@@ -145,10 +145,9 @@
     padding: 1rem 2rem;
     font-weight: 600;
   }
-}
+} */
 
-/* Avatar styling */
-:host ::ng-deep .p-avatar {
+/* :host ::ng-deep .p-avatar {
   transition: transform 0.2s ease;
 }
 
@@ -179,7 +178,7 @@
 
 :host ::ng-deep .search-results .p-card:hover {
   transform: translateY(-4px);
-}
+} */
 
 .blur-overlay {
   position: fixed;
@@ -213,7 +212,7 @@
   }
 }
 
-:host ::ng-deep .p-dialog .search-input {
+/* :host ::ng-deep .p-dialog .search-input {
   background: var(--surface-ground);
   border: 2px solid var(--primary-color);
   padding: 1.5rem 2rem;
@@ -232,24 +231,7 @@
   border-color: var(--p-primary-color);
   box-shadow: 0 0 0 4px rgba(var(--p-primary-color-rgb), 0.2);
   transform: translateY(-2px);
-}
-
-/* Add this if you want the outline to glow */
-@keyframes glowPulse {
-  0% {
-    box-shadow: 0 0 0 2px rgba(var(--p-primary-color-rgb), 0.1);
-  }
-  50% {
-    box-shadow: 0 0 0 4px rgba(var(--p-primary-color-rgb), 0.2);
-  }
-  100% {
-    box-shadow: 0 0 0 2px rgba(var(--p-primary-color-rgb), 0.1);
-  }
-}
-
-:host ::ng-deep .p-dialog .search-input:focus {
-  animation: glowPulse 2s infinite;
-}
+} */
 
 /* Fixed Search Container */
 .fixed-search-container {
@@ -280,8 +262,7 @@
   position: relative;
 }
 
-/* Enhanced Search Input */
-:host ::ng-deep .p-dialog .search-input {
+/* :host ::ng-deep .p-dialog .search-input {
   width: 60% !important;
   height: 60px;
   padding: 0 2rem;
@@ -292,17 +273,17 @@
   box-shadow: 0 0 0 4px rgba(var(--p-primary-color-rgb), 0.1),
     0 4px 12px rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
-}
+} */
 
-:host ::ng-deep .p-dialog .search-input:focus {
+/* :host ::ng-deep .p-dialog .search-input:focus {
   border-color: var(--p-primary-color);
   box-shadow: 0 0 0 4px rgba(var(--p-primary-color-rgb), 0.2),
     0 8px 16px rgba(0, 0, 0, 0.2);
   transform: translateY(-2px);
-}
+} */
 
 /* Back Home Button - Positioned absolutely */
-:host ::ng-deep .back-home-btn {
+/* :host ::ng-deep .back-home-btn {
   position: absolute;
   right: 0;
   top: 50%;
@@ -313,7 +294,7 @@
     padding: 0.5rem 1.5rem;
     white-space: nowrap;
   }
-}
+} */
 
 /* Search Results Container */
 .search-results-container {

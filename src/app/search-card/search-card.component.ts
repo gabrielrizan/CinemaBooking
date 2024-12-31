@@ -16,7 +16,6 @@ import { MultiSearchService } from '../multi-search.service';
 import { SharedService } from '../shared.service';
 import { Genres, SearchMedia } from '../models/movie.model';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'app-search-card',
@@ -32,7 +31,6 @@ import { ViewEncapsulation } from '@angular/core';
   ],
   templateUrl: './search-card.component.html',
   styleUrls: ['./search-card.component.css'],
-  encapsulation: ViewEncapsulation.None,
 })
 export class SearchCardComponent implements OnInit, AfterViewInit {
   @Input() movie: SearchMedia = {};

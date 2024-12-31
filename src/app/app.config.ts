@@ -318,17 +318,17 @@ const MyPreset = definePreset(Lara, {
     iconSize: '1rem',
     anchorGutter: '2px',
     primary: {
-      50: '#fff9f2',
-      100: '#ffe1c2',
-      200: '#ffc891',
-      300: '#ffb061',
-      400: '#ff9830',
-      500: '#ff8000',
-      600: '#d96d00',
-      700: '#b35a00',
-      800: '#8c4600',
-      900: '#663300',
-      950: '#402000',
+      50: '#f9f9ff',
+      100: '#e1e1ff',
+      200: '#c8c8ff',
+      300: '#b0b0ff',
+      400: '#9898ff',
+      500: '#8080ff',
+      600: '#6d6dd9',
+      700: '#5a5ab3',
+      800: '#46468c',
+      900: '#333366',
+      950: '#202040',
     },
     formField: {
       paddingX: '0.75rem',
@@ -3986,6 +3986,7 @@ const MyPreset = definePreset(Lara, {
         fontWeight: '600',
       },
     },
+
     radiobutton: {
       root: {
         width: '1.5rem',
@@ -5466,7 +5467,6 @@ export const appConfig: ApplicationConfig = {
         preset: MyPreset,
         options: {
           darkModeSelector: '.dark-mode',
-          cssLayer: true,
         },
       },
     }),
