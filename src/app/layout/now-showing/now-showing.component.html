@@ -26,23 +26,32 @@
               >
                 {{ movie.title }}
               </h2>
-              <div class="flex flex-wrap items-center gap-2 mb-4">
-                <p-tag
-                  [value]="movie.rating"
-                  [severity]="getRatingSeverity(movie.rating)"
-                  [rounded]="true"
-                ></p-tag>
-                <p-chip
-                  [label]="movie.runtime + ' min'"
-                  icon="pi pi-clock"
-                ></p-chip>
-                <p-chip [label]="movie.genre" icon="pi pi-film"></p-chip>
+              <div class="flex flex-wrap items-center gap-3 mb-4">
+                <!-- Rating Badge -->
+                <span
+                  class="movie-badge"
+                  [ngClass]="getRatingClass(movie.rating)"
+                >
+                  {{ movie.rating }}
+                </span>
+                <!-- Runtime Badge -->
+                <span class="movie-badge bg-surface-200">
+                  <i class="pi pi-clock mr-2"></i>
+                  {{ movie.runtime }} min
+                </span>
+                <!-- Genre Badge -->
+                <span class="movie-badge bg-surface-200">
+                  <i class="pi pi-film mr-2"></i>
+                  {{ movie.genre }}
+                </span>
               </div>
-              <p-message
-                severity="info"
-                [text]="movie.languageInfo"
-                styleClass="mb-4"
-              ></p-message>
+              <!-- Language Info -->
+              <div
+                class="flex items-center px-3 py-2 rounded-lg"
+              >
+                <i class="pi pi-info-circle mr-2"></i>
+                <span>{{ movie.languageInfo }}</span>
+              </div>
             </div>
 
             <!-- Showtimes Section -->
@@ -66,6 +75,7 @@
                     [label]="time"
                     size="small"
                     [routerLink]="['/select-tickets']"
+                    styleClass="p-button-outlined rounded"
                     [queryParams]="{
                       title: movie.title,
                       format: format,
@@ -86,13 +96,13 @@
             <p-button
               label="Movie Details"
               icon="pi pi-info-circle"
-              styleClass="p-button-outlined action-button"
+              styleClass="p-button-outlined action-button w-40"
               (click)="showDialog(movie)"
             ></p-button>
             <p-button
               label="Book Tickets"
               icon="pi pi-ticket"
-              styleClass="action-button"
+              styleClass="action-button w-40"
               [severity]="'primary'"
               [routerLink]="['/select-tickets']"
               [queryParams]="{
