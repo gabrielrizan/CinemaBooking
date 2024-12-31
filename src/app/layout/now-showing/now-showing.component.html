@@ -1,4 +1,44 @@
 <div class="now-showing-container mx-auto max-w-7xl">
+  <!-- Cinema Selector Section -->
+  <div class="mb-6">
+    <div class="flex flex-wrap justify-center gap-2 p-4 bg-surface-100 rounded-lg">
+      <p-dropdown
+        [options]="cinemas"
+        [(ngModel)]="selectedCinema"
+        optionLabel="name"
+        (onChange)="onCinemaChange($event.value)"
+        styleClass="w-full md:w-auto"
+        placeholder="Select Cinema"
+      ></p-dropdown>
+      <div class="flex items-center gap-2 text-sm text-surface-600">
+        <i class="pi pi-map-marker"></i>
+        {{ selectedCinema.name }} - {{ selectedCinema.address }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Date Selector Section -->
+  <div class="mb-6">
+    <div
+      class="flex flex-wrap justify-center gap-2 p-4 bg-surface-100 rounded-lg"
+    >
+      <p-calendar
+        [(ngModel)]="selectedDate"
+        [minDate]="minDate"
+        [maxDate]="maxDate"
+        [showIcon]="true"
+        dateFormat="dd/mm/yy"
+        [readonlyInput]="true"
+        styleClass="w-full md:w-auto"
+        placeholder="Select Date"
+      ></p-calendar>
+      <div class="flex items-center gap-2 text-sm text-surface-600">
+        <i class="pi pi-calendar"></i>
+        Showing movies for: {{ selectedDate | date : "fullDate" }}
+      </div>
+    </div>
+  </div>
+
   <h1 class="text-3xl font-bold mb-6 text-center">Now Showing</h1>
 
   <div class="grid grid-cols-12 gap-4">
@@ -27,25 +67,21 @@
                 {{ movie.title }}
               </h2>
               <div class="flex flex-wrap items-center gap-3 mb-4">
-                <!-- Rating Badge -->
                 <span
                   class="movie-badge"
                   [ngClass]="getRatingClass(movie.rating)"
                 >
                   {{ movie.rating }}
                 </span>
-                <!-- Runtime Badge -->
                 <span class="movie-badge bg-surface-200">
                   <i class="pi pi-clock mr-2"></i>
                   {{ movie.runtime }} min
                 </span>
-                <!-- Genre Badge -->
                 <span class="movie-badge bg-surface-200">
-                  <img src="genre.png" alt="Genre" class="w-4 h-4 mr-2 icon" />
+                  <i class="pi pi-film mr-2"></i>
                   {{ movie.genre }}
                 </span>
               </div>
-              <!-- Language Info -->
               <div class="flex items-center px-3 py-2 rounded-lg">
                 <i class="pi pi-info-circle mr-2"></i>
                 <span>{{ movie.languageInfo }}</span>
@@ -58,27 +94,29 @@
                 *ngFor="let format of movie.format"
                 class="format-section mb-4 p-4 rounded-lg"
               >
-                <!-- Format Label with Icon -->
                 <div class="format-label mb-3">
                   <span
                     class="text-lg font-semibold bg-primary/10 text-primary px-4 py-1 rounded-full"
                   >
-                    <i class="pi pi-video mr-2"></i>
                     {{ format }}
                   </span>
                 </div>
-                <!-- Showtimes Buttons -->
                 <div class="flex flex-wrap gap-2">
                   <p-button
-                    *ngFor="let time of movie.showtimes[format]"
+                    *ngFor="
+                      let time of getShowtimesForDate(movie, selectedDate)[
+                        format
+                      ]
+                    "
                     [label]="time"
                     size="small"
                     [routerLink]="['/select-tickets']"
-                    styleClass="p-button-outlined rounded-full"
+                    styleClass="p-button-outlined rounded"
                     [queryParams]="{
                       title: movie.title,
                       format: format,
                       showtime: time,
+                      date: selectedDate | date : 'yyyy-MM-dd',
                       languageInfo: movie.languageInfo,
                       poster: movie.poster
                     }"
@@ -107,7 +145,10 @@
               [queryParams]="{
                 title: movie.title,
                 format: movie.format[0],
-                showtime: movie.showtimes[movie.format[0]][0],
+                showtime: getShowtimesForDate(movie, selectedDate)[
+                  movie.format[0]
+                ][0],
+                date: selectedDate | date : 'yyyy-MM-dd',
                 languageInfo: movie.languageInfo,
                 poster: movie.poster
               }"
@@ -118,7 +159,7 @@
     </div>
   </div>
 
-  <!-- Enhanced Movie Details Dialog -->
+  <!-- Movie Details Dialog -->
   <p-dialog
     [(visible)]="dialogVisible"
     [modal]="true"

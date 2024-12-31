@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
 import { BadgeModule } from 'primeng/badge';
@@ -12,11 +12,27 @@ import { AccordionModule } from 'primeng/accordion';
 import { TagModule } from 'primeng/tag';
 import { MessageModule } from 'primeng/message';
 import { PanelModule } from 'primeng/panel';
+import { CalendarModule } from 'primeng/calendar';
+import { FormsModule } from '@angular/forms';
+import { DropdownModule } from 'primeng/dropdown';
+
+interface Cinema {
+  id: string;
+  name: string;
+  city: string;
+  address: string;
+}
 
 interface Movie {
   title: string;
   poster: string;
-  showtimes: { [key: string]: string[] };
+  showtimes: {
+    [cinemaId: string]: {
+      [date: string]: {
+        [format: string]: string[];
+      };
+    };
+  };
   format: string[];
   runtime: number;
   genre: string;
@@ -45,18 +61,68 @@ interface Movie {
     TagModule,
     MessageModule,
     PanelModule,
+    CalendarModule,
+    FormsModule,
+    DropdownModule,
   ],
   templateUrl: './now-showing.component.html',
   styleUrls: ['./now-showing.component.css'],
-  encapsulation: ViewEncapsulation.None,
 })
 export class NowShowingComponent {
+  selectedDate: Date = new Date();
+  minDate: Date = new Date();
+  maxDate: Date = new Date();
+  dialogVisible: boolean = false;
+  selectedMovie: Movie | null = null;
+  selectedCinema: Cinema;
+
+  cinemas: Cinema[] = [
+    {
+      id: 'buc-1',
+      name: 'Cinema City Bucharest Mall',
+      city: 'Bucharest',
+      address: 'Bucharest Mall, Str. Mihai Bravu 2-4',
+    },
+    {
+      id: 'cluj-1',
+      name: 'Cinema City Cluj Iulius',
+      city: 'Cluj-Napoca',
+      address: 'Iulius Mall, Str. Alexandru Vaida Voevod 53B',
+    },
+  ];
+
+  constructor() {
+    this.maxDate.setDate(this.maxDate.getDate() + 7);
+    this.selectedCinema = this.cinemas[0]; // Default to first cinema
+  }
+
   movies: Movie[] = [
     {
       title: '200% Wolf',
       poster:
         'https://www.cinemacity.ro/xmedia-cw/repo/feats/posters/6705D2R.jpg',
-      showtimes: { '2D': ['15:40', '18:00'], '3D': ['16:30', '19:30'] },
+      showtimes: {
+        'buc-1': {
+          [new Date().toISOString().split('T')[0]]: {
+            '2D': ['10:30', '13:00', '15:30'],
+            '3D': ['12:00', '14:30', '17:00'],
+          },
+          '2024-03-20': {
+            '2D': ['11:30', '14:00', '16:30'],
+            '3D': ['13:00', '15:30', '18:00'],
+          },
+        },
+        'cluj-1': {
+          [new Date().toISOString().split('T')[0]]: {
+            '2D': ['11:00', '13:30', '16:00'],
+            '3D': ['12:30', '15:00', '17:30'],
+          },
+          '2024-03-20': {
+            '2D': ['10:00', '12:30', '15:00'],
+            '3D': ['11:30', '14:00', '16:30'],
+          },
+        },
+      },
       format: ['2D', '3D'],
       runtime: 98,
       genre: 'Animație',
@@ -72,7 +138,18 @@ export class NowShowingComponent {
       title: 'The Marvels',
       poster:
         'https://upload.wikimedia.org/wikipedia/en/a/a9/The_Marvels_poster.jpeg',
-      showtimes: { '2D': ['14:30', '17:50'], '3D': ['15:20', '18:40'] },
+      showtimes: {
+        'buc-1': {
+          '2024-01-01': {
+            '2D': ['10:00', '12:30', '15:00'],
+            '3D': ['11:30', '14:00', '16:30'],
+          },
+          '2024-12-31': {
+            '2D': ['10:30', '14:00', '17:30', '21:00'],
+            '3D': ['12:00', '15:30', '19:00'],
+          },
+        },
+      },
       format: ['2D', '3D'],
       runtime: 130,
       genre: 'Action, Sci-Fi',
@@ -88,7 +165,18 @@ export class NowShowingComponent {
       title: 'Barbie',
       poster:
         'https://upload.wikimedia.org/wikipedia/en/3/39/Barbie_2023_film_poster.jpg',
-      showtimes: { '2D': ['13:00', '16:10'], '3D': ['14:50', '18:30'] },
+      showtimes: {
+        'buc-1': {
+          '2024-03-19': {
+            '2D': ['10:30', '13:00', '15:30'],
+            '3D': ['12:00', '14:30', '17:00'],
+          },
+          '2024-03-20': {
+            '2D': ['11:30', '14:00', '16:30'],
+            '3D': ['13:00', '15:30', '18:00'],
+          },
+        },
+      },
       format: ['2D', '3D'],
       runtime: 114,
       genre: 'Comedy, Fantasy',
@@ -104,7 +192,18 @@ export class NowShowingComponent {
       title: 'Spider-Man: Across the Spider-Verse',
       poster:
         'https://upload.wikimedia.org/wikipedia/en/f/f7/Spider-Man_Across_the_Spider-Verse_poster.png',
-      showtimes: { '2D': ['12:30', '16:00'], '3D': ['13:50', '17:40'] },
+      showtimes: {
+        'buc-1': {
+          '2024-03-19': {
+            '2D': ['10:30', '13:00', '15:30'],
+            '3D': ['12:00', '14:30', '17:00'],
+          },
+          '2024-03-20': {
+            '2D': ['11:30', '14:00', '16:30'],
+            '3D': ['13:00', '15:30', '18:00'],
+          },
+        },
+      },
       format: ['2D', '3D'],
       runtime: 140,
       genre: 'Animation, Action',
@@ -120,7 +219,18 @@ export class NowShowingComponent {
       title: 'Oppenheimer',
       poster:
         'https://upload.wikimedia.org/wikipedia/en/3/32/Oppenheimer_%282023%29.png',
-      showtimes: { '2D': ['16:20', '20:10'] },
+      showtimes: {
+        'buc-1': {
+          '2024-03-19': {
+            '2D': ['10:30', '13:00', '15:30'],
+            '3D': ['12:00', '14:30', '17:00'],
+          },
+          '2024-03-20': {
+            '2D': ['11:30', '14:00', '16:30'],
+            '3D': ['13:00', '15:30', '18:00'],
+          }
+        }
+      },
       format: ['2D'],
       runtime: 180,
       genre: 'Biography, Drama',
@@ -134,21 +244,6 @@ export class NowShowingComponent {
     },
   ];
 
-  selectedMovie: Movie | null = null;
-
-  showTimes(movie: Movie): string[] {
-    return [...new Set(Object.values(movie.showtimes).flat())].sort();
-  }
-
-  formatRuntime(minutes: number): string {
-    const hours = Math.floor(minutes / 60);
-    const remainingMinutes = minutes % 60;
-    return `${hours}h ${remainingMinutes}min`;
-  }
-
-  dialogVisible: boolean = false;
-
-  // methods to show/hide
   showDialog(movie: Movie) {
     this.selectedMovie = movie;
     this.dialogVisible = true;
@@ -172,29 +267,22 @@ export class NowShowingComponent {
     }
   }
 
-  getRatingSeverity(
-    rating: string
-  ):
-    | 'success'
-    | 'secondary'
-    | 'info'
-    | 'warn'
-    | 'danger'
-    | 'contrast'
-    | undefined {
-    switch (rating) {
-      case 'G':
-        return 'success';
-      case 'PG':
-        return 'info';
-      case 'PG-13':
-        return 'warn';
-      case 'R':
-        return 'danger';
-      case 'NC-17':
-        return 'danger';
-      default:
-        return 'secondary';
+  getShowtimesForDate(movie: Movie, date: Date): { [key: string]: string[] } {
+    const dateStr = date.toISOString().split('T')[0];
+
+    // Check if showtimes exist for selected cinema and date
+    if (!movie.showtimes[this.selectedCinema.id]?.[dateStr]) {
+      const emptyShowtimes: { [key: string]: string[] } = {};
+      movie.format.forEach((format) => {
+        emptyShowtimes[format] = [];
+      });
+      return emptyShowtimes;
     }
+
+    return movie.showtimes[this.selectedCinema.id][dateStr];
+  }
+
+  onCinemaChange(cinema: Cinema) {
+    this.selectedCinema = cinema;
   }
 }
