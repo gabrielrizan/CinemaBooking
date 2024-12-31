@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
 import { BadgeModule } from 'primeng/badge';
@@ -48,6 +48,7 @@ interface Movie {
   ],
   templateUrl: './now-showing.component.html',
   styleUrls: ['./now-showing.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class NowShowingComponent {
   movies: Movie[] = [

@@ -41,14 +41,12 @@
                 </span>
                 <!-- Genre Badge -->
                 <span class="movie-badge bg-surface-200">
-                  <i class="pi pi-film mr-2"></i>
+                  <img src="genre.png" alt="Genre" class="w-4 h-4 mr-2 icon" />
                   {{ movie.genre }}
                 </span>
               </div>
               <!-- Language Info -->
-              <div
-                class="flex items-center px-3 py-2 rounded-lg"
-              >
+              <div class="flex items-center px-3 py-2 rounded-lg">
                 <i class="pi pi-info-circle mr-2"></i>
                 <span>{{ movie.languageInfo }}</span>
               </div>
@@ -65,6 +63,7 @@
                   <span
                     class="text-lg font-semibold bg-primary/10 text-primary px-4 py-1 rounded-full"
                   >
+                    <i class="pi pi-video mr-2"></i>
                     {{ format }}
                   </span>
                 </div>
@@ -75,7 +74,7 @@
                     [label]="time"
                     size="small"
                     [routerLink]="['/select-tickets']"
-                    styleClass="p-button-outlined rounded"
+                    styleClass="p-button-outlined rounded-full"
                     [queryParams]="{
                       title: movie.title,
                       format: format,

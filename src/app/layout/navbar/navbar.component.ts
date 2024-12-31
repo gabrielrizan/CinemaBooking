@@ -1,4 +1,11 @@
-import { Component, OnInit, ViewChild, OnDestroy, ElementRef, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  OnDestroy,
+  ElementRef,
+  AfterViewInit,
+} from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
 import { BadgeModule } from 'primeng/badge';
@@ -295,15 +302,12 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
     const query = (event.target as HTMLInputElement).value.toLowerCase();
     this.searchSubject.next(query); // Emit the query to the searchSubject
   }
-  isDarkMode: boolean = false;
+  isDarkMode: boolean = true;
 
   toggleDarkMode(): void {
     this.isDarkMode = !this.isDarkMode;
     const element = document.querySelector('html');
     element?.classList.toggle('dark-mode');
-    // showSignUpForm() {
-    //   this.visible = true;
-    // }
   }
 
   ngOnDestroy() {
