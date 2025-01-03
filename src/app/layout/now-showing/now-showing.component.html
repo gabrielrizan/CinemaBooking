@@ -1,13 +1,15 @@
 <div class="now-showing-container mx-auto max-w-7xl">
   <!-- Cinema Selector Section -->
   <div class="mb-6">
-    <div class="flex flex-wrap justify-center gap-2 p-4 bg-surface-100 rounded-lg">
+    <div
+      class="flex flex-wrap justify-start gap-2 p-4 bg-surface-100 rounded-lg"
+    >
       <p-dropdown
         [options]="cinemas"
         [(ngModel)]="selectedCinema"
         optionLabel="name"
         (onChange)="onCinemaChange($event.value)"
-        styleClass="w-full md:w-auto"
+        styleClass="w-64 md:w-auto"
         placeholder="Select Cinema"
       ></p-dropdown>
       <div class="flex items-center gap-2 text-sm text-surface-600">
@@ -20,7 +22,7 @@
   <!-- Date Selector Section -->
   <div class="mb-6">
     <div
-      class="flex flex-wrap justify-center gap-2 p-4 bg-surface-100 rounded-lg"
+      class="flex flex-wrap justify-start gap-2 p-4 bg-surface-100 rounded-lg"
     >
       <p-calendar
         [(ngModel)]="selectedDate"
@@ -29,7 +31,7 @@
         [showIcon]="true"
         dateFormat="dd/mm/yy"
         [readonlyInput]="true"
-        styleClass="w-full md:w-auto"
+        styleClass="w-64"
         placeholder="Select Date"
       ></p-calendar>
       <div class="flex items-center gap-2 text-sm text-surface-600">
@@ -66,7 +68,7 @@
               >
                 {{ movie.title }}
               </h2>
-              <div class="flex flex-wrap items-center gap-3 mb-4">
+              <div class="flex flex-wrap items-center gap-2 mb-4">
                 <span
                   class="movie-badge"
                   [ngClass]="getRatingClass(movie.rating)"
@@ -78,7 +80,7 @@
                   {{ movie.runtime }} min
                 </span>
                 <span class="movie-badge bg-surface-200">
-                  <i class="pi pi-film mr-2"></i>
+                  <img src="genre.png" alt="genre" class="w-4 h-4 mr-2 icon" />
                   {{ movie.genre }}
                 </span>
               </div>

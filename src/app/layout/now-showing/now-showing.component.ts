@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
 import { BadgeModule } from 'primeng/badge';
@@ -67,6 +67,7 @@ interface Movie {
   ],
   templateUrl: './now-showing.component.html',
   styleUrls: ['./now-showing.component.css'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class NowShowingComponent {
   selectedDate: Date = new Date();
@@ -228,8 +229,8 @@ export class NowShowingComponent {
           '2024-03-20': {
             '2D': ['11:30', '14:00', '16:30'],
             '3D': ['13:00', '15:30', '18:00'],
-          }
-        }
+          },
+        },
       },
       format: ['2D'],
       runtime: 180,
