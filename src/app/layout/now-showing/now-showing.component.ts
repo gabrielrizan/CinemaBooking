@@ -97,16 +97,25 @@ export class NowShowingComponent {
   ];
 
   constructor() {
-    this.minDate = new Date(); // Today
+    this.minDate = new Date();
+    this.minDate.setHours(0, 0, 0, 0);
+
     this.maxDate = new Date();
-    this.maxDate.setDate(this.maxDate.getDate() + 15);
+    this.maxDate.setDate(this.maxDate.getDate() + 20);
+    this.maxDate.setHours(23, 59, 59, 999);
+
     this.selectedDate = new Date();
+    this.selectedDate.setHours(0, 0, 0, 0);
+
     this.selectedCinema = this.cinemas[0];
-    this.generateWeekDates(new Date());
+    this.weekStartDate = new Date(this.selectedDate);
+    this.generateWeekDates(this.weekStartDate);
   }
 
   selectDate(date: Date) {
-    this.selectedDate = date;
+    if (this.isDateInRange(date)) {
+      this.selectedDate = date;
+    }
   }
 
   generateWeekDates(startDate: Date) {
@@ -117,6 +126,7 @@ export class NowShowingComponent {
     for (let i = 0; i < 7; i++) {
       const date = new Date(start);
       date.setDate(start.getDate() + i);
+      date.setHours(0, 0, 0, 0);
       this.weekDates.push(date);
     }
   }
@@ -124,6 +134,7 @@ export class NowShowingComponent {
   previousWeek() {
     const newStart = new Date(this.weekStartDate);
     newStart.setDate(newStart.getDate() - 7);
+    newStart.setHours(0, 0, 0, 0);
     if (newStart >= this.minDate) {
       this.weekStartDate = newStart;
       this.generateWeekDates(newStart);
@@ -133,13 +144,8 @@ export class NowShowingComponent {
   nextWeek() {
     const newStart = new Date(this.weekStartDate);
     newStart.setDate(newStart.getDate() + 7);
-    const weekEnd = new Date(newStart);
-    weekEnd.setDate(newStart.getDate() + 6);
-
-    if (weekEnd <= this.maxDate) {
-      this.weekStartDate = newStart;
-      this.generateWeekDates(newStart);
-    }
+    this.weekStartDate = newStart;
+    this.generateWeekDates(newStart);
   }
 
   onCalendarSelect(date: Date) {
@@ -150,19 +156,35 @@ export class NowShowingComponent {
   }
 
   isSelectedDate(date: Date): boolean {
-    return date.toDateString() === this.selectedDate.toDateString();
+    return (
+      date.getFullYear() === this.selectedDate.getFullYear() &&
+      date.getMonth() === this.selectedDate.getMonth() &&
+      date.getDate() === this.selectedDate.getDate()
+    );
   }
 
   canGoBack(): boolean {
     const newStart = new Date(this.weekStartDate);
     newStart.setDate(newStart.getDate() - 7);
+    newStart.setHours(0, 0, 0, 0);
     return newStart >= this.minDate;
   }
 
   canGoForward(): boolean {
-    const lastDayOfNextWeek = new Date(this.weekStartDate);
-    lastDayOfNextWeek.setDate(lastDayOfNextWeek.getDate() + 13); // Current week end + 7 days
-    return lastDayOfNextWeek <= this.maxDate;
+    return true;
+  }
+
+  canSelectDate(date: Date): boolean {
+    const startOfDate = new Date(date);
+    startOfDate.setHours(0, 0, 0, 0);
+
+    const startOfMinDate = new Date(this.minDate);
+    startOfMinDate.setHours(0, 0, 0, 0);
+
+    const startOfMaxDate = new Date(this.maxDate);
+    startOfMaxDate.setHours(0, 0, 0, 0);
+
+    return startOfDate >= startOfMinDate && startOfDate <= startOfMaxDate;
   }
 
   movies: Movie[] = [
@@ -172,23 +194,31 @@ export class NowShowingComponent {
         'https://www.cinemacity.ro/xmedia-cw/repo/feats/posters/6705D2R.jpg',
       showtimes: {
         'buc-1': {
-          [new Date().toISOString().split('T')[0]]: {
-            '2D': ['10:30', '13:00', '15:30'],
-            '3D': ['12:00', '14:30', '17:00'],
+          '2025-01-03': {
+            '2D': ['10:30', '13:00', '15:30', '18:00', '20:30'],
+            '3D': ['12:00', '14:30', '17:00', '19:30', '22:00'],
           },
-          '2024-03-20': {
-            '2D': ['11:30', '14:00', '16:30'],
-            '3D': ['13:00', '15:30', '18:00'],
+          '2025-01-04': {
+            '2D': ['11:30', '14:00', '16:30', '19:00', '21:30'],
+            '3D': ['13:00', '15:30', '18:00', '20:30', '23:00'],
+          },
+          '2025-01-05': {
+            '2D': ['10:00', '12:30', '15:00', '17:30', '20:00'],
+            '3D': ['11:30', '14:00', '16:30', '19:00', '21:30'],
           },
         },
         'cluj-1': {
-          [new Date().toISOString().split('T')[0]]: {
-            '2D': ['11:00', '13:30', '16:00'],
-            '3D': ['12:30', '15:00', '17:30'],
+          '2025-01-03': {
+            '2D': ['11:00', '13:30', '16:00', '18:30', '21:00'],
+            '3D': ['12:30', '15:00', '17:30', '20:00', '22:30'],
           },
-          '2024-03-20': {
-            '2D': ['10:00', '12:30', '15:00'],
-            '3D': ['11:30', '14:00', '16:30'],
+          '2025-01-04': {
+            '2D': ['10:00', '12:30', '15:00', '17:30', '20:00'],
+            '3D': ['11:30', '14:00', '16:30', '19:00', '21:30'],
+          },
+          '2025-01-05': {
+            '2D': ['10:30', '13:00', '15:30', '18:00', '20:30'],
+            '3D': ['12:00', '14:30', '17:00', '19:30', '22:00'],
           },
         },
       },
@@ -209,13 +239,31 @@ export class NowShowingComponent {
         'https://upload.wikimedia.org/wikipedia/en/a/a9/The_Marvels_poster.jpeg',
       showtimes: {
         'buc-1': {
-          '2024-01-01': {
-            '2D': ['10:00', '12:30', '15:00'],
-            '3D': ['11:30', '14:00', '16:30'],
+          '2025-01-03': {
+            '2D': ['10:00', '12:30', '15:00', '17:30', '20:00'],
+            '3D': ['11:30', '14:00', '16:30', '19:00', '21:30'],
           },
-          '2024-12-31': {
-            '2D': ['10:30', '14:00', '17:30', '21:00'],
-            '3D': ['12:00', '15:30', '19:00'],
+          '2025-01-04': {
+            '2D': ['10:30', '13:00', '15:30', '18:00', '20:30'],
+            '3D': ['12:00', '14:30', '17:00', '19:30', '22:00'],
+          },
+          '2025-01-05': {
+            '2D': ['11:00', '13:30', '16:00', '18:30', '21:00'],
+            '3D': ['12:30', '15:00', '17:30', '20:00', '22:30'],
+          },
+        },
+        'cluj-1': {
+          '2025-01-03': {
+            '2D': ['10:30', '13:00', '15:30', '18:00', '20:30'],
+            '3D': ['12:00', '14:30', '17:00', '19:30', '22:00'],
+          },
+          '2025-01-04': {
+            '2D': ['11:00', '13:30', '16:00', '18:30', '21:00'],
+            '3D': ['12:30', '15:00', '17:30', '20:00', '22:30'],
+          },
+          '2025-01-05': {
+            '2D': ['10:00', '12:30', '15:00', '17:30', '20:00'],
+            '3D': ['11:30', '14:00', '16:30', '19:00', '21:30'],
           },
         },
       },
@@ -236,13 +284,31 @@ export class NowShowingComponent {
         'https://upload.wikimedia.org/wikipedia/en/3/39/Barbie_2023_film_poster.jpg',
       showtimes: {
         'buc-1': {
-          '2024-03-19': {
-            '2D': ['10:30', '13:00', '15:30'],
-            '3D': ['12:00', '14:30', '17:00'],
+          '2025-01-03': {
+            '2D': ['11:00', '13:30', '16:00', '18:30', '21:00'],
+            '3D': ['12:30', '15:00', '17:30', '20:00', '22:30'],
           },
-          '2024-03-20': {
-            '2D': ['11:30', '14:00', '16:30'],
-            '3D': ['13:00', '15:30', '18:00'],
+          '2025-01-04': {
+            '2D': ['10:30', '13:00', '15:30', '18:00', '20:30'],
+            '3D': ['12:00', '14:30', '17:00', '19:30', '22:00'],
+          },
+          '2025-01-05': {
+            '2D': ['10:00', '12:30', '15:00', '17:30', '20:00'],
+            '3D': ['11:30', '14:00', '16:30', '19:00', '21:30'],
+          },
+        },
+        'cluj-1': {
+          '2025-01-03': {
+            '2D': ['10:00', '12:30', '15:00', '17:30', '20:00'],
+            '3D': ['11:30', '14:00', '16:30', '19:00', '21:30'],
+          },
+          '2025-01-04': {
+            '2D': ['10:30', '13:00', '15:30', '18:00', '20:30'],
+            '3D': ['12:00', '14:30', '17:00', '19:30', '22:00'],
+          },
+          '2025-01-05': {
+            '2D': ['11:00', '13:30', '16:00', '18:30', '21:00'],
+            '3D': ['12:30', '15:00', '17:30', '20:00', '22:30'],
           },
         },
       },
@@ -263,13 +329,31 @@ export class NowShowingComponent {
         'https://upload.wikimedia.org/wikipedia/en/f/f7/Spider-Man_Across_the_Spider-Verse_poster.png',
       showtimes: {
         'buc-1': {
-          '2024-03-19': {
-            '2D': ['10:30', '13:00', '15:30'],
-            '3D': ['12:00', '14:30', '17:00'],
+          '2025-01-03': {
+            '2D': ['10:30', '13:00', '15:30', '18:00', '20:30'],
+            '3D': ['12:00', '14:30', '17:00', '19:30', '22:00'],
           },
-          '2024-03-20': {
-            '2D': ['11:30', '14:00', '16:30'],
-            '3D': ['13:00', '15:30', '18:00'],
+          '2025-01-04': {
+            '2D': ['11:00', '13:30', '16:00', '18:30', '21:00'],
+            '3D': ['12:30', '15:00', '17:30', '20:00', '22:30'],
+          },
+          '2025-01-05': {
+            '2D': ['10:00', '12:30', '15:00', '17:30', '20:00'],
+            '3D': ['11:30', '14:00', '16:30', '19:00', '21:30'],
+          },
+        },
+        'cluj-1': {
+          '2025-01-03': {
+            '2D': ['11:00', '13:30', '16:00', '18:30', '21:00'],
+            '3D': ['12:30', '15:00', '17:30', '20:00', '22:30'],
+          },
+          '2025-01-04': {
+            '2D': ['10:00', '12:30', '15:00', '17:30', '20:00'],
+            '3D': ['11:30', '14:00', '16:30', '19:00', '21:30'],
+          },
+          '2025-01-05': {
+            '2D': ['10:30', '13:00', '15:30', '18:00', '20:30'],
+            '3D': ['12:00', '14:30', '17:00', '19:30', '22:00'],
           },
         },
       },
@@ -290,13 +374,25 @@ export class NowShowingComponent {
         'https://upload.wikimedia.org/wikipedia/en/3/32/Oppenheimer_%282023%29.png',
       showtimes: {
         'buc-1': {
-          '2024-03-19': {
-            '2D': ['10:30', '13:00', '15:30'],
-            '3D': ['12:00', '14:30', '17:00'],
+          '2025-01-03': {
+            '2D': ['11:00', '14:30', '18:00', '21:30'],
           },
-          '2024-03-20': {
-            '2D': ['11:30', '14:00', '16:30'],
-            '3D': ['13:00', '15:30', '18:00'],
+          '2025-01-04': {
+            '2D': ['10:30', '14:00', '17:30', '21:00'],
+          },
+          '2025-01-05': {
+            '2D': ['12:00', '15:30', '19:00', '22:30'],
+          },
+        },
+        'cluj-1': {
+          '2025-01-03': {
+            '2D': ['10:30', '14:00', '17:30', '21:00'],
+          },
+          '2025-01-04': {
+            '2D': ['12:00', '15:30', '19:00', '22:30'],
+          },
+          '2025-01-05': {
+            '2D': ['11:00', '14:30', '18:00', '21:30'],
           },
         },
       },
@@ -353,5 +449,18 @@ export class NowShowingComponent {
 
   onCinemaChange(cinema: Cinema) {
     this.selectedCinema = cinema;
+  }
+
+  isDateInRange(date: Date): boolean {
+    const startOfDate = new Date(date);
+    startOfDate.setHours(0, 0, 0, 0);
+
+    const startOfMinDate = new Date(this.minDate);
+    startOfMinDate.setHours(0, 0, 0, 0);
+
+    const startOfMaxDate = new Date(this.maxDate);
+    startOfMaxDate.setHours(0, 0, 0, 0);
+
+    return startOfDate >= startOfMinDate && startOfDate <= startOfMaxDate;
   }
 }
