@@ -1,0 +1,26 @@
+.admin-dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+:host ::ng-deep .p-tabview-panels {
+  padding: 1.5rem 0 !important;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-header {
+  background: transparent;
+  border: none;
+  padding: 0 0 1rem 0;
+}
+
+:host ::ng-deep .p-datatable .p-datatable-thead > tr > th {
+  background: var(--surface-card);
+}
+
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr {
+  background: var(--surface-card);
+}
+
+:host ::ng-deep .p-datatable .p-datatable-tbody > tr:hover {
+  background: var(--surface-hover);
+}
