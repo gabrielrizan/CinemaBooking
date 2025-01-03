@@ -1,42 +1,72 @@
 <div class="now-showing-container mx-auto max-w-7xl">
   <!-- Cinema Selector Section -->
+
+  <!-- Date Selector Section -->
   <div class="mb-6">
-    <div
-      class="flex flex-wrap justify-start gap-2 p-4 bg-surface-100 rounded-lg"
-    >
+    <h2 class="text-xl mb-4">
+      PROGRAM PENTRU {{ selectedCinema.name | uppercase }}
+    </h2>
+    <div class="flex flex-col sm:flex-row gap-4">
       <p-dropdown
         [options]="cinemas"
         [(ngModel)]="selectedCinema"
         optionLabel="name"
         (onChange)="onCinemaChange($event.value)"
-        styleClass="w-64 md:w-auto"
+        styleClass="w-56"
         placeholder="Select Cinema"
       ></p-dropdown>
-      <div class="flex items-center gap-2 text-sm text-surface-600">
-        <i class="pi pi-map-marker"></i>
-        {{ selectedCinema.name }} - {{ selectedCinema.address }}
-      </div>
-    </div>
-  </div>
 
-  <!-- Date Selector Section -->
-  <div class="mb-6">
-    <div
-      class="flex flex-wrap justify-start gap-2 p-4 bg-surface-100 rounded-lg"
-    >
-      <p-calendar
-        [(ngModel)]="selectedDate"
-        [minDate]="minDate"
-        [maxDate]="maxDate"
-        [showIcon]="true"
-        dateFormat="dd/mm/yy"
-        [readonlyInput]="true"
-        styleClass="w-64"
-        placeholder="Select Date"
-      ></p-calendar>
-      <div class="flex items-center gap-2 text-sm text-surface-600">
-        <i class="pi pi-calendar"></i>
-        Showing movies for: {{ selectedDate | date : "fullDate" }}
+      <div class="flex items-center gap-2">
+        <!-- Previous Week Button -->
+        <p-button
+          icon="pi pi-chevron-left"
+          styleClass="p-button-outlined p-button-sm"
+          (onClick)="previousWeek()"
+          [disabled]="weekStartDate <= minDate"
+        >
+        </p-button>
+
+        <!-- Week Days -->
+        <button
+          *ngFor="let date of weekDates"
+          pButton
+          [class.p-button-outlined]="!isSelectedDate(date)"
+          class="p-button-sm"
+          [disabled]="date < minDate || date > maxDate"
+          (click)="selectDate(date)"
+        >
+          <div class="flex flex-col items-center">
+            <span>{{ date | date : "EEE" | uppercase }}</span>
+            <small>{{ date | date : "dd/MM" }}</small>
+          </div>
+        </button>
+
+        <!-- Next Week Button -->
+        <p-button
+          icon="pi pi-chevron-right"
+          styleClass="p-button-outlined p-button-sm"
+          (onClick)="nextWeek()"
+          [disabled]="weekDates[6] >= maxDate"
+        >
+        </p-button>
+
+        <!-- Calendar Overlay -->
+        <p-button
+          icon="pi pi-calendar"
+          styleClass="p-button-outlined p-button-sm"
+          (click)="op.toggle($event)"
+        >
+        </p-button>
+
+        <p-overlayPanel #op>
+          <p-calendar
+            [(ngModel)]="selectedDate"
+            [minDate]="minDate"
+            [maxDate]="maxDate"
+            (onSelect)="onCalendarSelect($event); op.hide()"
+          >
+          </p-calendar>
+        </p-overlayPanel>
       </div>
     </div>
   </div>

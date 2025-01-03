@@ -15,6 +15,7 @@ import { PanelModule } from 'primeng/panel';
 import { CalendarModule } from 'primeng/calendar';
 import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 interface Cinema {
   id: string;
@@ -64,6 +65,7 @@ interface Movie {
     CalendarModule,
     FormsModule,
     DropdownModule,
+    OverlayPanelModule,
   ],
   templateUrl: './now-showing.component.html',
   styleUrls: ['./now-showing.component.css'],
@@ -76,25 +78,91 @@ export class NowShowingComponent {
   dialogVisible: boolean = false;
   selectedMovie: Movie | null = null;
   selectedCinema: Cinema;
+  weekDates: Date[] = [];
+  weekStartDate: Date = new Date();
 
   cinemas: Cinema[] = [
     {
       id: 'buc-1',
-      name: 'Cinema City Bucharest Mall',
+      name: 'Bucharest Mall',
       city: 'Bucharest',
       address: 'Bucharest Mall, Str. Mihai Bravu 2-4',
     },
     {
       id: 'cluj-1',
-      name: 'Cinema City Cluj Iulius',
+      name: 'Cluj Iulius',
       city: 'Cluj-Napoca',
       address: 'Iulius Mall, Str. Alexandru Vaida Voevod 53B',
     },
   ];
 
   constructor() {
-    this.maxDate.setDate(this.maxDate.getDate() + 7);
-    this.selectedCinema = this.cinemas[0]; // Default to first cinema
+    this.minDate = new Date(); // Today
+    this.maxDate = new Date();
+    this.maxDate.setDate(this.maxDate.getDate() + 15);
+    this.selectedDate = new Date();
+    this.selectedCinema = this.cinemas[0];
+    this.generateWeekDates(new Date());
+  }
+
+  selectDate(date: Date) {
+    this.selectedDate = date;
+  }
+
+  generateWeekDates(startDate: Date) {
+    this.weekDates = [];
+    const start = new Date(startDate);
+    start.setHours(0, 0, 0, 0);
+
+    for (let i = 0; i < 7; i++) {
+      const date = new Date(start);
+      date.setDate(start.getDate() + i);
+      this.weekDates.push(date);
+    }
+  }
+
+  previousWeek() {
+    const newStart = new Date(this.weekStartDate);
+    newStart.setDate(newStart.getDate() - 7);
+    if (newStart >= this.minDate) {
+      this.weekStartDate = newStart;
+      this.generateWeekDates(newStart);
+    }
+  }
+
+  nextWeek() {
+    const newStart = new Date(this.weekStartDate);
+    newStart.setDate(newStart.getDate() + 7);
+    const weekEnd = new Date(newStart);
+    weekEnd.setDate(newStart.getDate() + 6);
+
+    if (weekEnd <= this.maxDate) {
+      this.weekStartDate = newStart;
+      this.generateWeekDates(newStart);
+    }
+  }
+
+  onCalendarSelect(date: Date) {
+    this.selectedDate = date;
+    this.weekStartDate = new Date(date);
+    this.weekStartDate.setDate(date.getDate() - date.getDay());
+    this.generateWeekDates(this.weekStartDate);
+  }
+
+  isSelectedDate(date: Date): boolean {
+    return date.toDateString() === this.selectedDate.toDateString();
+  }
+
+  canGoBack(): boolean {
+    const newStart = new Date(this.weekStartDate);
+    newStart.setDate(newStart.getDate() - 7);
+    return newStart >= this.minDate;
+  }
+
+  canGoForward(): boolean {
+    const lastDayOfNextWeek = new Date(this.weekStartDate);
+    lastDayOfNextWeek.setDate(lastDayOfNextWeek.getDate() + 13); // Current week end + 7 days
+    return lastDayOfNextWeek <= this.maxDate;
   }
 
   movies: Movie[] = [
