@@ -32,9 +32,11 @@ export class AuthService {
   private isLoggedInSubject = new BehaviorSubject<boolean>(this.isTokenValid());
   private userDetailsSubject = new BehaviorSubject<UserDetails | null>(null);
   private isAdminSubject = new BehaviorSubject<boolean>(false);
+  private adminViewSubject = new BehaviorSubject<boolean>(false);
   isLoggedIn$ = this.isLoggedInSubject.asObservable();
   userDetails$ = this.userDetailsSubject.asObservable();
   isAdmin$ = this.isAdminSubject.asObservable();
+  adminView$ = this.adminViewSubject.asObservable();
 
   constructor(private http: HttpClient, private router: Router) {
     this.setLoginStatus(this.isTokenValid());
@@ -125,5 +127,13 @@ export class AuthService {
 
   isAdmin(): boolean {
     return this.isAdminSubject.value;
+  }
+
+  toggleAdminView() {
+    this.adminViewSubject.next(!this.adminViewSubject.value);
+  }
+
+  isAdminView(): boolean {
+    return this.adminViewSubject.value;
   }
 }

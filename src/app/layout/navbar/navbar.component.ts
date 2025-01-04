@@ -47,8 +47,8 @@ import { TooltipModule } from 'primeng/tooltip';
     DividerModule,
     DialogModule,
     TieredMenuModule,
-    SearchCardComponent, // Assuming this is a standalone component
-    LoginComponent, // Assuming this is a standalone component
+    SearchCardComponent,
+    LoginComponent,
     RouterModule,
     TooltipModule,
   ],
@@ -60,9 +60,9 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
   loading: boolean = true;
   error: string | null = null;
   searchTerm: string = '';
-
+  isAdminView: boolean = true;
   items: MenuItem[] | undefined;
-  isLoggedIn = false; // Set this based on your actual authentication logic
+  isLoggedIn = false;
   isSearchActive: boolean = false;
   visible: boolean = false;
   filteredMovies: HomepageMovie[] = [];
@@ -72,9 +72,10 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('op') overlayPanel: OverlayPanel | undefined;
   @ViewChild('searchInput') searchInput!: ElementRef;
 
-  private searchSubject = new Subject<string>(); // Subject to handle the search input
+  private searchSubject = new Subject<string>();
   userFirstName: string = '';
   private authSubscription!: Subscription;
+  isAdmin: boolean = false;
 
   constructor(
     private movieService: MultiSearchService,
@@ -86,7 +87,24 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
     this.authSubscription = this.authService.isLoggedIn$.subscribe(
       (isLoggedIn) => {
         this.isLoggedIn = isLoggedIn;
-        this.updateMenuItems(); // This will update the navbar immediately
+        if (isLoggedIn) {
+          // Get user details when logged in
+          this.authService.getUserDetails().subscribe({
+            next: (user) => {
+              this.userFirstName = user.firstname;
+              this.isAdmin = user.is_staff === true;
+              this.updateMenuItems(); // Update menu items when admin status changes
+            },
+            error: (error) => {
+              console.error('Error loading user details:', error);
+            },
+          });
+        } else {
+          // Reset admin status and menu items when logged out
+          this.isAdmin = false;
+          this.userFirstName = '';
+          this.updateMenuItems();
+        }
       }
     );
 
@@ -218,6 +236,29 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
         this.userFirstName = '';
       }
     });
+
+    // Add subscription to check if user is admin
+    this.authService.getUserDetails().subscribe({
+      next: (user) => {
+        this.userFirstName = user.firstname;
+        this.isAdmin = user.is_staff === true;
+        this.updateMenuItems();
+      },
+      error: (error) => {
+        console.error('Error loading user details:', error);
+      },
+    });
+
+    // Subscribe to admin view changes
+    this.authService.adminView$.subscribe((isAdminView) => {
+      this.isAdminView = isAdminView;
+      this.updateMenuItems();
+    });
+  }
+
+  toggleAdminView() {
+    this.isAdminView = !this.isAdminView;
+    this.updateMenuItems();
   }
 
   private loadUserDetails() {
@@ -234,33 +275,159 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private updateMenuItems() {
-    if (this.isLoggedIn) {
-      // Show protected menu items
-      this.items = this.items?.map((item) => {
-        if (item.label === 'My Movies') {
-          return { ...item, visible: true };
-        }
-        return item;
-      });
-    } else {
-      // Hide protected menu items
-      this.items = this.items?.map((item) => {
-        if (item.label === 'My Movies') {
-          return { ...item, visible: false };
-        }
-        return item;
-      });
-    }
+    const baseItems = [
+      {
+        label: 'Home',
+        icon: 'pi pi-home',
+        routerLink: ['/home'],
+      },
+    ];
 
-    // Update user name if logged in
-    if (this.isLoggedIn && this.userFirstName) {
-      const accountItem = this.items?.find(
-        (item) => item.label === 'My Account'
-      );
-      if (accountItem) {
-        accountItem.label = `Hi, ${this.userFirstName}`;
-      }
-    }
+    const regularItems = [
+      {
+        label: 'Movies',
+        icon: 'pi pi-video',
+        items: [
+          {
+            label: 'Now Showing',
+            icon: 'pi pi-play',
+            routerLink: ['/movies/now-showing'],
+          },
+          {
+            label: 'Coming Soon',
+            icon: 'pi pi-clock',
+            routerLink: ['/movies/coming-soon'],
+          },
+          {
+            label: 'Top Rated',
+            icon: 'pi pi-thumbs-up',
+            routerLink: ['/movies/top-rated'],
+          },
+        ],
+      },
+      {
+        label: 'Offers',
+        icon: 'pi pi-tag',
+        items: [
+          {
+            label: 'Discounts',
+            icon: 'pi pi-percentage',
+            routerLink: ['/offers/discounts'],
+          },
+          {
+            label: 'Memberships',
+            icon: 'pi pi-id-card',
+            routerLink: ['/offers/memberships'],
+          },
+        ],
+      },
+      {
+        label: 'Snacks',
+        icon: 'pi pi-shopping-bag',
+        items: [
+          {
+            label: 'Popcorn',
+            icon: 'pi pi-shopping-cart',
+            routerLink: ['/snacks/popcorn'],
+          },
+          {
+            label: 'Drinks',
+            icon: 'pi pi-glass-martini',
+            routerLink: ['/snacks/drinks'],
+          },
+          {
+            label: 'Combos',
+            icon: 'pi pi-box',
+            routerLink: ['/snacks/combos'],
+          },
+        ],
+      },
+      {
+        label: 'Contact',
+        icon: 'pi pi-envelope',
+        routerLink: ['/contact'],
+      },
+      {
+        label: 'About Us',
+        icon: 'pi pi-info-circle',
+        routerLink: ['/about'],
+      },
+      {
+        label: 'My Movies',
+        icon: 'pi pi-video',
+        routerLink: ['/my-movies'],
+        visible: this.isLoggedIn,
+      },
+    ];
+
+    const adminItems = [
+      {
+        label: 'Dashboard',
+        icon: 'pi pi-chart-bar',
+        routerLink: ['/admin/dashboard'],
+      },
+      {
+        label: 'Analytics',
+        icon: 'pi pi-chart-line',
+        items: [
+          {
+            label: 'Sales Statistics',
+            icon: 'pi pi-dollar',
+            routerLink: ['/admin/statistics/sales'],
+          },
+          {
+            label: 'Movie Performance',
+            icon: 'pi pi-chart-pie',
+            routerLink: ['/admin/statistics/movies'],
+          },
+        ],
+      },
+      {
+        label: 'Cinema Management',
+        icon: 'pi pi-building',
+        items: [
+          {
+            label: 'Cinema Layouts',
+            icon: 'pi pi-th-large',
+            routerLink: ['/admin/cinemas/layouts'],
+          },
+          {
+            label: 'Add New Cinema',
+            icon: 'pi pi-plus',
+            routerLink: ['/admin/cinemas/new'],
+          },
+        ],
+      },
+      {
+        label: 'Movie Management',
+        icon: 'pi pi-video',
+        items: [
+          {
+            label: 'All Movies',
+            icon: 'pi pi-list',
+            routerLink: ['/admin/movies'],
+          },
+          {
+            label: 'Add Movie',
+            icon: 'pi pi-plus',
+            routerLink: ['/admin/movies/new'],
+          },
+          {
+            label: 'Manage Showtimes',
+            icon: 'pi pi-calendar',
+            routerLink: ['/admin/movies/showtimes'],
+          },
+        ],
+      },
+    ];
+
+    // Combine base items with either admin or regular items
+    this.items = [
+      ...baseItems,
+      ...(this.isAdmin && this.authService.isAdminView()
+        ? adminItems
+        : regularItems),
+    ];
   }
 
   logout() {

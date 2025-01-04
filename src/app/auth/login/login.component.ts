@@ -37,6 +37,7 @@ export class LoginComponent {
   password = '';
   isLoggedIn: boolean = false; // Set this based on your actual authentication logic
   userFirstName: string = '';
+  isAdmin: boolean = false;
 
   @ViewChild('op') overlayPanel!: OverlayPanel;
 
@@ -50,6 +51,7 @@ export class LoginComponent {
     this.authService.userDetails$.subscribe((user) => {
       if (user) {
         this.userFirstName = user.firstname;
+        this.isAdmin = user.is_staff === true;
         this.updateLoggedInItems();
       }
     });
@@ -63,6 +65,21 @@ export class LoginComponent {
         styleClass: 'font-bold',
       },
       { separator: true },
+      ...(this.isAdmin
+        ? [
+            {
+              label: this.authService.isAdminView()
+                ? 'Switch to Regular View'
+                : 'Switch to Admin View',
+              icon: 'pi pi-sync',
+              command: () => {
+                this.authService.toggleAdminView();
+                this.updateLoggedInItems();
+              },
+            },
+            { separator: true },
+          ]
+        : []),
       {
         label: 'My Account',
         icon: 'pi pi-user',

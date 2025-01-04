@@ -61,7 +61,7 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
-    path: 'admin',
+    path: 'admin/dashboard',
     component: AdminDasboardComponent,
     canActivate: [adminGuard],
   },
