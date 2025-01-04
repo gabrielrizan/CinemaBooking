@@ -1,0 +1,153 @@
+<div class="layout-container">
+  <!-- Controls -->
+  <div class="flex items-center gap-4 mb-8">
+    <div class="flex items-center gap-2">
+      <span class="text-sm">Rows:</span>
+      <p-inputNumber
+        [(ngModel)]="rows"
+        [min]="1"
+        [max]="20"
+        (onInput)="updateLayoutSize()"
+        [inputStyle]="{ width: '80px' }"
+      ></p-inputNumber>
+    </div>
+
+    <div class="flex gap-2">
+      <p-button
+        [label]="'Seat'"
+        [outlined]="selectedTool !== 'seat'"
+        (onClick)="selectedTool = 'seat'"
+        icon="pi pi-user"
+      ></p-button>
+      <p-button
+        [label]="'Space'"
+        [outlined]="selectedTool !== 'space'"
+        (onClick)="selectedTool = 'space'"
+        icon="pi pi-minus"
+      ></p-button>
+      <p-button
+        [label]="'Empty'"
+        [outlined]="selectedTool !== 'empty'"
+        (onClick)="selectedTool = 'empty'"
+        icon="pi pi-times"
+      ></p-button>
+    </div>
+
+    <p-button
+      label="View Saved Layouts"
+      icon="pi pi-list"
+      (onClick)="showSavedLayouts = true"
+    ></p-button>
+  </div>
+
+  <!-- Layout Area -->
+  <div class="bg-surface-card rounded-lg shadow-md p-8">
+    <div
+      class="seat-grid"
+      [style.--max-seats]="getMaxSeatsInLayout()"
+      [attr.data-max-seats]="getMaxSeatsInLayout()"
+    >
+      <!-- Screen -->
+      <div class="screen">Screen</div>
+
+      <!-- Seating Layout -->
+      <div *ngFor="let row of layout; let rowIndex = index" class="row">
+        <!-- Row Controls -->
+        <div class="row-controls">
+          <span class="w-8 text-center font-bold">{{
+            getRowLabel(rowIndex)
+          }}</span>
+          <p-inputNumber
+            [ngModel]="seatsPerRow[rowIndex]"
+            (ngModelChange)="updateRowSeats(rowIndex, $event)"
+            [min]="1"
+            [max]="40"
+            [showButtons]="true"
+            buttonLayout="horizontal"
+            spinnerMode="horizontal"
+            [inputStyle]="{ width: '60px' }"
+            [inputStyleClass]="'text-center'"
+          ></p-inputNumber>
+        </div>
+
+        <!-- Seats -->
+        <div class="seat-row">
+          <ng-container *ngFor="let cell of row; let colIndex = index">
+            <div
+              *ngIf="cell.type !== 'space'"
+              class="seat"
+              [ngClass]="{
+                'bg-blue-200 dark:bg-blue-800': cell.type === 'seat',
+                'bg-gray-100 dark:bg-gray-800': cell.type === 'empty'
+              }"
+              (click)="onCellClick(rowIndex, colIndex)"
+            >
+              <i *ngIf="cell.type === 'seat'" class="pi pi-user"></i>
+            </div>
+            <div *ngIf="cell.type === 'space'" class="space"></div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Save Controls -->
+  <div class="flex gap-4 mt-8">
+    <input
+      type="text"
+      pInputText
+      [(ngModel)]="layoutName"
+      placeholder="Layout Name"
+      class="w-64"
+    />
+    <p-button
+      label="Save Layout"
+      icon="pi pi-save"
+      (onClick)="saveLayout()"
+    ></p-button>
+  </div>
+
+  <!-- Dialogs and Toast -->
+  <p-dialog
+    [(visible)]="showSavedLayouts"
+    header="Saved Layouts"
+    [modal]="true"
+    [style]="{ width: '70vw' }"
+    [maximizable]="true"
+  >
+    <p-table [value]="savedLayouts">
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Name</th>
+          <th>Rows</th>
+          <th>Created</th>
+          <th>Actions</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-layout>
+        <tr>
+          <td>{{ layout.name }}</td>
+          <td>{{ layout.rows }}</td>
+          <td>{{ layout.createdAt | date }}</td>
+          <td>
+            <div class="flex gap-2">
+              <p-button
+                icon="pi pi-copy"
+                (onClick)="loadLayout(layout)"
+                pTooltip="Load Layout"
+              ></p-button>
+              <p-button
+                icon="pi pi-trash"
+                severity="danger"
+                (onClick)="deleteLayout(layout.id)"
+                pTooltip="Delete Layout"
+              ></p-button>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-dialog>
+
+  <p-toast></p-toast>
+</div>

@@ -12,6 +12,7 @@ import { MyMoviesComponent } from './my-movies/my-movies.component';
 import { authGuard } from './layout/guards/auth.guard';
 import { AdminDasboardComponent } from './admin/admin-dasboard/admin-dasboard.component';
 import { adminGuard } from './layout/guards/admin.guard';
+import { LayoutCreationComponent } from './admin/layout-creation/layout-creation.component';
 
 export const routes: Routes = [
   {
@@ -64,5 +65,9 @@ export const routes: Routes = [
     path: 'admin/dashboard',
     component: AdminDasboardComponent,
     canActivate: [adminGuard],
+  },
+  {
+    path: 'layout',
+    component: LayoutCreationComponent,
   },
 ];

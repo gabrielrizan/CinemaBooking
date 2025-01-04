@@ -1,0 +1,116 @@
+.layout-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.seat-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  position: relative;
+  padding-top: 5rem;
+}
+
+.screen {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(var(--seat-size) * var(--max-seats));
+  background: var(--surface-200);
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 1rem;
+}
+
+.row-controls {
+  width: 200px;
+  min-width: 200px;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.seat-row {
+  display: flex;
+  gap: 0.25rem;
+  justify-content: center;
+  flex-grow: 1;
+}
+
+.seat {
+  width: var(--seat-size);
+  height: var(--seat-size);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: calc(var(--seat-size) * 0.5);
+}
+
+.space {
+  width: var(--seat-size);
+  height: var(--seat-size);
+}
+
+.seat:hover {
+  transform: scale(1.1);
+  opacity: 0.9;
+}
+
+/* Add responsive seat sizes */
+:host {
+  --seat-size: 2rem;
+}
+
+:host .seat-grid[data-max-seats="28"] {
+  --seat-size: 1.85rem;
+}
+:host .seat-grid[data-max-seats="29"] {
+  --seat-size: 1.8rem;
+}
+:host .seat-grid[data-max-seats="30"] {
+  --seat-size: 1.75rem;
+}
+:host .seat-grid[data-max-seats="31"] {
+  --seat-size: 1.7rem;
+}
+:host .seat-grid[data-max-seats="32"] {
+  --seat-size: 1.65rem;
+}
+:host .seat-grid[data-max-seats="33"] {
+  --seat-size: 1.6rem;
+}
+:host .seat-grid[data-max-seats="34"] {
+  --seat-size: 1.55rem;
+}
+:host .seat-grid[data-max-seats="35"] {
+  --seat-size: 1.5rem;
+}
+:host .seat-grid[data-max-seats="36"] {
+  --seat-size: 1.45rem;
+}
+:host .seat-grid[data-max-seats="37"] {
+  --seat-size: 1.4rem;
+}
+:host .seat-grid[data-max-seats="38"] {
+  --seat-size: 1.35rem;
+}
+:host .seat-grid[data-max-seats="39"] {
+  --seat-size: 1.35rem;
+}
+:host .seat-grid[data-max-seats="40"] {
+  --seat-size: 1.35rem;
+}
