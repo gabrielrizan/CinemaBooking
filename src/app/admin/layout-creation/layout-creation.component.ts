@@ -48,7 +48,7 @@ export class LayoutCreationComponent implements OnInit {
   savedLayouts: SavedLayout[] = [];
   showSavedLayouts: boolean = false;
   showPreview: boolean = false;
-  previewLayout: Cell[][] = [];
+  previewLayout: SavedLayout | null = null;
 
   constructor(private messageService: MessageService) {}
 
@@ -176,7 +176,7 @@ export class LayoutCreationComponent implements OnInit {
   }
 
   showLayoutPreview(layout: SavedLayout) {
-    this.previewLayout = layout.layout;
+    this.previewLayout = layout;
     this.showPreview = true;
   }
 }

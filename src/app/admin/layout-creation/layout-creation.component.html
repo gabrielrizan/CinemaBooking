@@ -161,13 +161,21 @@
     [style]="{ width: '50vw' }"
     [maximizable]="true"
   >
-    <div class="preview-container">
+    <div class="preview-container" *ngIf="previewLayout">
       <div class="preview-screen">Screen</div>
       <div class="preview-grid">
-        <div *ngFor="let row of previewLayout; let rowIndex = index" class="preview-row">
+        <div
+          *ngFor="let row of previewLayout.layout; let rowIndex = index"
+          class="preview-row"
+        >
           <span class="preview-row-label">{{ getRowLabel(rowIndex) }}</span>
           <div class="preview-seats">
-            <ng-container *ngFor="let cell of row; let colIndex = index">
+            <ng-container
+              *ngFor="
+                let cell of row.slice(0, previewLayout.seatsPerRow[rowIndex]);
+                let colIndex = index
+              "
+            >
               <div
                 *ngIf="cell.type !== 'space'"
                 class="preview-seat"
@@ -182,6 +190,11 @@
             </ng-container>
           </div>
         </div>
+      </div>
+      <div class="preview-info mt-4">
+        <p>Layout Name: {{ previewLayout.name }}</p>
+        <p>Total Rows: {{ previewLayout.rows }}</p>
+        <p>Created: {{ previewLayout.createdAt | date }}</p>
       </div>
     </div>
   </p-dialog>

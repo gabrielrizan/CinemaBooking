@@ -115,7 +115,6 @@
   --seat-size: 1.35rem;
 }
 
-/* Add these preview-specific styles */
 .preview-container {
   padding: 2rem;
   background: var(--surface-ground);
@@ -128,9 +127,6 @@
   text-align: center;
   border-radius: 0.25rem;
   margin-bottom: 2rem;
-  width: 80%;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .preview-grid {
@@ -154,23 +150,15 @@
 .preview-seats {
   display: flex;
   gap: 0.25rem;
-  flex-grow: 1;
-  justify-content: center;
 }
 
 .preview-seat {
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 2rem;
+  height: 2rem;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 0.25rem;
-  font-size: 0.75rem;
-}
-
-.preview-space {
-  width: 1.5rem;
-  height: 1.5rem;
 }
 
 .preview-seat-active {
@@ -180,4 +168,15 @@
 
 .preview-seat-empty {
   background: var(--surface-200);
+}
+
+.preview-space {
+  width: 2rem;
+  height: 2rem;
+}
+
+.preview-info {
+  border-top: 1px solid var(--surface-200);
+  padding-top: 1rem;
+  margin-top: 1rem;
 }
