@@ -47,6 +47,8 @@ export class LayoutCreationComponent implements OnInit {
   layoutName: string = '';
   savedLayouts: SavedLayout[] = [];
   showSavedLayouts: boolean = false;
+  showPreview: boolean = false;
+  previewLayout: Cell[][] = [];
 
   constructor(private messageService: MessageService) {}
 
@@ -171,5 +173,10 @@ export class LayoutCreationComponent implements OnInit {
       summary: 'Success',
       detail: 'Layout deleted successfully',
     });
+  }
+
+  showLayoutPreview(layout: SavedLayout) {
+    this.previewLayout = layout.layout;
+    this.showPreview = true;
   }
 }

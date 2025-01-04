@@ -132,6 +132,11 @@
           <td>
             <div class="flex gap-2">
               <p-button
+                icon="pi pi-eye"
+                (onClick)="showLayoutPreview(layout)"
+                pTooltip="Preview Layout"
+              ></p-button>
+              <p-button
                 icon="pi pi-copy"
                 (onClick)="loadLayout(layout)"
                 pTooltip="Load Layout"
@@ -147,6 +152,38 @@
         </tr>
       </ng-template>
     </p-table>
+  </p-dialog>
+
+  <p-dialog
+    [(visible)]="showPreview"
+    header="Layout Preview"
+    [modal]="true"
+    [style]="{ width: '50vw' }"
+    [maximizable]="true"
+  >
+    <div class="preview-container">
+      <div class="preview-screen">Screen</div>
+      <div class="preview-grid">
+        <div *ngFor="let row of previewLayout; let rowIndex = index" class="preview-row">
+          <span class="preview-row-label">{{ getRowLabel(rowIndex) }}</span>
+          <div class="preview-seats">
+            <ng-container *ngFor="let cell of row; let colIndex = index">
+              <div
+                *ngIf="cell.type !== 'space'"
+                class="preview-seat"
+                [ngClass]="{
+                  'preview-seat-active': cell.type === 'seat',
+                  'preview-seat-empty': cell.type === 'empty'
+                }"
+              >
+                <i *ngIf="cell.type === 'seat'" class="pi pi-user"></i>
+              </div>
+              <div *ngIf="cell.type === 'space'" class="preview-space"></div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
   </p-dialog>
 
   <p-toast></p-toast>

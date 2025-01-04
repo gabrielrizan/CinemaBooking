@@ -114,3 +114,70 @@
 :host .seat-grid[data-max-seats="40"] {
   --seat-size: 1.35rem;
 }
+
+/* Add these preview-specific styles */
+.preview-container {
+  padding: 2rem;
+  background: var(--surface-ground);
+  border-radius: 0.5rem;
+}
+
+.preview-screen {
+  background: var(--surface-200);
+  padding: 0.5rem;
+  text-align: center;
+  border-radius: 0.25rem;
+  margin-bottom: 2rem;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.preview-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.preview-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.preview-row-label {
+  width: 2rem;
+  text-align: center;
+  font-weight: bold;
+}
+
+.preview-seats {
+  display: flex;
+  gap: 0.25rem;
+  flex-grow: 1;
+  justify-content: center;
+}
+
+.preview-seat {
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+}
+
+.preview-space {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.preview-seat-active {
+  background: var(--blue-200);
+  color: var(--blue-900);
+}
+
+.preview-seat-empty {
+  background: var(--surface-200);
+}
