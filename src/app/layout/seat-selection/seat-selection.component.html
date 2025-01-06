@@ -1,18 +1,15 @@
-<div
-  class="cinema-container flex flex-row items-start justify-center gap-12"
->
+<div class="cinema-container flex flex-row items-start justify-center gap-12">
   <!-- Seat Map and Screen -->
   <div class="cinema-map flex flex-col items-center gap-6">
     <!-- Screen -->
-    <div
-      class="screen flex items-center justify-center bg-gray-300 rounded-border py-2 w-full mb-12"
-    >
-      <span>Screen</span>
+    <div class="screen relative flex items-center justify-center mb-12">
+      <span class="absolute text-400 text-xl">Screen</span>
+      <img src="screen.png" alt="Screen" class="w-full max-w-xs" />
     </div>
 
     <!-- Seat Map -->
     <div class="seat-map flex flex-col items-center gap-4">
-      <ng-container *ngFor="let row of seatRows; let rowIndex = index">
+      <ng-container *ngFor="let row of processedLayout; let rowIndex = index">
         <div class="row flex items-center gap-2">
           <span class="row-label font-bold">{{ getRowLabel(rowIndex) }}</span>
           <div class="seat-row flex justify-center gap-2">
@@ -27,14 +24,14 @@
                       : 'cinema-available.svg'
                   "
                   [alt]="seat.label"
-                  class="cinema-seat-icon"
+                  class="w-4 h-4"
                   [class.reserved]="seat.reserved"
                   [class.selected]="selectedSeats.includes(seat)"
                   (click)="!seat.reserved && toggleSeatSelection(seat)"
                 />
               </ng-container>
               <ng-template #emptySpacePlaceholder>
-                <div class="empty-space"></div>
+                <div class="empty-space w-4 h-4"></div>
               </ng-template>
             </ng-container>
           </div>
@@ -47,15 +44,27 @@
   <div class="seat-legend flex flex-col items-start gap-6">
     <h4>Legend</h4>
     <div class="legend-item flex items-center gap-2">
-      <img src="cinema-available.svg" alt="Available" class="legend-icon" />
+      <img
+        src="cinema-available.svg"
+        alt="Available"
+        class="legend-icon w-4 h-4"
+      />
       <span>Available</span>
     </div>
     <div class="legend-item flex items-center gap-2">
-      <img src="cinema-occupied.svg" alt="Reserved" class="legend-icon" />
+      <img
+        src="cinema-occupied.svg"
+        alt="Reserved"
+        class="legend-icon w-4 h-4"
+      />
       <span>Taken</span>
     </div>
     <div class="legend-item flex items-center gap-2">
-      <img src="cinema-selected.svg" alt="Selected" class="legend-icon" />
+      <img
+        src="cinema-selected.svg"
+        alt="Selected"
+        class="legend-icon w-4 h-4"
+      />
       <span>Selected</span>
     </div>
 

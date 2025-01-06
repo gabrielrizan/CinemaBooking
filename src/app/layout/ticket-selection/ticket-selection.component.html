@@ -179,6 +179,7 @@
               <!-- Seat Selection Area -->
               <div class="bg-surface-50 dark:bg-surface-950 p-6 rounded-border mb-6">
                 <app-seat-selection
+                  [layoutData]="cinema_layout"
                   [maxSeats]="totalTickets"
                   class="flex justify-center"
                   (seatsSelected)="onSeatsSelected($event)"

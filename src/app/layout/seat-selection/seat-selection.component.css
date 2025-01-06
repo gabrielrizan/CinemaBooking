@@ -1,7 +1,7 @@
 /* General Seat Icon */
 .cinema-seat-icon {
-  width: 40px;
-  height: 40px;
+  width: 40px !important;
+  height: 40px !important;
   cursor: pointer;
   transition: transform 0.2s;
 }

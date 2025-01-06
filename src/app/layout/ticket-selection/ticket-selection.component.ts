@@ -17,6 +17,7 @@ import { TicketService } from '../../services/ticket.service';
 import { loadStripe } from '@stripe/stripe-js';
 import { AuthService } from '../../services/auth.service';
 import { MessageService } from 'primeng/api';
+import layoutData from '../../../../public/Cinema_Hall_1_layout.json';
 
 type TicketCategory = 'adult' | 'student' | 'child';
 
@@ -24,6 +25,19 @@ interface TicketPrice {
   category: TicketCategory;
   price: number;
   description?: string;
+}
+
+interface SeatLayout {
+  id: string;
+  name: string;
+  rows: number;
+  layout: Array<
+    Array<{
+      type: 'seat' | 'space';
+    }>
+  >;
+  seatsPerRow: number[];
+  createdAt: string;
 }
 
 interface TicketResponse {
@@ -53,7 +67,7 @@ interface TicketResponse {
 })
 export class TicketSelectionComponent implements OnInit {
   currentStep: number = 1; // Initialize the current step
-
+  cinema_layout: SeatLayout = layoutData as SeatLayout;
   movieId: string;
   selectedShowtime: string;
   title: string = '';
@@ -85,31 +99,32 @@ export class TicketSelectionComponent implements OnInit {
     value: i,
   }));
 
-  seatRows = [
-    [
-      { label: 'A1', occupied: false, selected: false },
-      { label: 'A2', occupied: true, selected: false },
-      { label: 'A3', occupied: false, selected: false },
-      { label: 'A4', occupied: false, selected: false },
-    ],
-    [
-      { label: 'B1', occupied: false, selected: false },
-      { label: 'B2', occupied: false, selected: false },
-      { label: 'B3', occupied: true, selected: false },
-      { label: 'B4', occupied: false, selected: false },
-    ],
-    [
-      { label: 'C1', occupied: true, selected: false },
-      { label: 'C2', occupied: false, selected: false },
-      { label: 'C3', occupied: false, selected: false },
-      { label: 'C4', occupied: false, selected: false },
-    ],
-  ];
+  // seatRows = [
+  //   [
+  //     { label: 'A1', occupied: false, selected: false },
+  //     { label: 'A2', occupied: true, selected: false },
+  //     { label: 'A3', occupied: false, selected: false },
+  //     { label: 'A4', occupied: false, selected: false },
+  //   ],
+  //   [
+  //     { label: 'B1', occupied: false, selected: false },
+  //     { label: 'B2', occupied: false, selected: false },
+  //     { label: 'B3', occupied: true, selected: false },
+  //     { label: 'B4', occupied: false, selected: false },
+  //   ],
+  //   [
+  //     { label: 'C1', occupied: true, selected: false },
+  //     { label: 'C2', occupied: false, selected: false },
+  //     { label: 'C3', occupied: false, selected: false },
+  //     { label: 'C4', occupied: false, selected: false },
+  //   ],
+  // ];
 
   ticketCategories: TicketCategory[] = ['adult', 'student', 'child'];
 
   selectedSeatsValid: boolean = false;
   selectedSeats: string[] = [];
+  processedSeats: any[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -123,6 +138,7 @@ export class TicketSelectionComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.processSeats();
     this.route.queryParams.subscribe((params) => {
       this.title = params['title'];
       this.format = params['format'];
@@ -147,12 +163,23 @@ export class TicketSelectionComponent implements OnInit {
     });
   }
 
-  toggleSeatSelection(rowIndex: number, seatIndex: number): void {
-    const seat = this.seatRows[rowIndex][seatIndex];
-    if (!seat.occupied) {
-      seat.selected = !seat.selected;
-    }
+  processSeats(): void {
+    this.processedSeats = this.cinema_layout.layout.map((row, rowIndex) =>
+      row.map((seat, seatIndex) => ({
+        label: `${String.fromCharCode(65 + rowIndex)}${seatIndex + 1}`, // A1, A2, etc.
+        occupied: false, // Default to unoccupied
+        selected: false, // Default to unselected
+        type: seat.type,
+      }))
+    );
   }
+
+  // toggleSeatSelection(rowIndex: number, seatIndex: number): void {
+  //   const seat = this.seatRows[rowIndex][seatIndex];
+  //   if (!seat.occupied) {
+  //     seat.selected = !seat.selected;
+  //   }
+  // }
 
   updateTotalTickets() {
     this.totalTickets = Object.values(this.ticketCounts).reduce(

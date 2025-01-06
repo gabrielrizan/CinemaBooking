@@ -1,0 +1,442 @@
+{
+  "id": "1736019464909",
+  "name": "Cinema Hall 1",
+  "rows": 8,
+  "layout": [
+    [
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      }
+    ],
+    [
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      }
+    ],
+    [
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      }
+    ],
+    [
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      }
+    ],
+    [
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      }
+    ],
+    [
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      }
+    ],
+    [
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      }
+    ],
+    [
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      }
+    ]
+  ],
+  "seatsPerRow": [
+    17,
+    17,
+    17,
+    17,
+    17,
+    17,
+    17,
+    17
+  ],
+  "createdAt": "2025-01-04T19:37:44.909Z"
+}

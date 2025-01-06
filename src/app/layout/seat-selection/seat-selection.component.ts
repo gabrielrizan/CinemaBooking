@@ -1,82 +1,76 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { ToastModule } from 'primeng/toast';
 
+interface Seat {
+  label: string;
+  reserved: boolean;
+  type: 'regular' | 'vip' | 'space';
+}
+
+interface SeatLayout {
+  id: string;
+  name: string;
+  rows: number;
+  layout: Array<Array<{ type: 'seat' | 'space' }>>;
+  seatsPerRow: number[];
+  createdAt: string;
+}
+
 @Component({
-    selector: 'app-seat-selection',
-    imports: [CommonModule, ProgressBarModule, ToastModule],
-    templateUrl: './seat-selection.component.html',
-    styleUrls: ['./seat-selection.component.css'],
-    providers: [MessageService]
+  selector: 'app-seat-selection',
+  imports: [CommonModule, ProgressBarModule, ToastModule],
+  templateUrl: './seat-selection.component.html',
+  providers: [MessageService],
 })
-export class SeatSelectionComponent {
-  private toastCooldown = false; // Cooldown state to prevent spamming
-  seatRows: any[][] = [];
-  selectedSeats: any[] = [];
-  @Input() maxSeats: number = 0; // Maximum seats allowed to select
-  @Output() selectionChange = new EventEmitter<any[]>(); // Emit selected seats
+export class SeatSelectionComponent implements OnInit {
+  private readonly TOAST_COOLDOWN_DURATION = 2000; // Cooldown duration in ms
+  private toastCooldown = false;
+
+  processedLayout: (Seat | null)[][] = [];
+  selectedSeats: Seat[] = [];
+
+  @Input() maxSeats: number = 0;
+  @Input() layoutData!: SeatLayout;
+  @Output() selectionChange = new EventEmitter<Seat[]>();
   @Output() seatsSelected = new EventEmitter<string[]>();
 
-  constructor(private messageService: MessageService) {
-    // Inject MessageService here
+  constructor(private messageService: MessageService) {}
+
+  ngOnInit(): void {
     this.initializeSeats();
   }
 
   initializeSeats(): void {
-    const rows = 8; // Number of rows
-    const seatsPerRow = 16; // Seats per row
-    const middleRowsForWheelchairs = [
-      Math.floor(rows / 2) - 1,
-      Math.floor(rows / 2),
-    ]; // Middle rows for wheelchair seats
+    const maxSeatsInRow = Math.max(...this.layoutData.seatsPerRow); // Find the maximum number of seats in any row
 
-    for (let i = 0; i < rows; i++) {
-      const row: any[] = [];
-      for (let j = 0; j < seatsPerRow; j++) {
-        // Skip stairs for the last row
-        if (
-          i < rows - 1 &&
-          (j === Math.floor(seatsPerRow / 2) ||
-            j === Math.floor(seatsPerRow / 2) - 1)
-        ) {
-          row.push(null); // Gap for stairs
-        } else {
-          // Add seat with default properties
-          const seat = {
-            label: `Row ${String.fromCharCode(65 + i)} Seat ${j + 1}`,
-            reserved: Math.random() < 0.2, // Randomly reserve some seats
-            vip: false,
-            wheelchair: false,
-          };
-
-          // Assign VIP seats (center of penultimate and last rows)
-          if (
-            (i === rows - 2 || i === rows - 1) &&
-            j >= seatsPerRow / 2 - 1 &&
-            j <= seatsPerRow / 2
-          ) {
-            seat.vip = true;
-          }
-
-          // Assign wheelchair seats near the stairs in middle rows
-          if (
-            middleRowsForWheelchairs.includes(i) &&
-            (j === Math.floor(seatsPerRow / 2) - 2 ||
-              j === Math.floor(seatsPerRow / 2) + 1)
-          ) {
-            seat.wheelchair = true;
-          }
-
-          row.push(seat);
+    this.processedLayout = this.layoutData.layout.map((row, rowIndex) => {
+      const seatRow = row.map((seatData, seatIndex) => {
+        if (seatData.type === 'space') {
+          return null; // Spaces are non-selectable placeholders
         }
+
+        return {
+          label: `Row ${String.fromCharCode(65 + rowIndex)} Seat ${
+            seatIndex + 1
+          }`,
+          reserved: false, // Replace with actual reserved data if available
+          type: 'regular' as const, // Explicitly set the type to a valid value
+        };
+      });
+
+      // Add null placeholders to the right of the row to ensure alignment
+      while (seatRow.length < maxSeatsInRow) {
+        seatRow.push(null);
       }
-      this.seatRows.push(row);
-    }
+
+      return seatRow;
+    });
   }
 
-  toggleSeatSelection(seat: any): void {
+  toggleSeatSelection(seat: Seat): void {
     if (
       this.selectedSeats.length < this.maxSeats ||
       this.selectedSeats.includes(seat)
@@ -88,9 +82,8 @@ export class SeatSelectionComponent {
         this.selectedSeats.splice(index, 1);
       }
 
-      // Emit both events
       this.selectionChange.emit(this.selectedSeats);
-      this.seatsSelected.emit(this.selectedSeats.map((seat) => seat.label));
+      this.seatsSelected.emit(this.selectedSeats.map((s) => s.label));
     } else {
       this.showLimitReachedToast();
     }
@@ -98,25 +91,24 @@ export class SeatSelectionComponent {
 
   showLimitReachedToast(): void {
     if (!this.toastCooldown) {
-      this.toastCooldown = true; // Set cooldown to true
+      this.toastCooldown = true;
       this.messageService.add({
         severity: 'warn',
         summary: 'Selection Limit Reached',
         detail: `You can only select up to ${this.maxSeats} tickets.`,
       });
 
-      // Reset cooldown after 2 seconds
       setTimeout(() => {
         this.toastCooldown = false;
-      }, 2000);
+      }, this.TOAST_COOLDOWN_DURATION);
     }
   }
 
   getRowLabel(index: number): string {
-    return String.fromCharCode(65 + index); // Convert index to A, B, C, ...
+    return String.fromCharCode(65 + index);
   }
 
-  isSeatSelected(seat: any): boolean {
+  isSeatSelected(seat: Seat): boolean {
     return this.selectedSeats.includes(seat);
   }
 }

@@ -1,0 +1,40 @@
+{
+  "id": "1736023941208",
+  "name": "4lay",
+  "rows": 2,
+  "layout": [
+    [
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      }
+    ],
+    [
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      }
+    ]
+  ],
+  "seatsPerRow": [
+    4,
+    4
+  ],
+  "createdAt": "2025-01-04T20:52:21.208Z"
+}

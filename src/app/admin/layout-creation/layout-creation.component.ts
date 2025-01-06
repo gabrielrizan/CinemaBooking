@@ -175,6 +175,18 @@ export class LayoutCreationComponent implements OnInit {
     });
   }
 
+  downloadLayout(layout: SavedLayout) {
+    const blob = new Blob([JSON.stringify(layout, null, 2)], {
+      type: 'application/json',
+    });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${layout.name.replace(/\s+/g, '_')}_layout.json`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  }
+
   showLayoutPreview(layout: SavedLayout) {
     this.previewLayout = layout;
     this.showPreview = true;
