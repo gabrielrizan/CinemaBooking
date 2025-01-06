@@ -1,0 +1,322 @@
+{
+  "id": "1736160873890",
+  "name": "space on the left",
+  "rows": 8,
+  "layout": [
+    [
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      }
+    ],
+    [
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      }
+    ],
+    [
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      }
+    ],
+    [
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      }
+    ],
+    [
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      }
+    ],
+    [
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      }
+    ],
+    [
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      }
+    ],
+    [
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      }
+    ]
+  ],
+  "seatsPerRow": [
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12
+  ],
+  "createdAt": "2025-01-06T10:54:33.890Z"
+}

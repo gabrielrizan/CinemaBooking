@@ -17,7 +17,7 @@ import { TicketService } from '../../services/ticket.service';
 import { loadStripe } from '@stripe/stripe-js';
 import { AuthService } from '../../services/auth.service';
 import { MessageService } from 'primeng/api';
-import layoutData from '../../../../public/Cinema_Hall_1_layout.json';
+import layoutData from '../../../../public/space_on_the_left_layout.json';
 
 type TicketCategory = 'adult' | 'student' | 'child';
 
@@ -240,39 +240,40 @@ export class TicketSelectionComponent implements OnInit {
     }
   }
   async proceedToPayment() {
-    console.log('Original showtime:', this.showtime);
-    console.log('Original movieId:', this.movieId); // Debug movieId
-
     let formattedShowtime;
     try {
+      // Get today's date
+      const today = new Date();
+      // Parse the time from showtime string
       const [hours, minutes] = this.showtime.split(':');
-      const date = new Date();
-      date.setHours(parseInt(hours), parseInt(minutes), 0);
-      formattedShowtime = date.toISOString();
+      // Combine date and time
+      today.setHours(parseInt(hours), parseInt(minutes), 0);
+      formattedShowtime = today.toISOString();
     } catch (error) {
       console.error('Date parsing error:', error);
       formattedShowtime = new Date().toISOString();
     }
 
-    // Ensure movieId is a valid number
     const movieId = Number(this.movieId);
     if (isNaN(movieId)) {
       console.error('Invalid movie ID:', this.movieId);
-      return; // Stop execution if movie ID is invalid
+      return;
     }
 
     const ticketData = {
-      movie_title: this.title,
-      movie_id: movieId, // Use the validated movieId
+      movie_title: this.title, // Make sure this is being passed correctly
+      movie_id: movieId,
       showtime: formattedShowtime,
       seats: this.selectedSeats,
       ticket_type: this.ticketCounts,
       total_amount: this.totalCost,
       poster: this.poster,
       payment_status: 'PENDING',
+      format: this.format, // Add format if needed
+      cinema_id: this.route.snapshot.queryParams['cinemaId'], // Add cinema ID
     };
 
-    console.log('Sending ticket data:', ticketData);
+    console.log('Sending ticket data:', ticketData); // Debug log
 
     try {
       const ticketResponse = await this.ticketService
@@ -325,9 +326,13 @@ export class TicketSelectionComponent implements OnInit {
             });
           }
         );
-    } catch (error: any) {
-      console.error('Error details:', error.error);
+    } catch (error) {
       console.error('Error creating ticket:', error);
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Failed to create ticket. Please try again.',
+      });
     }
   }
 }

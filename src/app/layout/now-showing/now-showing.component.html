@@ -1,9 +1,7 @@
 <div class="now-showing-container mx-auto max-w-7xl">
   <!-- Cinema Selector Section -->
-
-  <!-- Date Selector Section -->
   <div class="mb-6">
-    <h2 class="text-xl mb-4">
+    <h2 class="text-xl mb-4" *ngIf="selectedCinema">
       PROGRAM PENTRU {{ selectedCinema.name | uppercase }}
     </h2>
     <div class="flex flex-col sm:flex-row gap-4">
@@ -74,6 +72,7 @@
   <h1 class="text-3xl font-bold mb-6 text-center">Now Showing</h1>
 
   <div class="grid grid-cols-12 gap-4">
+    <!-- Movie Cards -->
     <div *ngFor="let movie of movies" class="col-span-12">
       <p-card styleClass="movie-card mb-6 shadow-lg">
         <div class="grid grid-cols-12 gap-4">
@@ -116,14 +115,14 @@
               </div>
               <div class="flex items-center px-3 py-2 rounded-lg">
                 <i class="pi pi-info-circle mr-2"></i>
-                <span>{{ movie.languageInfo }}</span>
+                <span>EN:(SUB:RO)</span>
               </div>
             </div>
 
             <!-- Showtimes Section -->
             <div class="showtimes-container">
               <div
-                *ngFor="let format of movie.format"
+                *ngFor="let format of getMovieFormats(movie)"
                 class="format-section mb-4 p-4 rounded-lg"
               >
                 <div class="format-label mb-3">
@@ -135,22 +134,19 @@
                 </div>
                 <div class="flex flex-wrap gap-2">
                   <p-button
-                    *ngFor="
-                      let time of getShowtimesForDate(movie, selectedDate)[
-                        format
-                      ]
-                    "
+                    *ngFor="let time of getShowtimesForMovie(movie)[format]"
                     [label]="time"
                     size="small"
                     [routerLink]="['/select-tickets']"
                     styleClass="p-button-outlined rounded"
                     [queryParams]="{
                       title: movie.title,
+                      movieId: movie.id,
                       format: format,
+                      poster: movie.poster,
                       showtime: time,
                       date: selectedDate | date : 'yyyy-MM-dd',
-                      languageInfo: movie.languageInfo,
-                      poster: movie.poster
+                      cinemaId: selectedCinema.id
                     }"
                   ></p-button>
                 </div>
@@ -176,13 +172,10 @@
               [routerLink]="['/select-tickets']"
               [queryParams]="{
                 title: movie.title,
-                format: movie.format[0],
-                showtime: getShowtimesForDate(movie, selectedDate)[
-                  movie.format[0]
-                ][0],
+                showtime:
+                  getShowtimesForMovie(movie)[getMovieFormats(movie)[0]][0],
                 date: selectedDate | date : 'yyyy-MM-dd',
-                languageInfo: movie.languageInfo,
-                poster: movie.poster
+                cinema: selectedCinema.name
               }"
             ></p-button>
           </div>
@@ -226,7 +219,7 @@
               {{ selectedMovie.director }}
             </p-panel>
             <p-panel header="Release Date" styleClass="mb-4">
-              {{ selectedMovie.releaseDate }}
+              {{ selectedMovie.release_date }}
             </p-panel>
           </div>
 
