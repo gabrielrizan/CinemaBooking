@@ -22,6 +22,7 @@ import {
   ShowTime,
   NowShowingService,
 } from '../../services/now-showing.service';
+import { AuthService } from '../../services/auth.service';
 import { forkJoin } from 'rxjs';
 
 @Component({
@@ -63,8 +64,12 @@ export class NowShowingComponent implements OnInit {
   movies: Movie[] = [];
   showTimes: ShowTime[] = [];
   allShowTimes: ShowTime[] = [];
+  isAdmin: boolean = false;
 
-  constructor(private nowShowingService: NowShowingService) {
+  constructor(
+    private nowShowingService: NowShowingService,
+    private authService: AuthService
+  ) {
     this.minDate.setHours(0, 0, 0, 0);
     this.maxDate.setDate(this.maxDate.getDate() + 20);
     this.maxDate.setHours(23, 59, 59, 999);
@@ -74,6 +79,16 @@ export class NowShowingComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.isAdmin = this.authService.isAdmin();
+
+    // Subscribe to isAdmin$ to ensure you get updates if it changes
+    this.authService.isAdmin$.subscribe((isAdmin) => {
+      this.isAdmin = isAdmin;
+      console.log('Updated isAdmin value:', isAdmin); // Log when it changes
+      this.setMinDateBasedOnRole();
+    });
+
+    // Fetch initial data
     forkJoin({
       cinemas: this.nowShowingService.getCinemas(),
       showtimes: this.nowShowingService.getAllShowTimes(),
@@ -88,6 +103,15 @@ export class NowShowingComponent implements OnInit {
       },
       error: (error) => console.error('Error fetching initial data:', error),
     });
+  }
+
+  setMinDateBasedOnRole(): void {
+    if (this.isAdmin) {
+      this.minDate = new Date(2000, 0, 1);
+    } else {
+      this.minDate = new Date();
+      this.minDate.setHours(0, 0, 0, 0);
+    }
   }
 
   selectDate(date: Date) {
