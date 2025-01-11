@@ -1,5 +1,12 @@
-<app-navbar></app-navbar>
+<div class="min-h-screen flex flex-col">
+  <!-- Navbar -->
+  <app-navbar></app-navbar>
 
-<router-outlet />
+  <!-- Page Content -->
+  <div class="flex-grow">
+    <router-outlet></router-outlet>
+  </div>
 
-<app-footer></app-footer>
+  <!-- Footer -->
+  <app-footer></app-footer>
+</div>
