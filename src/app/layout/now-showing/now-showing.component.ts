@@ -199,7 +199,7 @@ export class NowShowingComponent implements OnInit {
       if (!showtimes[st.format]) {
         showtimes[st.format] = [];
       }
-      showtimes[st.format].push(st.time);
+      showtimes[st.format].push(st.time.slice(0, -3)); // this will remove the seconds from the time (e.g. 14:30:00 -> 14:30)
     });
 
     return showtimes;
