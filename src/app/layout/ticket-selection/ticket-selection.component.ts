@@ -99,27 +99,6 @@ export class TicketSelectionComponent implements OnInit {
     value: i,
   }));
 
-  // seatRows = [
-  //   [
-  //     { label: 'A1', occupied: false, selected: false },
-  //     { label: 'A2', occupied: true, selected: false },
-  //     { label: 'A3', occupied: false, selected: false },
-  //     { label: 'A4', occupied: false, selected: false },
-  //   ],
-  //   [
-  //     { label: 'B1', occupied: false, selected: false },
-  //     { label: 'B2', occupied: false, selected: false },
-  //     { label: 'B3', occupied: true, selected: false },
-  //     { label: 'B4', occupied: false, selected: false },
-  //   ],
-  //   [
-  //     { label: 'C1', occupied: true, selected: false },
-  //     { label: 'C2', occupied: false, selected: false },
-  //     { label: 'C3', occupied: false, selected: false },
-  //     { label: 'C4', occupied: false, selected: false },
-  //   ],
-  // ];
-
   ticketCategories: TicketCategory[] = ['adult', 'student', 'child'];
 
   selectedSeatsValid: boolean = false;

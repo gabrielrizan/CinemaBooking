@@ -96,6 +96,8 @@ export class NowShowingComponent implements OnInit {
       next: (result) => {
         this.cinemas = result.cinemas;
         this.allShowTimes = result.showtimes;
+        console.log('Showtimes: ', this.allShowTimes);
+
         if (this.cinemas.length > 0) {
           this.selectedCinema = this.cinemas[0];
           this.updateDisplayedMovies();
@@ -117,7 +119,9 @@ export class NowShowingComponent implements OnInit {
   selectDate(date: Date) {
     if (this.isDateInRange(date)) {
       this.selectedDate = new Date(date);
-      this.selectedDate.setHours(0, 0, 0, 0);
+      let tempDate: string = this.selectedDate.toLocaleDateString();
+      console.log('Selected date:', tempDate);
+
       this.updateDisplayedMovies();
     }
   }
@@ -152,10 +156,17 @@ export class NowShowingComponent implements OnInit {
     this.generateWeekDates(newStart);
   }
 
-  onCalendarSelect(date: Date) {
-    this.selectedDate = date;
-    this.weekStartDate = new Date(date);
-    this.weekStartDate.setDate(date.getDate() - date.getDay());
+  onCalendarSelect(date: Date): void {
+    const selectedDate = new Date(date); // Normalize to local time
+    this.selectedDate = new Date(
+      selectedDate.getFullYear(),
+      selectedDate.getMonth(),
+      selectedDate.getDate()
+    );
+    this.weekStartDate = new Date(this.selectedDate);
+    this.weekStartDate.setDate(
+      this.selectedDate.getDate() - this.selectedDate.getDay()
+    );
     this.generateWeekDates(this.weekStartDate);
   }
 
@@ -183,7 +194,7 @@ export class NowShowingComponent implements OnInit {
   }
 
   getShowtimesForMovie(movie: Movie): { [format: string]: string[] } {
-    const dateStr = this.selectedDate.toISOString().split('T')[0];
+    const dateStr = this.selectedDate.toLocaleDateString('en-CA');
     const showtimes: { [format: string]: string[] } = {};
 
     // Filter showtimes for selected movie, date, and cinema
@@ -266,7 +277,7 @@ export class NowShowingComponent implements OnInit {
   getMoviesForSelectedCinema(): Movie[] {
     if (!this.selectedCinema || !this.showTimes) return [];
 
-    const dateStr = this.selectedDate.toISOString().split('T')[0];
+    const dateStr = this.selectedDate.toLocaleDateString('en-CA');
 
     // Filter showtimes for selected date and cinema
     const relevantShowtimes = this.showTimes.filter(
@@ -283,8 +294,7 @@ export class NowShowingComponent implements OnInit {
   }
 
   updateDisplayedMovies(): void {
-    const dateStr = this.selectedDate.toISOString().split('T')[0];
-
+    const dateStr = this.selectedDate.toLocaleDateString('en-CA');
     // Filter showtimes for selected date and cinema
     this.showTimes = this.allShowTimes.filter(
       (showtime) =>
@@ -295,6 +305,9 @@ export class NowShowingComponent implements OnInit {
     // Get unique movies from filtered showtimes
     const uniqueMovies = new Map<number, Movie>();
     this.showTimes.forEach((st) => uniqueMovies.set(st.movie.id, st.movie));
-    this.movies = Array.from(uniqueMovies.values());
+
+    this.movies = Array.from(uniqueMovies.values()).sort((a, b) =>
+      a.title.localeCompare(b.title)
+    );
   }
 }
