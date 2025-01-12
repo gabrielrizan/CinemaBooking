@@ -23,7 +23,6 @@ export interface Movie {
 }
 
 export interface ShowTime {
-  id: number;
   cinema: Cinema;
   movie: Movie;
   date: string;
@@ -45,5 +44,13 @@ export class NowShowingService {
 
   getCinemas(): Observable<Cinema[]> {
     return this.http.get<Cinema[]>(`${this.apiUrl}/cinemas/`);
+  }
+
+  getMovies(): Observable<Movie[]> {
+    return this.http.get<Movie[]>(`${this.apiUrl}/movies/`);
+  }
+
+  addShowtime(showtime: ShowTime): Observable<ShowTime> {
+    return this.http.post<ShowTime>(`${this.apiUrl}/now-showing/`, showtime);
   }
 }

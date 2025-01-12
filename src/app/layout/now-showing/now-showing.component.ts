@@ -22,6 +22,7 @@ import {
   ShowTime,
   NowShowingService,
 } from '../../services/now-showing.service';
+import { AddShowingComponent } from '../../admin/add-showing/add-showing.component';
 import { AuthService } from '../../services/auth.service';
 import { forkJoin } from 'rxjs';
 
@@ -46,6 +47,7 @@ import { forkJoin } from 'rxjs';
     FormsModule,
     DropdownModule,
     OverlayPanelModule,
+    AddShowingComponent,
   ],
   templateUrl: './now-showing.component.html',
   styleUrls: ['./now-showing.component.css'],
@@ -65,6 +67,7 @@ export class NowShowingComponent implements OnInit {
   showTimes: ShowTime[] = [];
   allShowTimes: ShowTime[] = [];
   isAdmin: boolean = false;
+  allMovies: Movie[] = [];
 
   constructor(
     private nowShowingService: NowShowingService,
@@ -92,11 +95,13 @@ export class NowShowingComponent implements OnInit {
     forkJoin({
       cinemas: this.nowShowingService.getCinemas(),
       showtimes: this.nowShowingService.getAllShowTimes(),
+      movies: this.nowShowingService.getMovies(),
     }).subscribe({
       next: (result) => {
         this.cinemas = result.cinemas;
         this.allShowTimes = result.showtimes;
-        console.log('Showtimes: ', this.allShowTimes);
+        this.allMovies = result.movies;
+        console.log('Movies: ', this.allMovies);
 
         if (this.cinemas.length > 0) {
           this.selectedCinema = this.cinemas[0];
@@ -272,6 +277,16 @@ export class NowShowingComponent implements OnInit {
     startOfMaxDate.setHours(0, 0, 0, 0);
 
     return startOfDate >= startOfMinDate && startOfDate <= startOfMaxDate;
+  }
+
+  showAddShowing = false; // Initial state: hidden
+
+  showAddShowingDialog(): void {
+    this.showAddShowing = true; // Show the add-showing view
+  }
+
+  hideAddShowingDialog(): void {
+    this.showAddShowing = false; // Hide the add-showing view
   }
 
   getMoviesForSelectedCinema(): Movie[] {

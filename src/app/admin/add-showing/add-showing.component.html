@@ -1,0 +1,96 @@
+<p-dialog
+  header="Add Showing"
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '50vw', height: '70vh' }"
+  [breakpoints]="{ '1024px': '75vw', '768px': '90vw', '576px': '100vw' }"
+  [closeOnEscape]="true"
+  [dismissableMask]="true"
+  [blockScroll]="true"
+  [appendTo]="'body'"
+  [focusTrap]="true"
+  (onHide)="closeDialog.emit()"
+>
+  <!-- Dialog Content -->
+  <div class="w-full h-full flex flex-col gap-4 p-6 overflow-auto">
+    <!-- Movie Dropdown -->
+    <div class="field w-full">
+      <label for="movie" class="block text-sm font-medium">Movie</label>
+      <p-dropdown
+        id="movie"
+        [options]="movies"
+        [(ngModel)]="newShowing.movie"
+        optionLabel="title"
+        placeholder="Select a Movie"
+        class="w-full"
+      ></p-dropdown>
+    </div>
+
+    <!-- Cinema Dropdown -->
+    <div class="field w-full">
+      <label for="cinema" class="block text-sm font-medium">Cinema</label>
+      <p-dropdown
+        id="cinema"
+        [options]="cinemas"
+        [(ngModel)]="newShowing.cinema"
+        optionLabel="name"
+        placeholder="Select a Cinema"
+        class="w-full"
+      ></p-dropdown>
+    </div>
+
+    <!-- Date Picker -->
+    <div class="field w-full relative">
+      <label for="date" class="block text-sm font-medium">Date</label>
+      <p-calendar
+        id="date"
+        [(ngModel)]="newShowing.date"
+        [minDate]="minDate"
+        [maxDate]="maxDate"
+        appendTo="body"
+        class="w-full"
+      ></p-calendar>
+    </div>
+
+    <!-- Time Input -->
+    <div class="field w-full">
+      <label for="time" class="block text-sm font-medium">Time</label>
+      <input
+        id="time"
+        type="time"
+        class="p-inputtext p-component w-full rounded-md"
+        [(ngModel)]="newShowing.time"
+      />
+    </div>
+
+    <!-- Format Input -->
+    <div class="field w-full">
+      <label for="format" class="block text-sm font-medium">Format</label>
+      <input
+        id="format"
+        type="text"
+        class="p-inputtext p-component w-full rounded-md"
+        [(ngModel)]="newShowing.format"
+        placeholder="e.g. 2D, 3D, IMAX"
+      />
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <ng-template pTemplate="footer">
+    <div class="flex justify-end gap-4 px-6 py-3">
+      <p-button
+        label="Cancel"
+        icon="pi pi-times"
+        styleClass="p-button-text"
+        (click)="closeAddShowingDialog()"
+      ></p-button>
+      <p-button
+        label="Save"
+        icon="pi pi-check"
+        styleClass="p-button-primary"
+        (click)="saveNewShowing()"
+      ></p-button>
+    </div>
+  </ng-template>
+</p-dialog>
