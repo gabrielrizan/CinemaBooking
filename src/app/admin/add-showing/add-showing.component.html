@@ -2,8 +2,6 @@
   header="Add Showing"
   [(visible)]="visible"
   [modal]="true"
-  [style]="{ width: '50vw', height: '70vh' }"
-  [breakpoints]="{ '1024px': '75vw', '768px': '90vw', '576px': '100vw' }"
   [closeOnEscape]="true"
   [dismissableMask]="true"
   [blockScroll]="true"
@@ -11,74 +9,91 @@
   [focusTrap]="true"
   (onHide)="closeDialog.emit()"
 >
-  <!-- Dialog Content -->
-  <div class="w-full h-full flex flex-col gap-4 p-6 overflow-auto">
-    <!-- Movie Dropdown -->
-    <div class="field w-full">
-      <label for="movie" class="block text-sm font-medium">Movie</label>
-      <p-dropdown
-        id="movie"
-        [options]="movies"
-        [(ngModel)]="newShowing.movie"
-        optionLabel="title"
-        placeholder="Select a Movie"
-        class="w-full"
-      ></p-dropdown>
-    </div>
+  <div class="p-dialog-content p-6 h-96">
+    <!-- Two-column layout -->
+    <div class="grid grid-cols-2 gap-4">
+      <!-- Movie Select -->
+      <div class="field col-span-2 md:col-span-1">
+        <label for="movie" class="block text-sm font-medium">Movie</label>
+        <p-select
+          id="movie"
+          [options]="movies"
+          [(ngModel)]="newShowing.movie"
+          optionLabel="title"
+          placeholder="Select a Movie"
+          class="w-full"
+        ></p-select>
+      </div>
 
-    <!-- Cinema Dropdown -->
-    <div class="field w-full">
-      <label for="cinema" class="block text-sm font-medium">Cinema</label>
-      <p-dropdown
-        id="cinema"
-        [options]="cinemas"
-        [(ngModel)]="newShowing.cinema"
-        optionLabel="name"
-        placeholder="Select a Cinema"
-        class="w-full"
-      ></p-dropdown>
-    </div>
+      <!-- Cinema Select -->
+      <div class="field col-span-2 md:col-span-1">
+        <label for="cinema" class="block text-sm font-medium">Cinema</label>
+        <p-select
+          id="cinema"
+          [options]="cinemas"
+          [(ngModel)]="newShowing.cinema"
+          optionLabel="name"
+          placeholder="Select a Cinema"
+          class="w-full"
+          (onChange)="onCinemaChange(newShowing.cinema)"
+        ></p-select>
+      </div>
 
-    <!-- Date Picker -->
-    <div class="field w-full relative">
-      <label for="date" class="block text-sm font-medium">Date</label>
-      <p-calendar
-        id="date"
-        [(ngModel)]="newShowing.date"
-        [minDate]="minDate"
-        [maxDate]="maxDate"
-        appendTo="body"
-        class="w-full"
-      ></p-calendar>
-    </div>
+      <!-- Date Picker -->
+      <div class="field col-span-2 md:col-span-1">
+        <label for="date" class="block text-sm font-medium">Date</label>
+        <p-datePicker
+          id="date"
+          [(ngModel)]="newShowing.date"
+          [minDate]="minDate"
+          [maxDate]="maxDate"
+          appendTo="body"
+          class="w-full"
+        ></p-datePicker>
+      </div>
 
-    <!-- Time Input -->
-    <div class="field w-full">
-      <label for="time" class="block text-sm font-medium">Time</label>
-      <input
-        id="time"
-        type="time"
-        class="p-inputtext p-component w-full rounded-md"
-        [(ngModel)]="newShowing.time"
-      />
-    </div>
+      <!-- Time Input -->
+      <div class="field col-span-2 md:col-span-1">
+        <label for="time" class="block text-sm font-medium">Time</label>
+        <input
+          id="time"
+          type="time"
+          class="p-inputtext p-component w-full rounded-md"
+          [(ngModel)]="newShowing.time"
+        />
+      </div>
 
-    <!-- Format Input -->
-    <div class="field w-full">
-      <label for="format" class="block text-sm font-medium">Format</label>
-      <input
-        id="format"
-        type="text"
-        class="p-inputtext p-component w-full rounded-md"
-        [(ngModel)]="newShowing.format"
-        placeholder="e.g. 2D, 3D, IMAX"
-      />
+      <!-- Format Input -->
+      <div class="field col-span-2 md:col-span-1">
+        <label for="format" class="block text-sm font-medium">Format</label>
+        <input
+          id="format"
+          type="text"
+          class="p-inputtext p-component w-full rounded-md"
+          [(ngModel)]="newShowing.format"
+          placeholder="e.g. 2D, 3D, IMAX"
+        />
+      </div>
+
+      <!-- Layout Select -->
+      <div class="field col-span-2 md:col-span-1">
+        <label for="layout" class="block text-sm font-medium">Layout</label>
+        <p-select
+          id="hall"
+          [options]="cinemaHalls"
+          [(ngModel)]="newShowing.hall"
+          optionLabel="name"
+          optionValue="id"
+          placeholder="Select Layout"
+          class="w-full"
+        ></p-select>
+      </div>
     </div>
   </div>
 
   <!-- Footer -->
   <ng-template pTemplate="footer">
-    <div class="flex justify-end gap-4 px-6 py-3">
+    <div class="p-dialog-footer flex justify-end gap-4 px-4 py-3">
       <p-button
         label="Cancel"
         icon="pi pi-times"

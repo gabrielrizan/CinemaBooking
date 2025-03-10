@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Cinema, Movie, ShowTime
+from .models import Cinema, Movie, ShowTime, CinemaHall
 
 # Serializer for Cinema model
 class CinemaSerializer(serializers.ModelSerializer):
@@ -113,4 +113,9 @@ class CinemaWithShowTimesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Cinema
+        fields = '__all__'
+
+class CinemaHallSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CinemaHall
         fields = '__all__'

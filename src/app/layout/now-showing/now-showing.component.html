@@ -149,8 +149,8 @@
                 </div>
                 <div class="flex flex-wrap gap-2">
                   <p-button
-                    *ngFor="let time of getShowtimesForMovie(movie)[format]"
-                    [label]="time"
+                    *ngFor="let show of getShowtimesForMovie(movie)[format]"
+                    [label]="show.time.slice(0, -3)"
                     size="small"
                     [routerLink]="['/select-tickets']"
                     styleClass="p-button-outlined rounded"
@@ -159,9 +159,10 @@
                       movieId: movie.id,
                       format: format,
                       poster: movie.poster,
-                      showtime: time,
+                      showtime: show.time.slice(0, -3),
                       date: selectedDate | date : 'yyyy-MM-dd',
-                      cinemaId: selectedCinema.id
+                      cinemaId: selectedCinema.id,
+                      hall: show.hall
                     }"
                   ></p-button>
                 </div>
@@ -191,7 +192,7 @@
                   getShowtimesForMovie(movie)[getMovieFormats(movie)[0]][0],
                 date: selectedDate | date : 'yyyy-MM-dd',
                 cinema: selectedCinema.name,
-                poster: movie.poster
+                poster: movie.poster,
               }"
             ></p-button>
           </div>

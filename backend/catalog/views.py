@@ -1,8 +1,8 @@
 from datetime import date
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Cinema, Movie, ShowTime
-from .serializers import CinemaSerializer, MovieSerializer, ShowTimeSerializer
+from .models import Cinema, Movie, ShowTime, CinemaHall
+from .serializers import CinemaSerializer, MovieSerializer, ShowTimeSerializer, CinemaHallSerializer
 from rest_framework.views import APIView
 
 class NowShowingView(APIView):
@@ -44,4 +44,31 @@ class MovieListView(APIView):
     def get(self, request):
         movies = Movie.objects.all()
         serializer = MovieSerializer(movies, many=True)
+        return Response(serializer.data)
+    
+class CinemaHallView(APIView):
+    def get(self, request, hall_id):
+        try:
+            hall = CinemaHall.objects.get(id=hall_id)
+        except CinemaHall.DoesNotExist:
+            return Response({"error": "Cinema hall not found."}, status=status.HTTP_404_NOT_FOUND)
+        serializer = CinemaHallSerializer(hall)
+        return Response(serializer.data)
+    
+    def put(self, request, hall_id):
+        try:
+            hall = CinemaHall.objects.get(id=hall_id)
+        except CinemaHall.DoesNotExist:
+            return Response({"error": "Cinema hall not found."}, status=status.HTTP_404_NOT_FOUND)
+        serializer = CinemaHallSerializer(hall, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class CinemaHallByCinemaView(APIView):
+    def get(self, request, cinema_id):
+        halls = CinemaHall.objects.filter(cinema_id=cinema_id)
+        serializer = CinemaHallSerializer(halls, many=True)
         return Response(serializer.data)

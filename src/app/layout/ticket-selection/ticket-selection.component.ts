@@ -17,7 +17,11 @@ import { TicketService } from '../../services/ticket.service';
 import { loadStripe } from '@stripe/stripe-js';
 import { AuthService } from '../../services/auth.service';
 import { MessageService } from 'primeng/api';
-import layoutData from '../../../../public/space_on_the_left_layout.json';
+import {
+  SeatLayout,
+  NowShowingService,
+} from '../../services/now-showing.service';
+// import layoutData from '../../../../public/space_on_the_left_layout.json';
 
 type TicketCategory = 'adult' | 'student' | 'child';
 
@@ -25,19 +29,6 @@ interface TicketPrice {
   category: TicketCategory;
   price: number;
   description?: string;
-}
-
-interface SeatLayout {
-  id: string;
-  name: string;
-  rows: number;
-  layout: Array<
-    Array<{
-      type: 'seat' | 'space';
-    }>
-  >;
-  seatsPerRow: number[];
-  createdAt: string;
 }
 
 interface TicketResponse {
@@ -67,7 +58,7 @@ interface TicketResponse {
 })
 export class TicketSelectionComponent implements OnInit {
   currentStep: number = 1; // Initialize the current step
-  cinema_layout: SeatLayout = layoutData as SeatLayout;
+  cinema_layout: SeatLayout = {} as SeatLayout;
   movieId: string;
   selectedShowtime: string;
   title: string = '';
@@ -77,6 +68,7 @@ export class TicketSelectionComponent implements OnInit {
   totalTickets: number = 0;
   totalCost: number = 0;
   poster: string = '';
+  layout: any;
 
   ticketPrices: TicketPrice[] = [
     { category: 'adult', price: 15.0, description: 'Ages 18+' },
@@ -100,7 +92,6 @@ export class TicketSelectionComponent implements OnInit {
   }));
 
   ticketCategories: TicketCategory[] = ['adult', 'student', 'child'];
-
   selectedSeatsValid: boolean = false;
   selectedSeats: string[] = [];
   processedSeats: any[] = [];
@@ -110,20 +101,31 @@ export class TicketSelectionComponent implements OnInit {
     private http: HttpClient,
     private ticketService: TicketService,
     private authService: AuthService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private nowShowingService: NowShowingService
   ) {
     this.movieId = this.route.snapshot.paramMap.get('movieId') ?? '';
     this.selectedShowtime = this.route.snapshot.paramMap.get('showtime') ?? '';
   }
 
   ngOnInit() {
-    this.processSeats();
     this.route.queryParams.subscribe((params) => {
       this.title = params['title'];
       this.format = params['format'];
       this.showtime = params['showtime'];
       this.languageInfo = params['languageInfo'];
       this.poster = params['poster'];
+      this.nowShowingService
+        .getCinemaHall(params['hall'])
+        .subscribe((data: SeatLayout) => {
+          this.cinema_layout = data.layout as unknown as SeatLayout; // or update your interfaces so they're compatible
+          console.log('Layout data cinema: ', this.cinema_layout.layout);
+          if (this.cinema_layout.layout) {
+            this.processSeats();
+          }
+        });
+
+      console.log('Layout data: ', this.cinema_layout);
 
       // Handle payment error
       if (params['error'] === 'payment_cancelled') {
@@ -145,9 +147,9 @@ export class TicketSelectionComponent implements OnInit {
   processSeats(): void {
     this.processedSeats = this.cinema_layout.layout.map((row, rowIndex) =>
       row.map((seat, seatIndex) => ({
-        label: `${String.fromCharCode(65 + rowIndex)}${seatIndex + 1}`, // A1, A2, etc.
-        occupied: false, // Default to unoccupied
-        selected: false, // Default to unselected
+        label: `${String.fromCharCode(65 + rowIndex)}${seatIndex + 1}`,
+        occupied: false,
+        selected: false,
         type: seat.type,
       }))
     );

@@ -1,0 +1,1375 @@
+{
+  "id": "1739009938741",
+  "name": "Sala Ultra",
+  "rows": 15,
+  "layout": [
+    [
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      }
+    ],
+    [
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      }
+    ],
+    [
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      }
+    ],
+    [
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      }
+    ],
+    [
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      }
+    ],
+    [
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      }
+    ],
+    [
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      }
+    ],
+    [
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      }
+    ],
+    [
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      }
+    ],
+    [
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      }
+    ],
+    [
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      }
+    ],
+    [
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      }
+    ],
+    [
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      }
+    ],
+    [
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      }
+    ],
+    [
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      }
+    ]
+  ],
+  "seatsPerRow": [
+    26,
+    26,
+    26,
+    26,
+    26,
+    26,
+    26,
+    33,
+    33,
+    33,
+    33,
+    33,
+    33,
+    33,
+    27
+  ],
+  "createdAt": "2025-02-08T10:18:58.741Z"
+}

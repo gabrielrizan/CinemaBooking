@@ -22,12 +22,26 @@ export interface Movie {
   release_date: string;
 }
 
+export interface SeatLayout {
+  id: string;
+  name: string;
+  rows: number;
+  layout: Array<
+    Array<{
+      type: 'seat' | 'space';
+    }>
+  >;
+  seatsPerRow: number[];
+  createdAt: string;
+}
+
 export interface ShowTime {
   cinema: Cinema;
   movie: Movie;
   date: string;
   time: string;
   format: string;
+  hall: string;
 }
 
 @Injectable({
@@ -44,6 +58,14 @@ export class NowShowingService {
 
   getCinemas(): Observable<Cinema[]> {
     return this.http.get<Cinema[]>(`${this.apiUrl}/cinemas/`);
+  }
+
+  getCinemaHall(id: number): Observable<SeatLayout> {
+    return this.http.get<SeatLayout>(`${this.apiUrl}/cinema-halls/${id}/`);
+  }
+
+  getCinemaHallsByCinema(cinemaId: number): Observable<SeatLayout[]> {
+    return this.http.get<SeatLayout[]>(`${this.apiUrl}/cinemas/${cinemaId}/halls/`);
   }
 
   getMovies(): Observable<Movie[]> {

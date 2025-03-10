@@ -1,0 +1,208 @@
+{
+  "id": "1739010235987",
+  "name": "VIP Hall",
+  "rows": 6,
+  "layout": [
+    [
+      {
+        "type": "seat"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      }
+    ],
+    [
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      }
+    ],
+    [
+      {
+        "type": "seat"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      }
+    ],
+    [
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      }
+    ],
+    [
+      {
+        "type": "seat"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      }
+    ],
+    [
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "seat"
+      },
+      {
+        "type": "space"
+      },
+      {
+        "type": "seat"
+      }
+    ]
+  ],
+  "seatsPerRow": [
+    10,
+    10,
+    10,
+    10,
+    10,
+    10
+  ],
+  "createdAt": "2025-02-08T10:23:55.987Z"
+}

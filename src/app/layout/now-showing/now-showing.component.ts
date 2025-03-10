@@ -101,7 +101,6 @@ export class NowShowingComponent implements OnInit {
         this.cinemas = result.cinemas;
         this.allShowTimes = result.showtimes;
         this.allMovies = result.movies;
-        console.log('Movies: ', this.allMovies);
 
         if (this.cinemas.length > 0) {
           this.selectedCinema = this.cinemas[0];
@@ -198,9 +197,9 @@ export class NowShowingComponent implements OnInit {
     }
   }
 
-  getShowtimesForMovie(movie: Movie): { [format: string]: string[] } {
+  getShowtimesForMovie(movie: Movie): { [format: string]: ShowTime[] } {
     const dateStr = this.selectedDate.toLocaleDateString('en-CA');
-    const showtimes: { [format: string]: string[] } = {};
+    const showtimes: { [format: string]: ShowTime[] } = {};
 
     // Filter showtimes for selected movie, date, and cinema
     const filteredShowtimes = this.showTimes.filter(
@@ -215,9 +214,10 @@ export class NowShowingComponent implements OnInit {
       if (!showtimes[st.format]) {
         showtimes[st.format] = [];
       }
-      showtimes[st.format].push(st.time.slice(0, -3)); // this will remove the seconds from the time (e.g. 14:30:00 -> 14:30)
+      showtimes[st.format].push(st); // this will remove the seconds from the time (e.g. 14:30:00 -> 14:30)
     });
 
+    console.log('Showtimes for movie:', showtimes);
     return showtimes;
   }
 

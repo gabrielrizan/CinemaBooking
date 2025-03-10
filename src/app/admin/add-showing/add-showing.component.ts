@@ -1,15 +1,19 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
-import { NowShowingService } from '../../services/now-showing.service';
+import {
+  NowShowingService,
+  SeatLayout,
+} from '../../services/now-showing.service';
 import { CommonModule } from '@angular/common';
 import { DropdownModule } from 'primeng/dropdown';
 import { CalendarModule } from 'primeng/calendar';
 import { Movie } from '../../services/now-showing.service';
 import { Cinema } from '../../services/now-showing.service';
 import { ShowTime } from '../../services/now-showing.service';
-import { OnInit } from '@angular/core';
+import { SelectModule } from 'primeng/select';
+import { DatePickerModule } from 'primeng/datepicker';
 
 @Component({
   selector: 'app-add-showing',
@@ -18,28 +22,28 @@ import { OnInit } from '@angular/core';
     FormsModule,
     ButtonModule,
     CommonModule,
-    FormsModule,
-    DropdownModule,
-    CalendarModule,
+    SelectModule,
+    DatePickerModule,
   ],
   templateUrl: './add-showing.component.html',
-  styleUrl: './add-showing.component.css',
+  styleUrls: ['./add-showing.component.css'],
 })
 export class AddShowingComponent implements OnInit {
   addShowingDialogVisible: boolean = false;
   minDate: Date = new Date();
   maxDate: Date = new Date();
-  @Input() visible: boolean = false; // <-- link from parent
-  @Input() movies: Movie[] = []; // <-- link from parent
-  @Input() cinemas: Cinema[] = []; // <-- link from parent
-  @Output() closeDialog = new EventEmitter<void>(); // <-- to notify parent
-
+  cinemaHalls: SeatLayout[] = [];
+  @Input() visible: boolean = false;
+  @Input() movies: Movie[] = [];
+  @Input() cinemas: Cinema[] = [];
+  @Output() closeDialog = new EventEmitter<void>();
   newShowing = {
     movie: {} as Movie,
     cinema: {} as Cinema,
     date: new Date(),
     time: '',
     format: '',
+    hall: '',
   };
 
   constructor(private nowShowingService: NowShowingService) {}
@@ -52,7 +56,7 @@ export class AddShowingComponent implements OnInit {
 
   closeAddShowingDialog(): void {
     this.addShowingDialogVisible = false;
-    this.closeDialog.emit(); // <-- notify parent
+    this.closeDialog.emit();
   }
 
   saveNewShowing(): void {
@@ -60,8 +64,19 @@ export class AddShowingComponent implements OnInit {
       ...this.newShowing,
       date: this.newShowing.date.toISOString().split('T')[0],
     };
+    console.log('Hall', this.newShowing.hall);
     this.nowShowingService.addShowtime(showTimeToSave).subscribe(() => {
       this.closeAddShowingDialog();
     });
+  }
+
+  onCinemaChange(selectedCinema: Cinema): void {
+    if (!selectedCinema) return;
+    this.nowShowingService
+      .getCinemaHallsByCinema(selectedCinema.id)
+      .subscribe((halls) => {
+        this.cinemaHalls = Object.values(halls);
+        this.newShowing.hall = '';
+      });
   }
 }
