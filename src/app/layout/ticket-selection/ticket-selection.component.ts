@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -21,7 +21,7 @@ import {
   SeatLayout,
   NowShowingService,
 } from '../../services/now-showing.service';
-// import layoutData from '../../../../public/space_on_the_left_layout.json';
+import { firstValueFrom } from 'rxjs';
 
 type TicketCategory = 'adult' | 'student' | 'child';
 
@@ -53,11 +53,11 @@ interface TicketResponse {
     TagModule,
   ],
   templateUrl: './ticket-selection.component.html',
-  styleUrl: './ticket-selection.component.css',
+  styleUrls: ['./ticket-selection.component.css'],
   providers: [MessageService],
 })
 export class TicketSelectionComponent implements OnInit {
-  currentStep: number = 1; // Initialize the current step
+  currentStep: number = 1;
   cinema_layout: SeatLayout = {} as SeatLayout;
   movieId: string;
   selectedShowtime: string;
@@ -109,38 +109,35 @@ export class TicketSelectionComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.route.queryParams.subscribe((params) => {
-      this.title = params['title'];
-      this.format = params['format'];
-      this.showtime = params['showtime'];
-      this.languageInfo = params['languageInfo'];
-      this.poster = params['poster'];
-      this.nowShowingService
-        .getCinemaHall(params['hall'])
-        .subscribe((data: SeatLayout) => {
-          this.cinema_layout = data.layout as unknown as SeatLayout; // or update your interfaces so they're compatible
-          console.log('Layout data cinema: ', this.cinema_layout.layout);
-          if (this.cinema_layout.layout) {
-            this.processSeats();
-          }
+    this.route.queryParams.subscribe({
+      next: (params) => {
+        this.title = params['title'];
+        this.format = params['format'];
+        this.showtime = params['showtime'];
+        this.languageInfo = params['languageInfo'];
+        this.poster = params['poster'];
+        this.nowShowingService.getCinemaHall(params['hall']).subscribe({
+          next: (data: SeatLayout) => {
+            this.cinema_layout = data.layout as unknown as SeatLayout;
+            console.log('Layout data cinema: ', this.cinema_layout.layout);
+            if (this.cinema_layout.layout) {
+              this.processSeats();
+            }
+          },
         });
-
-      console.log('Layout data: ', this.cinema_layout);
-
-      // Handle payment error
-      if (params['error'] === 'payment_cancelled') {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Payment Failed',
-          detail: 'Your payment was cancelled or failed. Please try again.',
-        });
-        this.currentStep = 3; // Go back to payment step
-      }
-
-      // Check for success parameter in URL
-      if (params['success'] === 'true') {
-        this.currentStep = 4; // Move to confirmation step
-      }
+        console.log('Layout data: ', this.cinema_layout);
+        if (params['error'] === 'payment_cancelled') {
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Payment Failed',
+            detail: 'Your payment was cancelled or failed. Please try again.',
+          });
+          this.currentStep = 3;
+        }
+        if (params['success'] === 'true') {
+          this.currentStep = 4;
+        }
+      },
     });
   }
 
@@ -154,13 +151,6 @@ export class TicketSelectionComponent implements OnInit {
       }))
     );
   }
-
-  // toggleSeatSelection(rowIndex: number, seatIndex: number): void {
-  //   const seat = this.seatRows[rowIndex][seatIndex];
-  //   if (!seat.occupied) {
-  //     seat.selected = !seat.selected;
-  //   }
-  // }
 
   updateTotalTickets() {
     this.totalTickets = Object.values(this.ticketCounts).reduce(
@@ -210,12 +200,11 @@ export class TicketSelectionComponent implements OnInit {
     this.selectedSeats = seats;
     this.selectedSeatsValid = seats.length === this.totalTickets;
   }
+
   onActiveIndexChange(event: any) {
-    // Prevent navigation if trying to skip steps
     if (event > this.currentStep) {
       return;
     }
-    // Allow moving backwards or to the next immediate step
     if (event <= this.currentStep) {
       this.currentStep = event;
     }
@@ -223,11 +212,8 @@ export class TicketSelectionComponent implements OnInit {
   async proceedToPayment() {
     let formattedShowtime;
     try {
-      // Get today's date
       const today = new Date();
-      // Parse the time from showtime string
       const [hours, minutes] = this.showtime.split(':');
-      // Combine date and time
       today.setHours(parseInt(hours), parseInt(minutes), 0);
       formattedShowtime = today.toISOString();
     } catch (error) {
@@ -242,7 +228,7 @@ export class TicketSelectionComponent implements OnInit {
     }
 
     const ticketData = {
-      movie_title: this.title, // Make sure this is being passed correctly
+      movie_title: this.title,
       movie_id: movieId,
       showtime: formattedShowtime,
       seats: this.selectedSeats,
@@ -250,21 +236,22 @@ export class TicketSelectionComponent implements OnInit {
       total_amount: this.totalCost,
       poster: this.poster,
       payment_status: 'PENDING',
-      format: this.format, // Add format if needed
-      cinema_id: this.route.snapshot.queryParams['cinemaId'], // Add cinema ID
+      format: this.format,
+      cinema_id: this.route.snapshot.queryParams['cinemaId'],
     };
 
-    console.log('Sending ticket data:', ticketData); // Debug log
+    console.log('Sending ticket data:', ticketData);
 
     try {
-      const ticketResponse = await this.ticketService
-        .createTicket(ticketData)
-        .toPromise();
-
+      // 1) Create ticket in your backend (PENDING)
+      const ticketResponse = await firstValueFrom(
+        this.ticketService.createTicket(ticketData)
+      );
       if (!ticketResponse || !ticketResponse.id) {
         throw new Error('Failed to create ticket');
       }
 
+      // 2) Create Stripe Checkout session
       const body = {
         ticketCounts: this.ticketCounts,
         prices: {
@@ -280,24 +267,13 @@ export class TicketSelectionComponent implements OnInit {
           'http://127.0.0.1:8000/api/payments/create-checkout-session/',
           body
         )
-        .subscribe(
-          (response: any) => {
+        .subscribe({
+          next: (response: any) => {
             if (response.url) {
-              const stripeWindow = window.open(response.url, '_blank');
-
-              window.addEventListener('message', async (event) => {
-                if (event.data === 'stripe-payment-success') {
-                  await this.ticketService.updateTicketStatus(
-                    ticketResponse.id,
-                    'COMPLETED'
-                  );
-                  stripeWindow?.close();
-                  this.currentStep = 4; // Move to confirmation step instead of redirecting
-                }
-              });
+              window.location.href = response.url;
             }
           },
-          (error) => {
+          error: (error) => {
             console.error('Error creating checkout session', error);
             this.messageService.add({
               severity: 'error',
@@ -305,8 +281,8 @@ export class TicketSelectionComponent implements OnInit {
               detail:
                 'There was an error processing your payment. Please try again.',
             });
-          }
-        );
+          },
+        });
     } catch (error) {
       console.error('Error creating ticket:', error);
       this.messageService.add({

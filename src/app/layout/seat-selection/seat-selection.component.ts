@@ -111,4 +111,16 @@ export class SeatSelectionComponent implements OnInit {
   isSeatSelected(seat: Seat): boolean {
     return this.selectedSeats.includes(seat);
   }
+
+  markSeatsAsReserved(seatLabels: string[]): void {
+    this.processedLayout.forEach((row) => {
+      row.forEach((seat) => {
+        if (seat && seatLabels.includes(seat.label)) {
+          seat.reserved = true;
+        }
+      });
+    });
+    this.selectedSeats = [];
+    this.selectionChange.emit(this.selectedSeats);
+  }
 }
