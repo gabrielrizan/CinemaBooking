@@ -73,5 +73,5 @@
   [closable]="true"
   [style]="{ width: '50vw' }"
 >
-  <app-signup></app-signup>
+  <app-signup (registered)="onSignupSuccess()"></app-signup>
 </p-dialog>

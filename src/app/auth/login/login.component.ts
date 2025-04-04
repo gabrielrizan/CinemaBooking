@@ -139,26 +139,22 @@ export class LoginComponent {
 
     this.authService.login(credentials).subscribe({
       next: (response) => {
-        // Store the JWT token
         localStorage.setItem('access_token', response.access);
         localStorage.setItem('refresh_token', response.refresh);
 
         console.log('Login successful', response);
 
-        // Mark user as logged in
         this.isLoggedIn = true;
-        this.cdr.detectChanges(); // Trigger change detection to update the UI
-        this.overlayPanel.hide(); // Hide the overlay panel
+        this.cdr.detectChanges();
+        this.overlayPanel.hide();
         this.messageService.add({
           severity: 'success',
           summary: 'Success',
           detail: 'Login successful',
         });
-        // Optionally redirect after login
       },
       error: (error) => {
         console.error('Login failed', error);
-        // Handle login error (e.g., show a message to the user)
         alert('Login failed. Please check your credentials.');
       },
     });
@@ -167,8 +163,8 @@ export class LoginComponent {
   logout() {
     this.authService.logout();
     this.isLoggedIn = false;
-    this.cdr.detectChanges(); // Trigger change detection to update the UI
-    this.overlayPanel.hide(); // Hide the overlay panel
+    this.cdr.detectChanges();
+    this.overlayPanel.hide();
     this.messageService.add({
       severity: 'success',
       summary: 'Success',
@@ -178,5 +174,15 @@ export class LoginComponent {
 
   showSignUpForm() {
     this.visible = true;
+  }
+
+  onSignupSuccess() {
+    this.visible = false; // Close modal
+    this.isLoggedIn = true;
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Success',
+      detail: 'Signed up successfully',
+    });
   }
 }

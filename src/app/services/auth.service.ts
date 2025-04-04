@@ -64,7 +64,6 @@ export class AuthService {
     try {
       await this.getUserDetails().toPromise();
     } catch (error) {
-      // Handle error silently or with user notification
     }
   }
 
