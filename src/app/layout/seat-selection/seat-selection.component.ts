@@ -1,8 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  OnInit,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { ToastModule } from 'primeng/toast';
+import { TicketService } from '../../services/ticket.service';
 
 interface Seat {
   label: string;
@@ -25,47 +34,55 @@ interface SeatLayout {
   templateUrl: './seat-selection.component.html',
   providers: [MessageService],
 })
-export class SeatSelectionComponent implements OnInit {
-  private readonly TOAST_COOLDOWN_DURATION = 2000; // Cooldown duration in ms
+export class SeatSelectionComponent implements OnInit, OnChanges {
+  private readonly TOAST_COOLDOWN_DURATION = 2000;
   private toastCooldown = false;
-
   processedLayout: (Seat | null)[][] = [];
   selectedSeats: Seat[] = [];
 
   @Input() maxSeats: number = 0;
   @Input() layoutData!: SeatLayout;
+  // New input property for reserved seat labels
+  @Input() reservedSeats: string[] = [];
+  
   @Output() selectionChange = new EventEmitter<Seat[]>();
   @Output() seatsSelected = new EventEmitter<string[]>();
 
-  constructor(private messageService: MessageService) {}
+  constructor(
+    private messageService: MessageService,
+    private ticketService: TicketService
+  ) {}
 
   ngOnInit(): void {
     this.initializeSeats();
+    // Optionally mark reserved seats on init if reservedSeats is already set
+    if (this.reservedSeats && this.reservedSeats.length > 0) {
+      this.markSeatsAsReserved(this.reservedSeats);
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['reservedSeats'] && this.reservedSeats) {
+      this.markSeatsAsReserved(this.reservedSeats);
+    }
   }
 
   initializeSeats(): void {
-    const maxSeatsInRow = Math.max(...this.layoutData.seatsPerRow); // Find the maximum number of seats in any row
-
+    const maxSeatsInRow = Math.max(...this.layoutData.seatsPerRow);
     this.processedLayout = this.layoutData.layout.map((row, rowIndex) => {
       const seatRow = row.map((seatData, seatIndex) => {
         if (seatData.type === 'space') {
-          return null; // Spaces are non-selectable placeholders
+          return null;
         }
-
         return {
-          label: `Row ${String.fromCharCode(65 + rowIndex)} Seat ${
-            seatIndex + 1
-          }`,
-          reserved: false, // Replace with actual reserved data if available
-          type: 'regular' as const, // Explicitly set the type to a valid value
+          label: `Row ${String.fromCharCode(65 + rowIndex)} Seat ${seatIndex + 1}`,
+          reserved: false,
+          type: 'regular' as const,
         };
       });
-
-      // Add null placeholders to the right of the row to ensure alignment
       while (seatRow.length < maxSeatsInRow) {
         seatRow.push(null);
       }
-
       return seatRow;
     });
   }
@@ -81,7 +98,6 @@ export class SeatSelectionComponent implements OnInit {
       } else {
         this.selectedSeats.splice(index, 1);
       }
-
       this.selectionChange.emit(this.selectedSeats);
       this.seatsSelected.emit(this.selectedSeats.map((s) => s.label));
     } else {
@@ -97,7 +113,6 @@ export class SeatSelectionComponent implements OnInit {
         summary: 'Selection Limit Reached',
         detail: `You can only select up to ${this.maxSeats} tickets.`,
       });
-
       setTimeout(() => {
         this.toastCooldown = false;
       }, this.TOAST_COOLDOWN_DURATION);
@@ -112,6 +127,7 @@ export class SeatSelectionComponent implements OnInit {
     return this.selectedSeats.includes(seat);
   }
 
+  // Updated method to mark reserved seats
   markSeatsAsReserved(seatLabels: string[]): void {
     this.processedLayout.forEach((row) => {
       row.forEach((seat) => {
@@ -120,7 +136,5 @@ export class SeatSelectionComponent implements OnInit {
         }
       });
     });
-    this.selectedSeats = [];
-    this.selectionChange.emit(this.selectedSeats);
   }
 }

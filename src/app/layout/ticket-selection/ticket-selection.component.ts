@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -14,7 +14,6 @@ import { PanelModule } from 'primeng/panel';
 import { ChipModule } from 'primeng/chip';
 import { TagModule } from 'primeng/tag';
 import { TicketService } from '../../services/ticket.service';
-import { loadStripe } from '@stripe/stripe-js';
 import { AuthService } from '../../services/auth.service';
 import { MessageService } from 'primeng/api';
 import {
@@ -57,6 +56,8 @@ interface TicketResponse {
   providers: [MessageService],
 })
 export class TicketSelectionComponent implements OnInit {
+  @ViewChild(SeatSelectionComponent)
+  seatSelectionComponent!: SeatSelectionComponent;
   currentStep: number = 1;
   cinema_layout: SeatLayout = {} as SeatLayout;
   movieId: string;
@@ -69,7 +70,6 @@ export class TicketSelectionComponent implements OnInit {
   totalCost: number = 0;
   poster: string = '';
   layout: any;
-
   ticketPrices: TicketPrice[] = [
     { category: 'adult', price: 15.0, description: 'Ages 18+' },
     {
@@ -79,22 +79,21 @@ export class TicketSelectionComponent implements OnInit {
     },
     { category: 'child', price: 8.0, description: 'Ages 3-17' },
   ];
-
   ticketCounts: Record<TicketCategory, number> = {
     adult: 0,
     student: 0,
     child: 0,
   };
-
   ticketOptions = Array.from({ length: 10 }, (_, i) => ({
     label: `${i}`,
     value: i,
   }));
-
   ticketCategories: TicketCategory[] = ['adult', 'student', 'child'];
   selectedSeatsValid: boolean = false;
   selectedSeats: string[] = [];
   processedSeats: any[] = [];
+  paymentSuccess: boolean = false;
+  boughtTickets: string[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -114,6 +113,7 @@ export class TicketSelectionComponent implements OnInit {
         this.title = params['title'];
         this.format = params['format'];
         this.showtime = params['showtime'];
+        console.log('Showtime:', this.showtime);
         this.languageInfo = params['languageInfo'];
         this.poster = params['poster'];
         this.nowShowingService.getCinemaHall(params['hall']).subscribe({
@@ -136,9 +136,18 @@ export class TicketSelectionComponent implements OnInit {
         }
         if (params['success'] === 'true') {
           this.currentStep = 4;
+          this.paymentSuccess = true;
         }
       },
     });
+    if (this.showtime) {
+      this.ticketService.getReservedSeats(Number(this.showtime)).subscribe({
+        next: (reserved: string[]) => {
+          this.boughtTickets = reserved;
+        },
+        error: (err) => console.error('Error fetching bought seats:', err),
+      });
+    }
   }
 
   processSeats(): void {
@@ -209,6 +218,7 @@ export class TicketSelectionComponent implements OnInit {
       this.currentStep = event;
     }
   }
+
   async proceedToPayment() {
     let formattedShowtime;
     try {
@@ -230,7 +240,7 @@ export class TicketSelectionComponent implements OnInit {
     const ticketData = {
       movie_title: this.title,
       movie_id: movieId,
-      showtime: formattedShowtime,
+      showtime: this.route.snapshot.queryParams['showtime'],
       seats: this.selectedSeats,
       ticket_type: this.ticketCounts,
       total_amount: this.totalCost,
@@ -243,15 +253,13 @@ export class TicketSelectionComponent implements OnInit {
     console.log('Sending ticket data:', ticketData);
 
     try {
-      // 1) Create ticket in your backend (PENDING)
       const ticketResponse = await firstValueFrom(
         this.ticketService.createTicket(ticketData)
       );
       if (!ticketResponse || !ticketResponse.id) {
         throw new Error('Failed to create ticket');
       }
-
-      // 2) Create Stripe Checkout session
+      localStorage.setItem('reservedSeats', JSON.stringify(this.selectedSeats));
       const body = {
         ticketCounts: this.ticketCounts,
         prices: {

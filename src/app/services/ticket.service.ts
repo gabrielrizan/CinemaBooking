@@ -53,4 +53,11 @@ export class TicketService {
       this.getHeaders()
     );
   }
+
+  getReservedSeats(showtimeId: number): Observable<string[]> {
+    return this.http.get<string[]>(
+      `${this.apiUrl}/tickets/reserved/?showtime_id=${showtimeId}`,
+      this.getHeaders()
+    );
+  }
 }

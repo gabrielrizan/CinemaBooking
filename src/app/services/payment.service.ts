@@ -75,4 +75,4 @@ export class PaymentService {
   }
 }
 
-// stripe listen --forward-to http://127.0.0.1:8000/api/payments/webhook/ this is the command for spinning the stripe CLI to listen to events 
+// stripe listen --forward-to http://127.0.0.1:8000/api/payments/webhook/ 

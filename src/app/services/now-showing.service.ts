@@ -36,6 +36,7 @@ export interface SeatLayout {
 }
 
 export interface ShowTime {
+  id?: number;
   cinema: Cinema;
   movie: Movie;
   date: string;
@@ -65,7 +66,9 @@ export class NowShowingService {
   }
 
   getCinemaHallsByCinema(cinemaId: number): Observable<SeatLayout[]> {
-    return this.http.get<SeatLayout[]>(`${this.apiUrl}/cinemas/${cinemaId}/halls/`);
+    return this.http.get<SeatLayout[]>(
+      `${this.apiUrl}/cinemas/${cinemaId}/halls/`
+    );
   }
 
   getMovies(): Observable<Movie[]> {

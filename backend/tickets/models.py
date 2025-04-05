@@ -1,5 +1,7 @@
 from django.db import models
 from django.conf import settings
+from catalog.models import ShowTime
+
 
 class Ticket(models.Model):
     PAYMENT_STATUS_CHOICES = [
@@ -11,8 +13,8 @@ class Ticket(models.Model):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     movie_title = models.CharField(max_length=255)
-    movie_id = models.IntegerField()  
-    showtime = models.DateTimeField()
+    movie_id = models.IntegerField()
+    showtime = models.ForeignKey(ShowTime, on_delete=models.SET_NULL, null=True, blank=True)
     seats = models.JSONField()  
     ticket_type = models.JSONField()  
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
