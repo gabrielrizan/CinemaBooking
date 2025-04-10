@@ -125,7 +125,6 @@ export class NowShowingComponent implements OnInit {
       this.selectedDate = new Date(date);
       let tempDate: string = this.selectedDate.toLocaleDateString();
       console.log('Selected date:', tempDate);
-
       this.updateDisplayedMovies();
     }
   }
@@ -200,8 +199,6 @@ export class NowShowingComponent implements OnInit {
   getShowtimesForMovie(movie: Movie): { [format: string]: ShowTime[] } {
     const dateStr = this.selectedDate.toLocaleDateString('en-CA');
     const showtimes: { [format: string]: ShowTime[] } = {};
-
-    // Filter showtimes for selected movie, date, and cinema
     const filteredShowtimes = this.showTimes.filter(
       (st) =>
         st.movie.id === movie.id &&
@@ -209,7 +206,6 @@ export class NowShowingComponent implements OnInit {
         st.cinema.id === this.selectedCinema.id
     );
 
-    // Group by format
     filteredShowtimes.forEach((st) => {
       if (!showtimes[st.format]) {
         showtimes[st.format] = [];

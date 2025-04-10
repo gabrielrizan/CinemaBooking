@@ -78,4 +78,8 @@ export class NowShowingService {
   addShowtime(showtime: ShowTime): Observable<ShowTime> {
     return this.http.post<ShowTime>(`${this.apiUrl}/now-showing/`, showtime);
   }
+
+  getShowtimeById(id: number): Observable<ShowTime> {
+    return this.http.get<ShowTime>(`${this.apiUrl}/now-showing/${id}/`);
+  }
 }

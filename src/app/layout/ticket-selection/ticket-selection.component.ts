@@ -69,6 +69,8 @@ export class TicketSelectionComponent implements OnInit {
   totalTickets: number = 0;
   totalCost: number = 0;
   poster: string = '';
+  time: string = '';
+  date: string = new Date().toISOString().split('T')[0];
   layout: any;
   ticketPrices: TicketPrice[] = [
     { category: 'adult', price: 15.0, description: 'Ages 18+' },
@@ -113,9 +115,12 @@ export class TicketSelectionComponent implements OnInit {
         this.title = params['title'];
         this.format = params['format'];
         this.showtime = params['showtime'];
-        console.log('Showtime:', this.showtime);
         this.languageInfo = params['languageInfo'];
         this.poster = params['poster'];
+        this.time = params['time'];
+        this.date = params['date'];
+        console.log('Time', this.time);
+        console.log('Date', this.date);
         this.nowShowingService.getCinemaHall(params['hall']).subscribe({
           next: (data: SeatLayout) => {
             this.cinema_layout = data.layout as unknown as SeatLayout;
@@ -125,7 +130,6 @@ export class TicketSelectionComponent implements OnInit {
             }
           },
         });
-        console.log('Layout data: ', this.cinema_layout);
         if (params['error'] === 'payment_cancelled') {
           this.messageService.add({
             severity: 'error',
@@ -248,6 +252,8 @@ export class TicketSelectionComponent implements OnInit {
       payment_status: 'PENDING',
       format: this.format,
       cinema_id: this.route.snapshot.queryParams['cinemaId'],
+      date: this.date,
+      time: this.time,
     };
 
     console.log('Sending ticket data:', ticketData);

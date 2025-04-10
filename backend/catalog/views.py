@@ -19,6 +19,18 @@ class NowShowingView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+class ShowTimeDetailView(APIView):
+    def get(self, request, showtime_id):
+        try:
+            showtime = ShowTime.objects.select_related('movie', 'cinema').get(id=showtime_id)
+        except ShowTime.DoesNotExist:
+            return Response({"error": "Showtime not found."}, status=status.HTTP_404_NOT_FOUND)
+        serializer = ShowTimeSerializer(showtime)
+        return Response(serializer.data)
+
+
+
 class CinemaListView(APIView):
     def get(self, request):
         cinemas = Cinema.objects.all()

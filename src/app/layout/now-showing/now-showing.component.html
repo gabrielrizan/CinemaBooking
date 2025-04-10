@@ -162,7 +162,8 @@
                       showtime: show.id,
                       date: selectedDate | date : 'yyyy-MM-dd',
                       cinemaId: selectedCinema.id,
-                      hall: show.hall
+                      hall: show.hall,
+                      time: show.time.slice(0, -3)
                     }"
                   ></p-button>
                 </div>
