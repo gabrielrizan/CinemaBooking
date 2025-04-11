@@ -20,6 +20,7 @@
     "@angular/router": "^19.0.5",
     "@primeng/themes": "^19.0.1",
     "@stripe/stripe-js": "^5.4.0",
+    "date-fns": "^4.1.0",
     "fast-average-color": "^9.4.0",
     "jwt-decode": "^4.0.0",
     "primeflex": "^3.3.1",

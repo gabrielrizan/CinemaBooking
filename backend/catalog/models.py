@@ -14,6 +14,7 @@ class Movie(models.Model):
     runtime = models.PositiveIntegerField(help_text="Runtime in minutes")
     genre = models.CharField(max_length=100)
     rating = models.CharField(max_length=20)
+    ageRating = models.CharField(max_length=10, help_text="Age rating (e.g., PG-13)", default="PG-13")
     synopsis = models.TextField()
     director = models.CharField(max_length=100)
     cast = models.TextField(help_text="Comma-separated list of cast members")

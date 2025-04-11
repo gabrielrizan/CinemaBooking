@@ -185,11 +185,11 @@ export class NowShowingComponent implements OnInit {
 
   getRatingClass(rating: string): string {
     switch (rating) {
-      case 'AG':
+      case 'PG':
         return 'bg-green-500';
-      case 'AP 12':
+      case 'PG-13':
         return 'bg-yellow-500';
-      case 'N-15':
+      case 'R':
         return 'bg-orange-500';
       default:
         return 'bg-blue-500';
@@ -210,10 +210,8 @@ export class NowShowingComponent implements OnInit {
       if (!showtimes[st.format]) {
         showtimes[st.format] = [];
       }
-      showtimes[st.format].push(st); // this will remove the seconds from the time (e.g. 14:30:00 -> 14:30)
+      showtimes[st.format].push(st); 
     });
-
-    console.log('Showtimes for movie:', showtimes);
     return showtimes;
   }
 

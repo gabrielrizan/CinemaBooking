@@ -14,6 +14,7 @@ import { Cinema } from '../../services/now-showing.service';
 import { ShowTime } from '../../services/now-showing.service';
 import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
+import { format } from 'date-fns';
 
 @Component({
   selector: 'app-add-showing',
@@ -46,9 +47,7 @@ export class AddShowingComponent implements OnInit {
   };
 
   constructor(private nowShowingService: NowShowingService) {
-    //set minDate to today
-    this.minDate.setHours(0, 0, 0, 0);
-    this.minDate.setDate(this.minDate.getDate() + 1);
+    this.minDate.setDate(this.minDate.getDate());
   }
 
   ngOnInit(): void {}
@@ -65,9 +64,9 @@ export class AddShowingComponent implements OnInit {
   saveNewShowing(): void {
     const showTimeToSave: ShowTime = {
       ...this.newShowing,
-      date: this.newShowing.date.toISOString().split('T')[0],
+      date: format(this.newShowing.date, 'yyyy-MM-dd'),
     };
-    console.log('Hall', this.newShowing.hall);
+    console.log('showTimeToSave', showTimeToSave);
     this.nowShowingService.addShowtime(showTimeToSave).subscribe(() => {
       this.closeAddShowingDialog();
     });

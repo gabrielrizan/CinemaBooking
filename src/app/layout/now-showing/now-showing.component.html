@@ -29,7 +29,6 @@
       ></p-dropdown>
 
       <div class="flex items-center gap-2">
-        <!-- Previous Week Button -->
         <p-button
           icon="pi pi-chevron-left"
           styleClass="p-button-outlined p-button-sm"
@@ -38,7 +37,6 @@
         >
         </p-button>
 
-        <!-- Week Days -->
         <button
           *ngFor="let date of weekDates"
           pButton
@@ -53,7 +51,6 @@
           </div>
         </button>
 
-        <!-- Next Week Button -->
         <p-button
           icon="pi pi-chevron-right"
           styleClass="p-button-outlined p-button-sm"
@@ -62,7 +59,6 @@
         >
         </p-button>
 
-        <!-- Calendar Overlay -->
         <p-button
           icon="pi pi-calendar"
           styleClass="p-button-outlined p-button-sm"
@@ -115,9 +111,9 @@
               <div class="flex flex-wrap items-center gap-2 mb-4">
                 <span
                   class="movie-badge"
-                  [ngClass]="getRatingClass(movie.rating)"
+                  [ngClass]="getRatingClass(movie.ageRating)"
                 >
-                  {{ movie.rating }}
+                  {{ movie.ageRating }}
                 </span>
                 <span class="movie-badge bg-surface-200">
                   <i class="pi pi-clock mr-2"></i>

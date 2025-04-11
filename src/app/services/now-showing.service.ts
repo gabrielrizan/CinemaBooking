@@ -18,6 +18,7 @@ export interface Movie {
   rating: string;
   synopsis: string;
   director: string;
+  ageRating: string;
   cast: string; // Will need to split this on frontend
   release_date: string;
 }
@@ -86,5 +87,4 @@ export class NowShowingService {
   getNowPlayingMovies(): Observable<Movie[]> {
     return this.http.get<Movie[]>(`${this.apiUrl}/now-playing/`);
   }
-
 }
