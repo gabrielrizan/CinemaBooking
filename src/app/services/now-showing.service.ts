@@ -82,4 +82,9 @@ export class NowShowingService {
   getShowtimeById(id: number): Observable<ShowTime> {
     return this.http.get<ShowTime>(`${this.apiUrl}/now-showing/${id}/`);
   }
+
+  getNowPlayingMovies(): Observable<Movie[]> {
+    return this.http.get<Movie[]>(`${this.apiUrl}/now-playing/`);
+  }
+
 }

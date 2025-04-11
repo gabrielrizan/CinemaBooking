@@ -5,6 +5,22 @@ from .models import Cinema, Movie, ShowTime, CinemaHall
 from .serializers import CinemaSerializer, MovieSerializer, ShowTimeSerializer, CinemaHallSerializer
 from rest_framework.views import APIView
 
+
+
+class NowPlayingView(APIView):
+    def get(self, request):
+        # Get all movies that are currently playing
+        movies = Movie.objects.filter(nowPlaying=True).order_by('-release_date')
+        serializer = MovieSerializer(movies, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = MovieSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 class NowShowingView(APIView):
     def get(self, request):
         # Get all showtimes with their related movies and cinemas

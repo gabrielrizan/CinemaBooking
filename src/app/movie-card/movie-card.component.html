@@ -1,3 +1,4 @@
+<!-- The card container for the movie -->
 <div class="movie-card" tooltipPosition="top">
   <div
     class="movie-poster"
@@ -7,14 +8,18 @@
     <img [src]="movie.imageUrl" alt="{{ movie.title }} poster" />
     <div class="movie-details" *ngIf="showDetails">
       <div class="details-content">
-        <h2>{{ movie.title }} <span>({{ movie.year }})</span> - <span class="rating">{{ movie.rating }}</span></h2>
+        <h2>
+          {{ movie.title }}
+          <span>({{ movie.year }})</span> -
+          <span class="rating">{{ movie.rating }}</span>
+        </h2>
         <div class="info-bar">
           <span class="age-rating">{{ movie.ageRating }}</span>
           <span class="genre">{{ movie.genre }}</span>
           <span class="runtime">{{ movie.duration }}m</span>
         </div>
         <p>{{ movie.description }}</p>
-        <p><strong>Actors:</strong> {{ movie.actors.join(', ') }}</p>
+        <p><strong>Actors:</strong> {{ movie.actors.join(", ") }}</p>
         <p><strong>Director:</strong> {{ movie.director }}</p>
       </div>
       <div class="buttons">
@@ -36,3 +41,27 @@
     </div>
   </div>
 </div>
+
+<p-dialog
+  header="{{ movie.title }} - Trailer"
+  [(visible)]="showTrailerDialog"
+  modal="true"
+  appendTo="body"
+  [style]="{
+    width: '1200px',
+    height: 'auto',
+    margin: 'auto'
+  }"
+  [baseZIndex]="10000"
+  [dismissableMask]="true"
+>
+  <ng-template pTemplate="content">
+    <div class="trailer-container">
+      <iframe
+        [src]="getSanitizedTrailerUrl()"
+        frameborder="0"
+        allowfullscreen
+      ></iframe>
+    </div>
+  </ng-template>
+</p-dialog>

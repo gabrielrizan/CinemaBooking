@@ -1,240 +1,38 @@
 import { Component } from '@angular/core';
 import { MovieCardComponent } from '../movie-card/movie-card.component';
 import { CommonModule } from '@angular/common';
+import { NowShowingService } from '../services/now-showing.service';
 
 @Component({
-    selector: 'app-home',
-    imports: [MovieCardComponent, CommonModule],
-    templateUrl: './home.component.html',
-    styleUrl: './home.component.css'
+  selector: 'app-home',
+  imports: [MovieCardComponent, CommonModule],
+  templateUrl: './home.component.html',
+  styleUrl: './home.component.css',
 })
 export class HomeComponent {
-  movies = [
-    {
-      title: 'Solo: A Star Wars Story',
-      description:
-        'During an adventure into the criminal underworld, Han Solo meets his future co-pilot Chewbacca and encounters Lando Calrissian years before joining the Rebellion.',
-      imageUrl: 'solo-poster.jpg',
-      actors: ['Alden Ehrenreich', 'Woody Harrelson', 'Emilia Clarke'],
-      rating: 6.9,
-      trailerUrl: 'https://www.youtube.com/watch?v=jPEYpryMp2s',
-      movieId: '1',
-      year: '2018',
-      director: 'Ron Howard',
-      duration: '135',
-      genre: 'Action, Adventure, Fantasy',
-      backgroundUrl: 'solo-background.jpg',
-      ageRating: '12',
-    },
-    {
-      title: 'Game of Thrones',
-      description:
-        'Nine noble families fight for control over the lands of Westeros, while an ancient enemy returns after being dormant for millennia.',
-      imageUrl: 'got-poster.jpg',
-      actors: ['Emilia Clarke', 'Peter Dinklage', 'Kit Harington'],
-      rating: 9.3,
-      trailerUrl: 'https://www.youtube.com/watch?v=rlR4PJn8b8I',
-      movieId: '2',
-      year: '2011',
-      director: 'Various',
-      duration: '57 (average per episode)',
-      genre: 'Action, Adventure, Drama',
-      backgroundUrl: 'got-background.jpg',
-      ageRating: '18',
-    },
-    {
-      title: 'The Mandalorian',
-      description:
-        'The travels of a lone bounty hunter in the outer reaches of the galaxy, far from the authority of the New Republic.',
-      imageUrl: 'mandalorian-poster.jpg',
-      actors: ['Pedro Pascal', 'Gina Carano', 'Giancarlo Esposito'],
-      rating: 8.8,
-      trailerUrl: 'https://www.youtube.com/watch?v=aOC8E8z_ifw',
-      movieId: '3',
-      year: '2019',
-      director: 'Various',
-      duration: '40 (average per episode)',
-      genre: 'Action, Adventure, Fantasy',
-      backgroundUrl: 'mandalorian-background.jpg',
-      ageRating: '12',
-    },
-    {
-      title: 'Star Wars: The Rise of Skywalker',
-      description:
-        'The surviving members of the resistance face the First Order once again, and the legendary conflict between the Jedi and the Sith reaches its peak.',
-      imageUrl: 'sw-rsos-poster.jpg',
-      actors: ['Daisy Ridley', 'John Boyega', 'Oscar Isaac'],
-      rating: 6.5,
-      trailerUrl: 'https://www.youtube.com/watch?v=8Qn_spdM5Zg',
-      movieId: '4',
-      year: '2019',
-      director: 'J.J. Abrams',
-      duration: '142',
-      genre: 'Action, Adventure, Fantasy',
-      backgroundUrl: 'sw-rsos-background.jpg',
-      ageRating: '12',
-    },
-    {
-      title: 'Star Wars: The Last Jedi',
-      description:
-        'Rey develops her newly discovered abilities with the guidance of Luke Skywalker, who is unsettled by the strength of her powers.',
-      imageUrl: 'sw-the-last-jedi-poster.jpeg',
-      actors: ['Daisy Ridley', 'John Boyega', 'Mark Hamill'],
-      rating: 7.0,
-      trailerUrl: 'https://www.youtube.com/watch?v=Q0CbN8sfihY',
-      movieId: '5',
-      year: '2017',
-      director: 'Rian Johnson',
-      duration: '152',
-      genre: 'Action, Adventure, Fantasy',
-      backgroundUrl: 'sw-the-last-jedi-background.jpg',
-      ageRating: '12',
-    },
-    {
-      title: 'Star Wars: The Force Awakens',
-      description:
-        'As a new threat to the galaxy rises, Rey, a desert scavenger, and Finn, an ex-stormtrooper, join Han Solo to search for the one hope of restoring peace.',
-      imageUrl: 'forceawakens-poster.jpg',
-      actors: ['Daisy Ridley', 'John Boyega', 'Oscar Isaac'],
-      rating: 7.9,
-      trailerUrl: 'https://www.youtube.com/watch?v=sGbxmsDFVnE',
-      movieId: '6',
-      year: '2015',
-      director: 'J.J. Abrams',
-      duration: '138',
-      genre: 'Action, Adventure, Fantasy',
-      backgroundUrl: 'forceawakens-background.jpg',
-      ageRating: '12',
-    },
-    {
-      title: 'Star Wars: A New Hope',
-      description:
-        "Luke Skywalker joins forces with a Jedi Knight, a cocky pilot, a Wookiee, and two droids to save the galaxy from the Empire's world-destroying battle station.",
-      imageUrl: 'swanewhope.jpg',
-      actors: ['Mark Hamill', 'Harrison Ford', 'Carrie Fisher'],
-      rating: 8.6,
-      trailerUrl: 'https://www.youtube.com/watch?v=1g3_CFmnU7k',
-      movieId: '7',
-      year: '1977',
-      director: 'George Lucas',
-      duration: '121',
-      genre: 'Action, Adventure, Fantasy',
-      backgroundUrl: 'swanewhope.jpg',
-      ageRating: '12',
-    },
-    {
-      title: 'The Witcher',
-      description:
-        'Geralt of Rivia, a mutated monster-hunter for hire, journeys toward his destiny in a turbulent world where people often prove more wicked than beasts.',
-      imageUrl: 'witcher-poster.jpg',
-      actors: ['Henry Cavill', 'Freya Allan', 'Anya Chalotra'],
-      rating: 8.2,
-      trailerUrl: 'https://www.youtube.com/watch?v=ndl1W4ltcmg',
-      movieId: '8',
-      year: '2019',
-      director: 'Various',
-      duration: '60 (average per episode)',
-      genre: 'Action, Adventure, Drama',
-      backgroundUrl: 'witcher-background.jpg',
-      ageRating: '18',
-    },
-    {
-      title: 'The Hateful Eight',
-      description:
-        'In the dead of a Wyoming winter, a bounty hunter and his prisoner find shelter in a cabin currently inhabited by a collection of nefarious characters.',
-      imageUrl: 'hateful-eight-poster.jpg',
-      actors: ['Samuel L. Jackson', 'Kurt Russell', 'Jennifer Jason Leigh'],
-      rating: 7.8,
-      trailerUrl: 'https://www.youtube.com/watch?v=6_UI1GzaWv0',
-      movieId: '9',
-      year: '2015',
-      director: 'Quentin Tarantino',
-      duration: '167',
-      genre: 'Crime, Drama, Mystery',
-      backgroundUrl: 'hateful-eight-background.jpg',
-      ageRating: '18',
-    },
-    {
-      title: 'Pulp Fiction',
-      description:
-        'The lives of two mob hitmen, a boxer, a gangster, and his wife intertwine in four tales of violence and redemption.',
-      imageUrl: 'pulp-fiction-poster.jpg',
-      actors: ['John Travolta', 'Uma Thurman', 'Samuel L. Jackson'],
-      rating: 8.9,
-      trailerUrl: 'https://www.youtube.com/watch?v=s7EdQ4FqbhY',
-      movieId: '10',
-      year: '1994',
-      director: 'Quentin Tarantino',
-      duration: '154',
-      genre: 'Crime, Drama',
-      backgroundUrl: 'pulp-fiction-background.jpg',
-      ageRating: '18',
-    },
-    {
-      title: 'Shang-Chi and the Legend of the Ten Rings',
-      description:
-        'Shang-Chi, the master of weaponry-based Kung Fu, is forced to confront his past after being drawn into the Ten Rings organization.',
-      imageUrl: 'shang-chi-poster.jpg',
-      actors: ['Simu Liu', 'Awkwafina', 'Tony Chiu-Wai Leung'],
-      rating: 7.9,
-      trailerUrl: 'https://www.youtube.com/watch?v=8YjFbMbfXaQ',
-      movieId: '11',
-      year: '2021',
-      director: 'Destin Daniel Cretton',
-      duration: '132',
-      genre: 'Action, Adventure, Fantasy',
-      backgroundUrl: 'shang-chi-background.jpg',
-      ageRating: '12',
-    },
-    {
-      title: '21 Jump Street',
-      description:
-        'A pair of underachieving cops are sent back to a local high school to blend in and bring down a synthetic drug ring.',
-      imageUrl: '21-jump-street-poster.jpg',
-      actors: ['Jonah Hill', 'Channing Tatum', 'Ice Cube'],
-      rating: 7.2,
-      trailerUrl: 'https://www.youtube.com/watch?v=RLoKtb4c4W0',
-      movieId: '12',
-      year: '2012',
-      director: 'Phil Lord, Christopher Miller',
-      duration: '109',
-      genre: 'Action, Comedy, Crime',
-      backgroundUrl: '21-jump-street-background.jpg',
-      ageRating: '15',
-    },
-    {
-      title: 'Good Will Hunting',
-      description:
-        'Will Hunting, a janitor at MIT, has a gift for mathematics, but needs help from a psychologist to find direction in his life.',
-      imageUrl: 'good-will-hunting-poster.jpg',
-      actors: ['Robin Williams', 'Matt Damon', 'Ben Affleck'],
-      rating: 8.3,
-      trailerUrl: 'https://www.youtube.com/watch?v=PaZVjZEFkRs',
-      movieId: '13',
-      year: '1997',
-      director: 'Gus Van Sant',
-      duration: '126',
-      genre: 'Drama, Romance',
-      backgroundUrl: 'good-will-hunting-background.jpg',
-      ageRating: '15',
-    },
-    {
-      title: 'The Matrix',
-      description:
-        'A computer hacker learns from mysterious rebels about the true nature of his reality and his role in the war against its controllers.',
-      imageUrl: 'matrix-poster.jpg',
-      actors: ['Keanu Reeves', 'Laurence Fishburne', 'Carrie-Anne Moss'],
-      rating: 8.7,
-      trailerUrl: 'https://www.youtube.com/watch?v=vKQi3bBA1y8',
-      movieId: '14',
-      year: '1999',
-      director: 'Lana Wachowski, Lilly Wachowski',
-      duration: '136',
-      genre: 'Action, Sci-Fi',
-      backgroundUrl: 'matrix-background.jpg',
-      ageRating: '15',
-    },
-  ];
+  nowPlayingMovies: any[] = [];
+  constructor(private playingService: NowShowingService) {
+    this.playingService.getNowPlayingMovies().subscribe((data: any[]) => {
+      this.nowPlayingMovies = data.map(movie => ({
+        title: movie.title,
+        description: movie.synopsis,  
+        imageUrl: movie.poster,
+        actors: movie.cast.split(',').map((actor: string) => actor.trim()),
+        rating: +movie.rating / 10, 
+        trailerUrl: movie.trailer,
+        movieId: movie.id,
+        year: new Date(movie.release_date).getFullYear(),
+        director: movie.director,
+        duration: movie.runtime,
+        genre: movie.genre,
+        backgroundUrl: movie.backgroundUrl || 'default-background.jpg',
+        ageRating: movie.ageRating || 'PG-13'
+      }));
+      console.log("Now playing movies", this.nowPlayingMovies);
+    });
+  }
+
+  
 
   trackByMovieId(index: number, movie: any): number {
     return movie.movieId;

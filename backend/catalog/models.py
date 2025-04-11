@@ -17,6 +17,8 @@ class Movie(models.Model):
     synopsis = models.TextField()
     director = models.CharField(max_length=100)
     cast = models.TextField(help_text="Comma-separated list of cast members")
+    trailer = models.URLField(default="https://www.youtube.com/watch?v=BpJYNVhGf1s")
+    nowPlaying = models.BooleanField(default=False, help_text="Is the movie currently playing?")
     release_date = models.DateField()
     
     def __str__(self):
