@@ -84,14 +84,12 @@ export class NowShowingComponent implements OnInit {
   ngOnInit(): void {
     this.isAdmin = this.authService.isAdmin();
 
-    // Subscribe to isAdmin$ to ensure you get updates if it changes
     this.authService.isAdmin$.subscribe((isAdmin) => {
       this.isAdmin = isAdmin;
-      console.log('Updated isAdmin value:', isAdmin); // Log when it changes
+      console.log('Updated isAdmin value:', isAdmin); 
       this.setMinDateBasedOnRole();
     });
 
-    // Fetch initial data
     forkJoin({
       cinemas: this.nowShowingService.getCinemas(),
       showtimes: this.nowShowingService.getAllShowTimes(),
@@ -160,7 +158,7 @@ export class NowShowingComponent implements OnInit {
   }
 
   onCalendarSelect(date: Date): void {
-    const selectedDate = new Date(date); // Normalize to local time
+    const selectedDate = new Date(date); 
     this.selectedDate = new Date(
       selectedDate.getFullYear(),
       selectedDate.getMonth(),
@@ -210,7 +208,7 @@ export class NowShowingComponent implements OnInit {
       if (!showtimes[st.format]) {
         showtimes[st.format] = [];
       }
-      showtimes[st.format].push(st); 
+      showtimes[st.format].push(st);
     });
     return showtimes;
   }
@@ -273,29 +271,24 @@ export class NowShowingComponent implements OnInit {
     return startOfDate >= startOfMinDate && startOfDate <= startOfMaxDate;
   }
 
-  showAddShowing = false; // Initial state: hidden
+  showAddShowing = false; 
 
   showAddShowingDialog(): void {
-    this.showAddShowing = true; // Show the add-showing view
+    this.showAddShowing = true; 
   }
 
   hideAddShowingDialog(): void {
-    this.showAddShowing = false; // Hide the add-showing view
+    this.showAddShowing = false; 
   }
 
   getMoviesForSelectedCinema(): Movie[] {
     if (!this.selectedCinema || !this.showTimes) return [];
-
     const dateStr = this.selectedDate.toLocaleDateString('en-CA');
-
-    // Filter showtimes for selected date and cinema
     const relevantShowtimes = this.showTimes.filter(
       (showtime) =>
         showtime.cinema.id === this.selectedCinema.id &&
         showtime.date === dateStr
     );
-
-    // Get unique movies from filtered showtimes
     const uniqueMovies = new Map<number, Movie>();
     relevantShowtimes.forEach((st) => uniqueMovies.set(st.movie.id, st.movie));
 
@@ -304,19 +297,25 @@ export class NowShowingComponent implements OnInit {
 
   updateDisplayedMovies(): void {
     const dateStr = this.selectedDate.toLocaleDateString('en-CA');
-    // Filter showtimes for selected date and cinema
     this.showTimes = this.allShowTimes.filter(
       (showtime) =>
         showtime.cinema.id === this.selectedCinema.id &&
         showtime.date === dateStr
     );
 
-    // Get unique movies from filtered showtimes
     const uniqueMovies = new Map<number, Movie>();
     this.showTimes.forEach((st) => uniqueMovies.set(st.movie.id, st.movie));
 
     this.movies = Array.from(uniqueMovies.values()).sort((a, b) =>
       a.title.localeCompare(b.title)
     );
+  }
+
+  // refreshes the showtimes when a new showing is added WITHOUT page refresh
+  onShowingAdded(): void {
+    this.nowShowingService.getAllShowTimes().subscribe((updatedShowtimes) => {
+      this.allShowTimes = updatedShowtimes;
+      this.updateDisplayedMovies();
+    });
   }
 }

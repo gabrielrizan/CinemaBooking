@@ -3,6 +3,7 @@
   [movies]="allMovies"
   [cinemas]="cinemas"
   (closeDialog)="hideAddShowingDialog()"
+  (showingAdded)="onShowingAdded()"
 ></app-add-showing>
 <div class="now-showing-container mx-auto max-w-7xl">
   <div class="flex justify-end mb-4" *ngIf="isAdmin">

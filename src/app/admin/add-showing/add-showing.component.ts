@@ -36,6 +36,7 @@ export class AddShowingComponent implements OnInit {
   @Input() visible: boolean = false;
   @Input() movies: Movie[] = [];
   @Input() cinemas: Cinema[] = [];
+  @Output() showingAdded = new EventEmitter<void>();
   @Output() closeDialog = new EventEmitter<void>();
   newShowing = {
     movie: {} as Movie,
@@ -68,6 +69,7 @@ export class AddShowingComponent implements OnInit {
     };
     console.log('showTimeToSave', showTimeToSave);
     this.nowShowingService.addShowtime(showTimeToSave).subscribe(() => {
+      this.showingAdded.emit();
       this.closeAddShowingDialog();
     });
   }
