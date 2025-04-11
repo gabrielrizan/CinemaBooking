@@ -1,21 +1,27 @@
 <div class="my-movies-container">
   <p-tabView styleClass="movie-tabs">
+    <!-- Active Tickets -->
     <p-tabPanel header="Active Tickets">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div *ngFor="let ticket of upcomingMovies" class="movie-card-container">
+      <!-- Use a vertical stack to list the horizontal cards -->
+      <div class="flex flex-col gap-6">
+        <div *ngFor="let ticket of upcomingMovies">
           <p-card styleClass="shadow-md rounded-2xl overflow-hidden">
-            <ng-template pTemplate="header">
-              <div class="relative overflow-hidden">
+            <!-- Container set as flex row: left for image, right for details -->
+            <div class="flex">
+              <!-- Left Side: Poster image container -->
+              <div class="relative w-40 flex-shrink-0">
                 <img
                   [src]="ticket.poster"
                   alt="Movie Poster"
-                  class="w-full h-64 object-cover"
+                  class="w-full h-full object-contain"
                 />
+                <!-- Movie Title overlay on the image -->
                 <div
-                  class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 text-white px-3 py-2 text-sm font-semibold"
+                  class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 text-white text-sm font-semibold px-2 py-1"
                 >
                   {{ ticket.movie_title }}
                 </div>
+                <!-- Payment status tag overlay -->
                 <div class="absolute top-2 right-2">
                   <p-tag
                     [value]="getUpcomingStatus(ticket.payment_status)"
@@ -24,109 +30,120 @@
                   ></p-tag>
                 </div>
               </div>
-            </ng-template>
-            <div class="p-4 flex flex-col movie-details-container">
-              <div class="flex items-center gap-3">
-                <i class="pi pi-calendar text-lg"></i>
-                <span>{{ ticket.movie_date | date : "fullDate" }}</span>
-              </div>
-              <div class="flex items-center gap-3">
-                <i class="pi pi-clock text-lg"></i>
-                <span>{{ ticket.movie_time?.slice(0, -3) }}</span>
-              </div>
-              <div class="flex items-center gap-3">
-                <i class="pi pi-ticket text-lg"></i>
-                <div class="text-sm leading-tight">
-                  <div
-                    *ngFor="let rowGroup of groupSeatsByRow(ticket.seats)"
-                    class="mb-1"
-                  >
-                    <span class="font-semibold">Row {{ rowGroup.row }}:</span>
-                    <p-chip
-                      *ngFor="let seatNum of rowGroup.seats"
-                      label="{{ seatNum }}"
-                      class="inline-block ml-2 mb-1"
-                      styleClass="bg-gray-200 text-black"
-                    ></p-chip>
+              <!-- Right Side: Details & Actions -->
+              <div class="flex flex-col justify-between p-4 flex-grow">
+                <div class="space-y-2">
+                  <!-- Movie Date -->
+                  <div class="flex items-center gap-2">
+                    <i class="pi pi-calendar text-lg"></i>
+                    <span>{{ ticket.movie_date | date : "fullDate" }}</span>
+                  </div>
+                  <!-- Movie Time -->
+                  <div class="flex items-center gap-2">
+                    <i class="pi pi-clock text-lg"></i>
+                    <span>{{ ticket.movie_time?.slice(0, -3) }}</span>
+                  </div>
+                  <!-- Seats -->
+                  <div class="flex items-center gap-2">
+                    <i class="pi pi-ticket text-lg"></i>
+                    <div class="text-sm">
+                      <div
+                        *ngFor="let rowGroup of groupSeatsByRow(ticket.seats)"
+                      >
+                        <span class="font-semibold"
+                          >Row {{ rowGroup.row }}:</span
+                        >
+                        <p-chip
+                          *ngFor="let seatNum of rowGroup.seats"
+                          label="{{ seatNum }}"
+                          class="inline-block ml-2 mb-1"
+                          styleClass="bg-gray-200 text-black"
+                        ></p-chip>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Total Amount -->
+                  <div class="flex items-center gap-2">
+                    <i class="pi pi-wallet text-lg"></i>
+                    <span class="font-medium"
+                      >Total: ${{ ticket.total_amount }}</span
+                    >
                   </div>
                 </div>
-              </div>
-              <div class="flex items-center gap-3">
-                <i class="pi pi-wallet text-lg"></i>
-                <span class="font-medium"
-                  >Total: ${{ ticket.total_amount }}</span
-                >
+                <!-- Footer / Buttons -->
+                <div class="flex gap-2 mt-4">
+                  <p-button
+                    label="Details"
+                    icon="pi pi-eye"
+                    styleClass="p-button-outlined flex-1"
+                  ></p-button>
+                  <p-button
+                    label="Cancel"
+                    icon="pi pi-times"
+                    severity="danger"
+                    styleClass="flex-1"
+                    (onClick)="cancelTicket(ticket.id)"
+                  ></p-button>
+                </div>
               </div>
             </div>
-            <ng-template pTemplate="footer">
-              <div
-                class="px-4 pb-4 pt-2 flex justify-between items-center gap-2"
-              >
-                <p-button
-                  label="Details"
-                  icon="pi pi-eye"
-                  styleClass="p-button-outlined flex-1"
-                ></p-button>
-                <p-button
-                  label="Cancel"
-                  icon="pi pi-times"
-                  severity="danger"
-                  styleClass="flex-1"
-                  (onClick)="cancelTicket(ticket.id)"
-                ></p-button>
-              </div>
-            </ng-template>
           </p-card>
         </div>
       </div>
     </p-tabPanel>
 
+    <!-- Movie History -->
     <p-tabPanel header="Movie History">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div *ngFor="let ticket of pastMovies" class="movie-card-container">
+      <div class="flex flex-col gap-6">
+        <div *ngFor="let ticket of pastMovies">
           <p-card styleClass="shadow-md rounded-2xl overflow-hidden">
-            <ng-template pTemplate="header">
-              <div class="relative overflow-hidden">
+            <div class="flex">
+              <!-- Left: Poster Image -->
+              <div class="relative w-40 flex-shrink-0">
                 <img
                   [src]="ticket.poster"
                   alt="Movie Poster"
-                  class="w-full h-64 object-cover grayscale-[30%]"
+                  class="w-full h-full object-contain grayscale-[30%]"
                 />
+                <!-- Movie title overlay -->
                 <div
-                  class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 text-white px-3 py-2 text-sm font-semibold"
+                  class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 text-white text-sm font-semibold px-2 py-1"
                 >
                   {{ ticket.movie_title }}
                 </div>
+                <!-- Watched badge overlay -->
                 <div class="absolute top-2 right-2">
                   <p-badge value="Watched" severity="info"></p-badge>
                 </div>
               </div>
-            </ng-template>
-            <div class="p-4 flex flex-col movie-details-container">
-              <div class="flex items-center gap-3">
-                <i class="pi pi-calendar text-lg"></i>
-                <span>{{ ticket.movie_date | date : "fullDate" }}</span>
-              </div>
-              <div class="flex items-center gap-3">
-                <i class="pi pi-clock text-lg"></i>
-                <span>{{ ticket.movie_time?.slice(0, -3) }}</span>
-              </div>
-              <div class="flex items-center gap-3">
-                <i class="pi pi-wallet text-lg"></i>
-                <span class="font-medium"
-                  >Total: ${{ ticket.total_amount }}</span
-                >
+              <!-- Right: Details & Actions -->
+              <div class="flex flex-col justify-between p-4 flex-grow">
+                <div class="space-y-2">
+                  <div class="flex items-center gap-2">
+                    <i class="pi pi-calendar text-lg"></i>
+                    <span>{{ ticket.movie_date | date : "fullDate" }}</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <i class="pi pi-clock text-lg"></i>
+                    <span>{{ ticket.movie_time?.slice(0, -3) }}</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <i class="pi pi-wallet text-lg"></i>
+                    <span class="font-medium"
+                      >Total: ${{ ticket.total_amount }}</span
+                    >
+                  </div>
+                </div>
+                <!-- Footer / Button -->
+                <div class="mt-4">
+                  <p-button
+                    label="Rate this movie"
+                    icon="pi pi-star"
+                    styleClass="p-button-outlined w-full"
+                  ></p-button>
+                </div>
               </div>
             </div>
-            <ng-template pTemplate="footer">
-              <div class="px-4 pb-4 pt-2">
-                <p-button
-                  label="Rate this movie"
-                  icon="pi pi-star"
-                  styleClass="p-button-outlined w-full"
-                ></p-button>
-              </div>
-            </ng-template>
           </p-card>
         </div>
       </div>
