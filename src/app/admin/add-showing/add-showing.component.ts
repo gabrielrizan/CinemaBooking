@@ -31,7 +31,6 @@ import { DatePickerModule } from 'primeng/datepicker';
 export class AddShowingComponent implements OnInit {
   addShowingDialogVisible: boolean = false;
   minDate: Date = new Date();
-  maxDate: Date = new Date();
   cinemaHalls: SeatLayout[] = [];
   @Input() visible: boolean = false;
   @Input() movies: Movie[] = [];
@@ -46,7 +45,11 @@ export class AddShowingComponent implements OnInit {
     hall: '',
   };
 
-  constructor(private nowShowingService: NowShowingService) {}
+  constructor(private nowShowingService: NowShowingService) {
+    //set minDate to today
+    this.minDate.setHours(0, 0, 0, 0);
+    this.minDate.setDate(this.minDate.getDate() + 1);
+  }
 
   ngOnInit(): void {}
 
