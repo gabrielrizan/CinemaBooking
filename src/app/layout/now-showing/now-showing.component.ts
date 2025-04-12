@@ -4,7 +4,7 @@ import { DividerModule } from 'primeng/divider';
 import { BadgeModule } from 'primeng/badge';
 import { CommonModule } from '@angular/common';
 import { ImageModule } from 'primeng/image';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ChipModule } from 'primeng/chip';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
@@ -16,16 +16,22 @@ import { CalendarModule } from 'primeng/calendar';
 import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
+
 import {
   Cinema,
   Movie,
   ShowTime,
   NowShowingService,
 } from '../../services/now-showing.service';
-import { AddShowingComponent } from '../../admin/add-showing/add-showing.component';
 import { AuthService } from '../../services/auth.service';
-import { forkJoin } from 'rxjs';
+import { SharedService } from '../../shared.service';
+
+import { AddShowingComponent } from '../../admin/add-showing/add-showing.component';
 import { AddMovieComponent } from '../../admin/add-movie/add-movie.component';
+
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-now-showing',
@@ -36,7 +42,6 @@ import { AddMovieComponent } from '../../admin/add-movie/add-movie.component';
     BadgeModule,
     CommonModule,
     ImageModule,
-    RouterModule,
     ChipModule,
     DialogModule,
     ButtonModule,
@@ -50,10 +55,13 @@ import { AddMovieComponent } from '../../admin/add-movie/add-movie.component';
     OverlayPanelModule,
     AddShowingComponent,
     AddMovieComponent,
+    RouterModule,
+    ToastModule,
   ],
   templateUrl: './now-showing.component.html',
   styleUrls: ['./now-showing.component.css'],
   encapsulation: ViewEncapsulation.None,
+  providers: [MessageService], // <-- Add the MessageService provider here
 })
 export class NowShowingComponent implements OnInit {
   selectedDate: Date = new Date();
@@ -71,13 +79,22 @@ export class NowShowingComponent implements OnInit {
   isAdmin: boolean = false;
   allMovies: Movie[] = [];
 
+  showAddShowing = false;
+  showAddMovie = false;
+
   constructor(
     private nowShowingService: NowShowingService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router,
+    private messageService: MessageService,
+    private sharedService: SharedService
   ) {
+    // Set default min & max dates
     this.minDate.setHours(0, 0, 0, 0);
     this.maxDate.setDate(this.maxDate.getDate() + 20);
     this.maxDate.setHours(23, 59, 59, 999);
+
+    // Initialize selected date & week start
     this.selectedDate.setHours(0, 0, 0, 0);
     this.weekStartDate = new Date(this.selectedDate);
     this.generateWeekDates(this.weekStartDate);
@@ -86,12 +103,14 @@ export class NowShowingComponent implements OnInit {
   ngOnInit(): void {
     this.isAdmin = this.authService.isAdmin();
 
+    // Watch for admin changes
     this.authService.isAdmin$.subscribe((isAdmin) => {
       this.isAdmin = isAdmin;
       console.log('Updated isAdmin value:', isAdmin);
       this.setMinDateBasedOnRole();
     });
 
+    // Fetch initial data (cinemas, showtimes, movies)
     forkJoin({
       cinemas: this.nowShowingService.getCinemas(),
       showtimes: this.nowShowingService.getAllShowTimes(),
@@ -111,8 +130,9 @@ export class NowShowingComponent implements OnInit {
     });
   }
 
-  setMinDateBasedOnRole(): void {
+  private setMinDateBasedOnRole(): void {
     if (this.isAdmin) {
+      // Admin can choose dates far in the past
       this.minDate = new Date(2000, 0, 1);
     } else {
       this.minDate = new Date();
@@ -123,8 +143,7 @@ export class NowShowingComponent implements OnInit {
   selectDate(date: Date) {
     if (this.isDateInRange(date)) {
       this.selectedDate = new Date(date);
-      let tempDate: string = this.selectedDate.toLocaleDateString();
-      console.log('Selected date:', tempDate);
+      console.log('Selected date:', this.selectedDate.toLocaleDateString());
       this.updateDisplayedMovies();
     }
   }
@@ -146,6 +165,7 @@ export class NowShowingComponent implements OnInit {
     const newStart = new Date(this.weekStartDate);
     newStart.setDate(newStart.getDate() - 7);
     newStart.setHours(0, 0, 0, 0);
+
     if (newStart >= this.minDate) {
       this.weekStartDate = newStart;
       this.generateWeekDates(newStart);
@@ -198,7 +218,8 @@ export class NowShowingComponent implements OnInit {
 
   getShowtimesForMovie(movie: Movie): { [format: string]: ShowTime[] } {
     const dateStr = this.selectedDate.toLocaleDateString('en-CA');
-    const showtimes: { [format: string]: ShowTime[] } = {};
+    const showtimesByFormat: { [format: string]: ShowTime[] } = {};
+
     const filteredShowtimes = this.showTimes.filter(
       (st) =>
         st.movie.id === movie.id &&
@@ -207,12 +228,12 @@ export class NowShowingComponent implements OnInit {
     );
 
     filteredShowtimes.forEach((st) => {
-      if (!showtimes[st.format]) {
-        showtimes[st.format] = [];
+      if (!showtimesByFormat[st.format]) {
+        showtimesByFormat[st.format] = [];
       }
-      showtimes[st.format].push(st);
+      showtimesByFormat[st.format].push(st);
     });
-    return showtimes;
+    return showtimesByFormat;
   }
 
   getMovieFormats(movie: Movie): string[] {
@@ -239,20 +260,15 @@ export class NowShowingComponent implements OnInit {
   }
 
   canGoForward(): boolean {
-    return true;
+    return true; // Adjust if you have logic limiting forward navigation
   }
 
   canSelectDate(date: Date): boolean {
-    const startOfDate = new Date(date);
-    startOfDate.setHours(0, 0, 0, 0);
+    const startOfDate = new Date(date).setHours(0, 0, 0, 0);
+    const minDateMs = this.minDate.setHours(0, 0, 0, 0);
+    const maxDateMs = this.maxDate.setHours(0, 0, 0, 0);
 
-    const startOfMinDate = new Date(this.minDate);
-    startOfMinDate.setHours(0, 0, 0, 0);
-
-    const startOfMaxDate = new Date(this.maxDate);
-    startOfMaxDate.setHours(0, 0, 0, 0);
-
-    return startOfDate >= startOfMinDate && startOfDate <= startOfMaxDate;
+    return startOfDate >= minDateMs && startOfDate <= maxDateMs;
   }
 
   onCinemaChange(cinema: Cinema): void {
@@ -261,20 +277,12 @@ export class NowShowingComponent implements OnInit {
   }
 
   isDateInRange(date: Date): boolean {
-    const startOfDate = new Date(date);
-    startOfDate.setHours(0, 0, 0, 0);
+    const startOfDate = new Date(date).setHours(0, 0, 0, 0);
+    const minDateMs = this.minDate.setHours(0, 0, 0, 0);
+    const maxDateMs = this.maxDate.setHours(0, 0, 0, 0);
 
-    const startOfMinDate = new Date(this.minDate);
-    startOfMinDate.setHours(0, 0, 0, 0);
-
-    const startOfMaxDate = new Date(this.maxDate);
-    startOfMaxDate.setHours(0, 0, 0, 0);
-
-    return startOfDate >= startOfMinDate && startOfDate <= startOfMaxDate;
+    return startOfDate >= minDateMs && startOfDate <= maxDateMs;
   }
-
-  showAddShowing = false;
-  showAddMovie: boolean = false;
 
   showAddShowingDialog(): void {
     this.showAddShowing = true;
@@ -294,12 +302,14 @@ export class NowShowingComponent implements OnInit {
 
   getMoviesForSelectedCinema(): Movie[] {
     if (!this.selectedCinema || !this.showTimes) return [];
+
     const dateStr = this.selectedDate.toLocaleDateString('en-CA');
     const relevantShowtimes = this.showTimes.filter(
       (showtime) =>
         showtime.cinema.id === this.selectedCinema.id &&
         showtime.date === dateStr
     );
+
     const uniqueMovies = new Map<number, Movie>();
     relevantShowtimes.forEach((st) => {
       if (st.movie.id !== undefined) {
@@ -330,16 +340,16 @@ export class NowShowingComponent implements OnInit {
     );
   }
 
-  // refreshes the showtimes when a new showing is added WITHOUT page refresh
   onShowingAdded(): void {
+    // Refresh showtimes after adding
     this.nowShowingService.getAllShowTimes().subscribe((updatedShowtimes) => {
       this.allShowTimes = updatedShowtimes;
       this.updateDisplayedMovies();
     });
   }
 
-  //refreshs same as above
   onMovieAdded(): void {
+    // Refresh movies after adding
     this.nowShowingService.getMovies().subscribe({
       next: (movies) => {
         this.allMovies = movies;
@@ -347,5 +357,35 @@ export class NowShowingComponent implements OnInit {
       },
       error: (error) => console.error('Error refreshing movies:', error),
     });
+  }
+
+  handleShowtimeClick(show: ShowTime, movie: Movie, format: string): void {
+    // If not authenticated, prompt login
+    if (!this.authService.isTokenValid()) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Authentication Required',
+        detail: 'Please log in or sign up to book tickets.',
+        life: 3000,
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      this.sharedService.showLoginPanel();
+      return;
+    }
+
+    // Else navigate to ticket booking
+    const queryParams = {
+      title: movie.title,
+      movieId: movie.id,
+      format: format,
+      poster: movie.poster,
+      showtime: show.id,
+      date: this.selectedDate.toISOString().split('T')[0], // YYYY-MM-DD
+      cinemaId: this.selectedCinema.id,
+      hall: show.hall,
+      time: show.time.slice(0, -3),
+    };
+
+    this.router.navigate(['/select-tickets'], { queryParams });
   }
 }

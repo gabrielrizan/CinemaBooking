@@ -55,7 +55,7 @@ import { TooltipModule } from 'primeng/tooltip';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
 })
-export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
+export class NavbarComponent implements OnInit, OnDestroy {
   movies: SearchMedia[] = [];
   loading: boolean = true;
   error: string | null = null;
@@ -71,6 +71,8 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild('op') overlayPanel: OverlayPanel | undefined;
   @ViewChild('searchInput') searchInput!: ElementRef;
+  @ViewChild('avatarEl', { static: false }) avatarEl!: ElementRef;
+  @ViewChild('loginComponent') loginComponent!: LoginComponent;
 
   private searchSubject = new Subject<string>();
   userFirstName: string = '';
@@ -421,7 +423,6 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
       },
     ];
 
-    // Combine base items with either admin or regular items
     this.items = [
       ...baseItems,
       ...(this.isAdmin && this.authService.isAdminView()
@@ -434,22 +435,6 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
     this.authService.logout(); // Use the service's logout method
     this.overlayPanel?.hide();
   }
-
-  // clearSearch() {
-  //   this.searchTerm = '';
-  //   this.movies = [];
-  //   this.searchInput.nativeElement.focus();
-  // }
-
-  // logIn() {
-  //   // Handle log in logic
-  //   console.log('Log In button clicked');
-  // }
-
-  // signUp() {
-  //   // Handle sign up logic
-  //   console.log('Sign Up button clicked');
-  // }
 
   onSearchFocus() {
     this.isSearchActive = true;
@@ -481,9 +466,5 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.authSubscription) {
       this.authSubscription.unsubscribe();
     }
-  }
-
-  ngAfterViewInit() {
-    // You can add any additional initialization logic here
   }
 }

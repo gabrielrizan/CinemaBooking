@@ -160,19 +160,8 @@
                     *ngFor="let show of getShowtimesForMovie(movie)[format]"
                     [label]="show.time.slice(0, -3)"
                     size="small"
-                    [routerLink]="['/select-tickets']"
+                    (click)="handleShowtimeClick(show, movie, format)"
                     styleClass="p-button-outlined rounded"
-                    [queryParams]="{
-                      title: movie.title,
-                      movieId: movie.id,
-                      format: format,
-                      poster: movie.poster,
-                      showtime: show.id,
-                      date: selectedDate | date : 'yyyy-MM-dd',
-                      cinemaId: selectedCinema.id,
-                      hall: show.hall,
-                      time: show.time.slice(0, -3)
-                    }"
                   ></p-button>
                 </div>
               </div>
@@ -261,3 +250,4 @@
     </div>
   </p-dialog>
 </div>
+<p-toast position="top-left"></p-toast>

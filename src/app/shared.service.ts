@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Subject, BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SharedService {
-  // Subject to notify when search blur should be triggered
   private searchBlurSubject = new Subject<void>();
   searchBlur$ = this.searchBlurSubject.asObservable();
+
+  private loginPanelSubject = new Subject<void>();
+  loginPanel$ = this.loginPanelSubject.asObservable();
 
   private movieOrTvDetailsSubject = new BehaviorSubject<any>(null);
   private movieCreditsSubject = new BehaviorSubject<any>(null);
@@ -46,5 +47,10 @@ export class SharedService {
   // Method to trigger the search blur event
   triggerSearchBlur() {
     this.searchBlurSubject.next();
+  }
+
+  // Method to notify subscribers that the login panel should open
+  showLoginPanel() {
+    this.loginPanelSubject.next();
   }
 }

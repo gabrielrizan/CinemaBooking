@@ -1,5 +1,5 @@
 <p-toast></p-toast>
-<p-overlayPanel #op>
+<p-popover #op>
   <ng-container *ngIf="isLoggedIn; else loginTemplate">
     <p-tieredMenu #menu [model]="loggedInItems"></p-tieredMenu>
   </ng-container>
@@ -9,9 +9,7 @@
         <div
           class="w-full md:w-5/12 flex flex-col items-center justify-center gap-4 py-8"
         >
-          <div
-            class="flex flex-wrap justify-center items-center gap-2"
-          >
+          <div class="flex flex-wrap justify-center items-center gap-2">
             <label class="w-24">Email</label>
             <input
               pInputText
@@ -21,9 +19,7 @@
               [(ngModel)]="username"
             />
           </div>
-          <div
-            class="flex flex-wrap justify-center items-center gap-2"
-          >
+          <div class="flex flex-wrap justify-center items-center gap-2">
             <label class="w-24">Password</label>
             <input
               pInputText
@@ -38,33 +34,31 @@
             icon="pi pi-user"
             styleClass="w-40 mx-auto"
             (click)="onLogin()"
-          />
+          ></p-button>
         </div>
         <div class="w-full md:w-2/12">
-          <p-divider layout="vertical" styleClass="hidden md:flex"
-            ><b>OR</b></p-divider
-          >
+          <p-divider layout="vertical" styleClass="hidden md:flex">
+            <b>OR</b>
+          </p-divider>
           <p-divider
             layout="horizontal"
             styleClass="flex md:hidden"
             [align]="'center'"
-            ><b>OR</b></p-divider
           >
+          </p-divider>
         </div>
-        <div
-          class="w-full md:w-5/12 flex items-center justify-center py-8"
-        >
+        <div class="w-full md:w-5/12 flex items-center justify-center py-8">
           <p-button
             (click)="showSignUpForm()"
             label="Sign Up"
             icon="pi pi-user-plus"
             styleClass="p-button-success w-40"
-          />
+          ></p-button>
         </div>
       </div>
     </div>
   </ng-template>
-</p-overlayPanel>
+</p-popover>
 
 <p-dialog
   header="Sign up"

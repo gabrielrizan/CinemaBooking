@@ -1,24 +1,26 @@
-import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
+import { Popover, PopoverModule } from 'primeng/popover';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { DividerModule } from 'primeng/divider';
 import { Router } from '@angular/router';
 import { TieredMenuModule } from 'primeng/tieredmenu';
-import { AuthService } from '../../services/auth.service'; // Import the AuthService
+import { AuthService } from '../../services/auth.service';
 import { DialogModule } from 'primeng/dialog';
 import { SignupComponent } from '../signup/signup.component';
 import { MenuItem, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { SharedService } from '../../shared.service';
 
 @Component({
   selector: 'app-login',
+  standalone: true,
   imports: [
     CommonModule,
     FormsModule,
-    OverlayPanelModule,
+    PopoverModule, // Use Popover instead of OverlayPanel
     ButtonModule,
     InputTextModule,
     DividerModule,
@@ -31,21 +33,57 @@ import { ToastModule } from 'primeng/toast';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   visible = false;
   username = '';
   password = '';
-  isLoggedIn: boolean = false; // Set this based on your actual authentication logic
+  isLoggedIn: boolean = false;
   userFirstName: string = '';
   isAdmin: boolean = false;
+  public avatarElementRef?: HTMLElement;
+  public setAvatarReference(element: HTMLElement): void {
+    this.avatarElementRef = element;
+  }
 
-  @ViewChild('op') overlayPanel!: OverlayPanel;
+  @ViewChild('op') popover!: Popover;
+
+  ngOnInit(): void {
+    this.sharedService.loginPanel$.subscribe(() => {
+      this.openPanelAtTarget(
+        this.avatarElementRef ?? this.popover.el.nativeElement
+      );
+    });
+  }
+
+  loggedInItems: MenuItem[] = [
+    {
+      label: 'My Account',
+      icon: 'pi pi-user',
+      routerLink: ['/my-account'],
+    },
+    {
+      label: 'My Tickets',
+      icon: 'pi pi-ticket',
+      routerLink: ['/my-tickets'],
+    },
+    {
+      label: 'My Searches',
+      icon: 'pi pi-history',
+      routerLink: ['/my-searches'],
+    },
+    {
+      label: 'Logout',
+      icon: 'pi pi-sign-out',
+      command: () => this.logout(),
+    },
+  ];
 
   constructor(
     private authService: AuthService,
     private router: Router,
     private cdr: ChangeDetectorRef,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private sharedService: SharedService
   ) {
     this.isLoggedIn = this.authService.isTokenValid();
     this.authService.userDetails$.subscribe((user) => {
@@ -105,31 +143,19 @@ export class LoginComponent {
   }
 
   togglePanel(event: Event) {
-    this.overlayPanel.toggle(event); // Use the toggle method from OverlayPanel
+    this.popover.toggle(event);
   }
 
-  loggedInItems: MenuItem[] = [
-    {
-      label: 'My Account',
-      icon: 'pi pi-user',
-      routerLink: ['/my-account'],
-    },
-    {
-      label: 'My Tickets',
-      icon: 'pi pi-ticket',
-      routerLink: ['/my-tickets'],
-    },
-    {
-      label: 'My Searches',
-      icon: 'pi pi-history',
-      routerLink: ['/my-searches'],
-    },
-    {
-      label: 'Logout',
-      icon: 'pi pi-sign-out',
-      command: () => this.logout(),
-    },
-  ];
+  openPanelAtTarget(targetElement: HTMLElement): void {
+    const pseudoEvent = {
+      type: 'click',
+      target: targetElement,
+      currentTarget: targetElement,
+      preventDefault: () => {},
+      stopPropagation: () => {},
+    };
+    this.popover.show(pseudoEvent, targetElement);
+  }
 
   onLogin() {
     const credentials = {
@@ -146,7 +172,7 @@ export class LoginComponent {
 
         this.isLoggedIn = true;
         this.cdr.detectChanges();
-        this.overlayPanel.hide();
+        this.popover.hide();
         this.messageService.add({
           severity: 'success',
           summary: 'Success',
@@ -164,7 +190,7 @@ export class LoginComponent {
     this.authService.logout();
     this.isLoggedIn = false;
     this.cdr.detectChanges();
-    this.overlayPanel.hide();
+    this.popover.hide();
     this.messageService.add({
       severity: 'success',
       summary: 'Success',
