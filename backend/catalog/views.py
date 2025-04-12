@@ -74,6 +74,13 @@ class MovieListView(APIView):
         serializer = MovieSerializer(movies, many=True)
         return Response(serializer.data)
     
+    def post(self, request):
+        serializer = MovieSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 class CinemaHallView(APIView):
     def get(self, request, hall_id):
         try:

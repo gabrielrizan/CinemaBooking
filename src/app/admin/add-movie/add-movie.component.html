@@ -1,1 +1,255 @@
-<p>add-movie works!</p>
+<p-dialog
+  header="Add Movie"
+  [(visible)]="visible"
+  modal="true"
+  [closable]="true"
+  (onHide)="onClose()"
+  [style]="{ width: '80vw', 'max-width': '800px' }"
+  [contentStyle]="{ 'max-height': '80vh', overflow: 'auto' }"
+  styleClass="shadow-lg"
+>
+  <form #movieForm="ngForm" (ngSubmit)="onSubmit(movieForm)" class="p-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Left Column (basic info) -->
+      <div class="space-y-4">
+        <h3 class="text-lg font-semibold mb-4 border-b pb-2">
+          Basic Information
+        </h3>
+
+        <!-- Title -->
+        <div class="mb-4">
+          <label for="title" class="block text-sm font-medium mb-1">
+            Title <span>*</span>
+          </label>
+          <input
+            id="title"
+            type="text"
+            pInputText
+            [(ngModel)]="movieData.title"
+            name="title"
+            required
+            class="w-full shadow-sm rounded-md"
+          />
+        </div>
+
+        <!-- Poster URL -->
+        <div class="mb-4">
+          <label for="poster" class="block text-sm font-medium mb-1">
+            Poster URL <span>*</span>
+          </label>
+          <input
+            id="poster"
+            type="text"
+            pInputText
+            [(ngModel)]="movieData.poster"
+            name="poster"
+            required
+            class="w-full shadow-sm rounded-md"
+          />
+        </div>
+
+        <!-- Runtime -->
+        <div class="mb-4">
+          <label for="runtime" class="block text-sm font-medium mb-1">
+            Runtime (min) <span>*</span>
+          </label>
+          <p-inputNumber
+            id="runtime"
+            [(ngModel)]="movieData.runtime"
+            name="runtime"
+            required
+            [showButtons]="true"
+            [min]="0"
+            styleClass="w-full"
+          ></p-inputNumber>
+        </div>
+
+        <!-- Genre -->
+        <div class="mb-4">
+          <label for="genre" class="block text-sm font-medium mb-1">
+            Genre <span>*</span>
+          </label>
+          <input
+            id="genre"
+            type="text"
+            pInputText
+            [(ngModel)]="movieData.genre"
+            name="genre"
+            required
+            class="w-full shadow-sm rounded-md"
+          />
+        </div>
+
+        <!-- Rating (as a text input) -->
+        <div class="mb-4">
+          <label for="rating" class="block text-sm font-medium mb-1">
+            Rating
+          </label>
+          <input
+            id="rating"
+            type="number"
+            pInputText
+            [(ngModel)]="movieData.rating"
+            name="rating"
+            min="0"
+            max="10"
+            step="0.1"
+            placeholder="0.0 - 10.0"
+            class="w-full shadow-sm rounded-md"
+          />
+        </div>
+
+        <!-- Age Rating (dropdown) -->
+        <div class="mb-4">
+          <label for="ageRating" class="block text-sm font-medium mb-1">
+            Age Rating <span>*</span>
+          </label>
+          <p-dropdown
+            id="ageRating"
+            [(ngModel)]="movieData.ageRating"
+            name="ageRating"
+            [options]="ageRatingOptions"
+            optionLabel="label"
+            optionValue="value"
+            styleClass="w-full"
+            placeholder="Select Age Rating"
+            required
+          ></p-dropdown>
+        </div>
+      </div>
+
+      <!-- Right Column (additional info) -->
+      <div class="space-y-4">
+        <h3 class="text-lg font-semibold mb-4 border-b pb-2">
+          Additional Details
+        </h3>
+
+        <!-- Release Date -->
+        <div class="mb-4">
+          <label for="release_date" class="block text-sm font-medium mb-1">
+            Release Date <span>*</span>
+          </label>
+          <p-calendar
+            id="release_date"
+            [(ngModel)]="movieData.release_date"
+            name="release_date"
+            dateFormat="yy-mm-dd"
+            required
+            styleClass="w-full"
+            [showIcon]="true"
+          ></p-calendar>
+        </div>
+
+        <!-- Director -->
+        <div class="mb-4">
+          <label for="director" class="block text-sm font-medium mb-1">
+            Director <span>*</span>
+          </label>
+          <input
+            id="director"
+            type="text"
+            pInputText
+            [(ngModel)]="movieData.director"
+            name="director"
+            required
+            class="w-full shadow-sm rounded-md"
+          />
+        </div>
+
+        <!-- Cast -->
+        <div class="mb-4">
+          <label for="cast" class="block text-sm font-medium mb-1">
+            Cast (comma separated) <span>*</span>
+          </label>
+          <input
+            id="cast"
+            type="text"
+            pInputText
+            [(ngModel)]="movieData.cast"
+            name="cast"
+            required
+            placeholder="Actor 1, Actor 2, Actor 3..."
+            class="w-full shadow-sm rounded-md"
+          />
+        </div>
+
+        <!-- Trailer URL -->
+        <div class="mb-4">
+          <label for="trailer" class="block text-sm font-medium mb-1">
+            Trailer URL
+          </label>
+          <div class="p-inputgroup shadow-sm rounded-md overflow-hidden">
+            <span class="p-inputgroup-addon">
+              <i class="pi pi-video"></i>
+            </span>
+            <input
+              id="trailer"
+              type="text"
+              pInputText
+              [(ngModel)]="movieData.trailer"
+              name="trailer"
+              placeholder="YouTube URL"
+              class="w-full"
+            />
+          </div>
+        </div>
+
+        <!-- Now Playing Checkbox -->
+        <div class="mb-4 mt-6">
+          <div class="flex items-center">
+            <p-checkbox
+              [(ngModel)]="movieData.nowPlaying"
+              binary="true"
+              inputId="nowPlaying"
+              name="nowPlaying"
+            ></p-checkbox>
+            <label for="nowPlaying" class="ml-2 text-sm"> Now Playing </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Synopsis (Full width) -->
+      <div class="col-span-1 md:col-span-2">
+        <label for="synopsis" class="block text-sm font-medium mb-1">
+          Synopsis <span>*</span>
+        </label>
+        <textarea
+          id="synopsis"
+          pInputTextarea
+          [(ngModel)]="movieData.synopsis"
+          name="synopsis"
+          required
+          class="w-full shadow-sm rounded-md"
+          rows="4"
+        ></textarea>
+      </div>
+
+      <!-- Error Message -->
+      <div
+        *ngIf="errorMessage"
+        class="col-span-1 md:col-span-2 p-3 border rounded-md"
+      >
+        <i class="pi pi-exclamation-circle mr-2"></i>{{ errorMessage }}
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="flex justify-end mt-6 gap-2">
+      <button
+        type="button"
+        pButton
+        label="Cancel"
+        (click)="onClose()"
+        class="p-button-outlined"
+      ></button>
+      <button
+        type="submit"
+        pButton
+        label="Add Movie"
+        [disabled]="isSubmitting || !movieForm.form.valid"
+        class="p-button-primary"
+        icon="pi pi-check"
+      ></button>
+    </div>
+  </form>
+</p-dialog>

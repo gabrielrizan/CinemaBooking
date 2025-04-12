@@ -25,6 +25,7 @@ import {
 import { AddShowingComponent } from '../../admin/add-showing/add-showing.component';
 import { AuthService } from '../../services/auth.service';
 import { forkJoin } from 'rxjs';
+import { AddMovieComponent } from '../../admin/add-movie/add-movie.component';
 
 @Component({
   selector: 'app-now-showing',
@@ -48,6 +49,7 @@ import { forkJoin } from 'rxjs';
     DropdownModule,
     OverlayPanelModule,
     AddShowingComponent,
+    AddMovieComponent,
   ],
   templateUrl: './now-showing.component.html',
   styleUrls: ['./now-showing.component.css'],
@@ -86,7 +88,7 @@ export class NowShowingComponent implements OnInit {
 
     this.authService.isAdmin$.subscribe((isAdmin) => {
       this.isAdmin = isAdmin;
-      console.log('Updated isAdmin value:', isAdmin); 
+      console.log('Updated isAdmin value:', isAdmin);
       this.setMinDateBasedOnRole();
     });
 
@@ -158,7 +160,7 @@ export class NowShowingComponent implements OnInit {
   }
 
   onCalendarSelect(date: Date): void {
-    const selectedDate = new Date(date); 
+    const selectedDate = new Date(date);
     this.selectedDate = new Date(
       selectedDate.getFullYear(),
       selectedDate.getMonth(),
@@ -271,14 +273,23 @@ export class NowShowingComponent implements OnInit {
     return startOfDate >= startOfMinDate && startOfDate <= startOfMaxDate;
   }
 
-  showAddShowing = false; 
+  showAddShowing = false;
+  showAddMovie: boolean = false;
 
   showAddShowingDialog(): void {
-    this.showAddShowing = true; 
+    this.showAddShowing = true;
   }
 
   hideAddShowingDialog(): void {
-    this.showAddShowing = false; 
+    this.showAddShowing = false;
+  }
+
+  showAddMovieDialog(): void {
+    this.showAddMovie = true;
+  }
+
+  hideAddMovieDialog(): void {
+    this.showAddMovie = false;
   }
 
   getMoviesForSelectedCinema(): Movie[] {
@@ -290,7 +301,11 @@ export class NowShowingComponent implements OnInit {
         showtime.date === dateStr
     );
     const uniqueMovies = new Map<number, Movie>();
-    relevantShowtimes.forEach((st) => uniqueMovies.set(st.movie.id, st.movie));
+    relevantShowtimes.forEach((st) => {
+      if (st.movie.id !== undefined) {
+        uniqueMovies.set(st.movie.id, st.movie);
+      }
+    });
 
     return Array.from(uniqueMovies.values());
   }
@@ -304,7 +319,11 @@ export class NowShowingComponent implements OnInit {
     );
 
     const uniqueMovies = new Map<number, Movie>();
-    this.showTimes.forEach((st) => uniqueMovies.set(st.movie.id, st.movie));
+    this.showTimes.forEach((st) => {
+      if (st.movie.id !== undefined) {
+        uniqueMovies.set(st.movie.id, st.movie);
+      }
+    });
 
     this.movies = Array.from(uniqueMovies.values()).sort((a, b) =>
       a.title.localeCompare(b.title)
@@ -316,6 +335,17 @@ export class NowShowingComponent implements OnInit {
     this.nowShowingService.getAllShowTimes().subscribe((updatedShowtimes) => {
       this.allShowTimes = updatedShowtimes;
       this.updateDisplayedMovies();
+    });
+  }
+
+  //refreshs same as above
+  onMovieAdded(): void {
+    this.nowShowingService.getMovies().subscribe({
+      next: (movies) => {
+        this.allMovies = movies;
+        this.updateDisplayedMovies();
+      },
+      error: (error) => console.error('Error refreshing movies:', error),
     });
   }
 }
