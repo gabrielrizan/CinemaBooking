@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -9,7 +9,6 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { StepperModule } from 'primeng/stepper';
 import { SeatSelectionComponent } from '../seat-selection/seat-selection.component';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
 import { PanelModule } from 'primeng/panel';
 import { ChipModule } from 'primeng/chip';
 import { TagModule } from 'primeng/tag';
@@ -38,6 +37,7 @@ interface TicketResponse {
 
 @Component({
   selector: 'app-ticket-selection',
+  standalone: true,
   imports: [
     InputNumberModule,
     FormsModule,
@@ -58,6 +58,7 @@ interface TicketResponse {
 export class TicketSelectionComponent implements OnInit {
   @ViewChild(SeatSelectionComponent)
   seatSelectionComponent!: SeatSelectionComponent;
+
   currentStep: number = 1;
   cinema_layout: SeatLayout = {} as SeatLayout;
   movieId: string;
@@ -112,38 +113,66 @@ export class TicketSelectionComponent implements OnInit {
   ngOnInit() {
     this.route.queryParams.subscribe({
       next: (params) => {
-        this.title = params['title'];
-        this.format = params['format'];
-        this.showtime = params['showtime'];
-        this.languageInfo = params['languageInfo'];
-        this.poster = params['poster'];
-        this.time = params['time'];
-        this.date = params['date'];
-        console.log('Time', this.time);
-        console.log('Date', this.date);
-        this.nowShowingService.getCinemaHall(params['hall']).subscribe({
-          next: (data: SeatLayout) => {
-            this.cinema_layout = data.layout as unknown as SeatLayout;
-            console.log('Layout data cinema: ', this.cinema_layout.layout);
-            if (this.cinema_layout.layout) {
-              this.processSeats();
-            }
-          },
-        });
-        if (params['error'] === 'payment_cancelled') {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Payment Failed',
-            detail: 'Your payment was cancelled or failed. Please try again.',
-          });
-          this.currentStep = 3;
-        }
+        // If we're returning from a successful payment:
         if (params['success'] === 'true') {
           this.currentStep = 4;
           this.paymentSuccess = true;
+
+          // Retrieve stored data from localStorage
+          const storedTitle = localStorage.getItem('movieTitle');
+          const storedFormat = localStorage.getItem('movieFormat');
+          const storedTime = localStorage.getItem('movieTime');
+          const storedPoster = localStorage.getItem('moviePoster');
+          const storedTicketCounts = localStorage.getItem('ticketCounts');
+
+          // Apply them to our component if they exist
+          if (storedTitle) this.title = storedTitle;
+          if (storedFormat) this.format = storedFormat;
+          if (storedTime) this.time = storedTime;
+          if (storedPoster) this.poster = storedPoster;
+          if (storedTicketCounts) {
+            this.ticketCounts = JSON.parse(storedTicketCounts);
+          }
+
+          // Recalculate total cost after retrieval
+          this.updateTotalTickets();
+        } else {
+          // Otherwise, normal param usage
+          this.title = params['title'];
+          this.format = params['format'];
+          this.showtime = params['showtime'];
+          this.languageInfo = params['languageInfo'];
+          this.poster = params['poster'];
+          this.time = params['time'];
+          this.date = params['date'];
+          console.log('Time', this.time);
+          console.log('Date', this.date);
+
+          // If user canceled or payment failed
+          if (params['error'] === 'payment_cancelled') {
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Payment Failed',
+              detail: 'Your payment was cancelled or failed. Please try again.',
+            });
+            this.currentStep = 3;
+          }
+
+          // Fetch cinema layout
+          this.nowShowingService.getCinemaHall(params['hall']).subscribe({
+            next: (data: SeatLayout) => {
+              this.cinema_layout = data.layout as unknown as SeatLayout;
+              console.log('Layout data cinema: ', this.cinema_layout.layout);
+              if (this.cinema_layout.layout) {
+                this.processSeats();
+              }
+            },
+          });
         }
       },
     });
+
+    // Fetch reserved seats if showtime is provided
     if (this.showtime) {
       this.ticketService.getReservedSeats(Number(this.showtime)).subscribe({
         next: (reserved: string[]) => {
@@ -241,6 +270,7 @@ export class TicketSelectionComponent implements OnInit {
       return;
     }
 
+    // Prepare ticket data
     const ticketData = {
       movie_title: this.title,
       movie_id: movieId,
@@ -265,7 +295,15 @@ export class TicketSelectionComponent implements OnInit {
       if (!ticketResponse || !ticketResponse.id) {
         throw new Error('Failed to create ticket');
       }
-      localStorage.setItem('reservedSeats', JSON.stringify(this.selectedSeats));
+
+      // **Store data in localStorage** before redirect
+      localStorage.setItem('movieTitle', this.title);
+      localStorage.setItem('movieFormat', this.format);
+      localStorage.setItem('movieTime', this.time);
+      localStorage.setItem('moviePoster', this.poster);
+      localStorage.setItem('ticketCounts', JSON.stringify(this.ticketCounts));
+
+      // Prepare Stripe request
       const body = {
         ticketCounts: this.ticketCounts,
         prices: {
@@ -276,6 +314,7 @@ export class TicketSelectionComponent implements OnInit {
         ticketId: ticketResponse.id,
       };
 
+      // Create checkout session -> redirect user
       this.http
         .post(
           'http://127.0.0.1:8000/api/payments/create-checkout-session/',

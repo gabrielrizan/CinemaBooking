@@ -1,164 +1,162 @@
-<div class="container mx-auto p-6">
-  <p-card class="ticket-card shadow-md">
+<div class="container mx-auto p-6 max-w-7xl">
+  <p-card class="ticket-card shadow-lg">
     <p-stepper
       [value]="currentStep"
       [linear]="true"
       (activeIndexChange)="onActiveIndexChange($event)"
-      class="mb-4"
+      class="mb-8"
     >
-      <p-step-list>
-        <p-step [value]="1">Select Tickets</p-step>
-        <p-step [value]="2">Select Seats</p-step>
-        <p-step [value]="3">Payment</p-step>
-        <p-step [value]="4">Confirmation</p-step>
+      <p-step-list class="mb-4">
+        <p-step [value]="1" class="px-4 py-2">Select Tickets</p-step>
+        <p-step [value]="2" class="px-4 py-2">Select Seats</p-step>
+        <p-step [value]="3" class="px-4 py-2">Payment</p-step>
+        <p-step [value]="4" class="px-4 py-2">Confirmation</p-step>
       </p-step-list>
 
       <p-step-panels>
         <!-- Step 1: Select Tickets -->
         <p-step-panel [value]="1">
           <ng-template #content let-activateCallback="activateCallback">
-            <div class="grid grid-cols-12 gap-4 p-6">
-              <!-- Left Column: Movie Info & Ticket Selection -->
-              <div class="col-span-12 lg:col-span-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 p-8">
+              <!-- Left Column -->
+              <div class="space-y-6">
+                <!-- Movie Info -->
                 <div
-                  class="bg-surface-0 dark:bg-surface-900 p-6 rounded-border shadow"
+                  class="p-6 rounded-lg shadow bg-surface-0 dark:bg-surface-900"
                 >
-                  <!-- Movie Info Section -->
-                  <div class="mb-8">
-                    <h2
-                      class="text-2xl font-bold mb-4 text-surface-900 dark:text-surface-0"
-                    >
-                      {{ title }}
-                    </h2>
-                    <div class="flex gap-4 flex-wrap">
-                      <p-tag
-                        severity="info"
-                        [value]="time"
-                        icon="pi pi-clock"
-                      ></p-tag>
-                      <p-tag
-                        severity="info"
-                        [value]="format"
-                        icon="pi pi-video"
-                      ></p-tag>
-                      <p-tag
-                        severity="info"
-                        [value]="'EN:SUB'"
-                        icon="pi pi-volume-up"
-                      ></p-tag>
-                    </div>
-                  </div>
-
-                  <!-- Ticket Selection Section -->
-                  <div class="flex flex-col gap-4">
-                    <div
-                      *ngFor="let category of ticketCategories"
-                      class="bg-surface-50 dark:bg-surface-950 p-4 rounded-border"
-                    >
-                      <div class="flex justify-between items-center">
-                        <div class="flex flex-col gap-2">
-                          <h3 class="text-xl font-medium m-0">
-                            {{ category | titlecase }} Ticket
-                          </h3>
-                          <p
-                            class="text-surface-600 dark:text-surface-200 text-sm m-0"
-                          >
-                            {{ getTicketDescription(category) }}
-                          </p>
-                          <span class="text-primary font-medium">
-                            ${{ getTicketPrice(category).toFixed(2) }}
-                          </span>
-                        </div>
-                        <div
-                          class="flex items-center gap-2 bg-surface-0 dark:bg-surface-900 p-2 rounded-border"
-                        >
-                          <button
-                            pButton
-                            icon="pi pi-minus"
-                            class="p-button-rounded p-button-text p-button-sm"
-                            (click)="decrementTicket(category)"
-                            [disabled]="ticketCounts[category] === 0"
-                          ></button>
-                          <span class="font-medium text-xl px-6">{{
-                            ticketCounts[category]
-                          }}</span>
-                          <button
-                            pButton
-                            icon="pi pi-plus"
-                            class="p-button-rounded p-button-text p-button-sm"
-                            (click)="incrementTicket(category)"
-                            [disabled]="ticketCounts[category] === 10"
-                          ></button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <!-- Order Summary -->
-                  <div
-                    *ngIf="totalTickets > 0"
-                    class="bg-surface-50 dark:bg-surface-950 p-6 rounded-border mt-6"
+                  <h2
+                    class="text-2xl font-bold mb-4 text-surface-900 dark:text-surface-0"
                   >
-                    <h3 class="text-xl font-medium mb-4">Order Summary</h3>
-                    <div class="flex flex-col gap-4">
-                      <div *ngFor="let category of ticketCategories">
-                        <div
-                          *ngIf="ticketCounts[category] > 0"
-                          class="flex justify-between py-2"
+                    {{ title }}
+                  </h2>
+                  <div class="flex flex-wrap gap-4">
+                    <p-tag
+                      severity="info"
+                      [value]="time"
+                      icon="pi pi-clock"
+                    ></p-tag>
+                    <p-tag
+                      severity="info"
+                      [value]="format"
+                      icon="pi pi-video"
+                    ></p-tag>
+                    <p-tag
+                      severity="info"
+                      [value]="'EN:SUB'"
+                      icon="pi pi-volume-up"
+                    ></p-tag>
+                  </div>
+                </div>
+
+                <!-- Ticket Selection -->
+                <div class="space-y-4">
+                  <div
+                    *ngFor="let category of ticketCategories"
+                    class="p-4 rounded-lg bg-surface-50 dark:bg-surface-950 shadow"
+                  >
+                    <div class="flex justify-between items-center">
+                      <div>
+                        <h3 class="text-xl font-medium">
+                          {{ category | titlecase }} Ticket
+                        </h3>
+                        <p
+                          class="text-sm text-surface-600 dark:text-surface-200"
                         >
-                          <span class="text-surface-600 dark:text-surface-200"
-                            >{{ category | titlecase }} ×
-                            {{ ticketCounts[category] }}</span
-                          >
-                          <span
-                            class="text-surface-900 dark:text-surface-0 font-medium"
-                          >
-                            ${{
-                              (
-                                getTicketPrice(category) *
-                                ticketCounts[category]
-                              ).toFixed(2)
-                            }}
-                          </span>
-                        </div>
+                          {{ getTicketDescription(category) }}
+                        </p>
+                        <span class="font-medium text-primary">
+                          ${{ getTicketPrice(category).toFixed(2) }}
+                        </span>
                       </div>
                       <div
-                        class="flex justify-between py-4 border-t border-surface"
+                        class="flex items-center space-x-2 bg-surface-0 dark:bg-surface-900 p-2 rounded-lg"
                       >
+                        <button
+                          pButton
+                          icon="pi pi-minus"
+                          class="p-button-rounded p-button-text p-button-sm"
+                          (click)="decrementTicket(category)"
+                          [disabled]="ticketCounts[category] === 0"
+                        ></button>
+                        <span class="text-xl font-medium px-6">
+                          {{ ticketCounts[category] }}
+                        </span>
+                        <button
+                          pButton
+                          icon="pi pi-plus"
+                          class="p-button-rounded p-button-text p-button-sm"
+                          (click)="incrementTicket(category)"
+                          [disabled]="ticketCounts[category] === 10"
+                        ></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div
+                  *ngIf="totalTickets > 0"
+                  class="p-6 rounded-lg bg-surface-50 dark:bg-surface-950 shadow mt-6"
+                >
+                  <h3 class="text-xl font-medium mb-4">Order Summary</h3>
+                  <div class="space-y-4">
+                    <div *ngFor="let category of ticketCategories">
+                      <div
+                        *ngIf="ticketCounts[category] > 0"
+                        class="flex justify-between py-2"
+                      >
+                        <span class="text-surface-600 dark:text-surface-200">
+                          {{ category | titlecase }} ×
+                          {{ ticketCounts[category] }}
+                        </span>
                         <span
-                          class="text-surface-900 dark:text-surface-0 font-bold text-xl"
-                          >Total</span
+                          class="font-medium text-surface-900 dark:text-surface-0"
                         >
-                        <span class="text-primary font-bold text-xl">
-                          ${{ totalCost.toFixed(2) }}
+                          ${{
+                            (
+                              getTicketPrice(category) * ticketCounts[category]
+                            ).toFixed(2)
+                          }}
                         </span>
                       </div>
                     </div>
+                    <div
+                      class="flex justify-between py-4 border-t border-surface"
+                    >
+                      <span
+                        class="font-bold text-xl text-surface-900 dark:text-surface-0"
+                      >
+                        Total
+                      </span>
+                      <span class="font-bold text-2xl text-primary">
+                        ${{ totalCost.toFixed(2) }}
+                      </span>
+                    </div>
                   </div>
+                </div>
 
-                  <!-- Action Button -->
-                  <div class="flex justify-end mt-6">
-                    <p-button
-                      label="Continue to Seats"
-                      icon="pi pi-arrow-right"
-                      iconPos="right"
-                      [disabled]="totalTickets === 0"
-                      (onClick)="activateCallback(2)"
-                      styleClass="p-button-raised"
-                    ></p-button>
-                  </div>
+                <!-- Action Button -->
+                <div class="flex justify-end mt-6">
+                  <p-button
+                    label="Continue to Seats"
+                    icon="pi pi-arrow-right"
+                    iconPos="right"
+                    [disabled]="totalTickets === 0"
+                    (onClick)="activateCallback(2)"
+                    styleClass="p-button-raised"
+                  ></p-button>
                 </div>
               </div>
 
               <!-- Right Column: Movie Poster -->
-              <div class="col-span-12 lg:col-span-4">
+              <div class="flex justify-center">
                 <div
-                  class="bg-surface-0 dark:bg-surface-900 p-6 rounded-border shadow"
+                  class="p-6 rounded-lg shadow bg-surface-0 dark:bg-surface-900"
                 >
                   <img
                     [src]="poster"
                     [alt]="title"
-                    class="w-full rounded-border shadow-sm"
+                    class="h-3/4 rounded-lg shadow"
                     style="object-fit: cover"
                   />
                 </div>
@@ -170,35 +168,34 @@
         <!-- Step 2: Select Seats -->
         <p-step-panel [value]="2">
           <ng-template #content let-activateCallback="activateCallback">
-            <div
-              class="bg-surface-0 dark:bg-surface-900 p-6 rounded-border shadow"
-            >
-              <!-- Header Section -->
-              <div class="text-center mb-8">
+            <div class="p-8 rounded-lg shadow bg-surface-0 dark:bg-surface-900">
+              <!-- Header -->
+              <div class="text-center space-y-4 mb-8">
                 <h2
-                  class="text-2xl font-bold text-surface-900 dark:text-surface-0 mb-2"
+                  class="text-2xl font-bold text-surface-900 dark:text-surface-0"
                 >
                   Select Your Seats
                 </h2>
-                <p class="text-surface-600 dark:text-surface-200 mb-4">
+                <p class="text-surface-600 dark:text-surface-200">
                   Please select {{ totalTickets }} seat(s)
                 </p>
-                <p-tag
-                  severity="info"
-                  [value]="'Screen 1'"
-                  icon="pi pi-desktop"
-                  class="mr-2"
-                ></p-tag>
-                <p-tag
-                  severity="warn"
-                  [value]="time"
-                  icon="pi pi-clock"
-                ></p-tag>
+                <div class="flex justify-center space-x-2">
+                  <p-tag
+                    severity="info"
+                    [value]="'Screen 1'"
+                    icon="pi pi-desktop"
+                  ></p-tag>
+                  <p-tag
+                    severity="warn"
+                    [value]="time"
+                    icon="pi pi-clock"
+                  ></p-tag>
+                </div>
               </div>
 
               <!-- Seat Selection Area -->
               <div
-                class="bg-surface-50 dark:bg-surface-950 p-6 rounded-border mb-6"
+                class="p-6 rounded-lg bg-surface-50 dark:bg-surface-950 shadow mb-6"
               >
                 <app-seat-selection
                   [layoutData]="cinema_layout"
@@ -235,30 +232,28 @@
         <p-step-panel [value]="3">
           <ng-template #content let-activateCallback="activateCallback">
             <div
-              class="bg-surface-0 dark:bg-surface-900 p-6 rounded-border shadow max-w-4xl mx-auto"
+              class="max-w-4xl mx-auto p-8 rounded-lg shadow bg-surface-0 dark:bg-surface-900"
             >
               <h2 class="text-2xl font-bold mb-12 text-center text-primary">
                 Review & Payment
               </h2>
 
-              <div class="grid grid-cols-12 gap-4">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <!-- Movie Poster -->
-                <div class="col-span-12 md:col-span-3">
+                <div class="flex justify-center md:col-span-1">
                   <img
                     [src]="poster"
-                    class="w-full h-auto max-h-48 object-cover rounded-lg shadow-md"
+                    class="h-3/4 object-cover rounded-lg shadow"
                     [alt]="title"
                   />
                 </div>
 
                 <!-- Order Summary -->
-                <div class="col-span-12 md:col-span-9">
+                <div class="md:col-span-2">
                   <div
-                    class="bg-surface-50 dark:bg-surface-950 p-6 rounded-border"
+                    class="p-6 rounded-lg bg-surface-50 dark:bg-surface-950 shadow"
                   >
                     <h3 class="text-xl font-semibold mb-2">{{ title }}</h3>
-
-                    <!-- Movie Info -->
                     <div
                       class="flex flex-wrap gap-6 mb-6 text-surface-600 dark:text-surface-200"
                     >
@@ -272,29 +267,29 @@
                       </div>
                       <div class="flex items-center gap-2">
                         <i class="pi pi-volume-up"></i>
-                        <span>'EN:SUB'</span>
+                        <span>EN:SUB</span>
                       </div>
                     </div>
 
                     <h3 class="text-lg font-semibold mb-4">Order Details</h3>
-                    <div class="flex flex-col gap-4">
+                    <div class="space-y-4">
                       <div *ngFor="let category of ticketCategories">
                         <div
                           *ngIf="ticketCounts[category] > 0"
-                          class="flex justify-between p-4 bg-surface-0 dark:bg-surface-900 rounded-border"
+                          class="flex justify-between p-4 rounded-lg bg-surface-0 dark:bg-surface-900"
                         >
                           <div>
-                            <span class="font-medium text-lg">{{
-                              category | titlecase
-                            }}</span>
-                            <div
-                              class="text-surface-600 dark:text-surface-200 text-sm mt-1"
+                            <span class="font-medium text-lg">
+                              {{ category | titlecase }}
+                            </span>
+                            <p
+                              class="text-sm text-surface-600 dark:text-surface-200 mt-1"
                             >
                               {{ getTicketDescription(category) }}
-                            </div>
+                            </p>
                           </div>
                           <div class="text-right">
-                            <div class="text-primary font-medium">
+                            <div class="font-medium text-primary">
                               ${{
                                 (
                                   getTicketPrice(category) *
@@ -302,24 +297,27 @@
                                 ).toFixed(2)
                               }}
                             </div>
-                            <div
-                              class="text-surface-600 dark:text-surface-200 text-sm"
+                            <p
+                              class="text-sm text-surface-600 dark:text-surface-200"
                             >
                               {{ ticketCounts[category] }} × ${{
                                 getTicketPrice(category)
                               }}
-                            </div>
+                            </p>
                           </div>
                         </div>
                       </div>
-
                       <div
-                        class="flex justify-between p-4 bg-surface-0 dark:bg-surface-900 rounded-border mt-6"
+                        class="flex justify-between p-4 rounded-lg bg-surface-0 dark:bg-surface-900 mt-6 border-t border-surface"
                       >
-                        <span class="text-xl font-bold">Total</span>
-                        <span class="text-2xl font-bold text-primary"
-                          >${{ totalCost.toFixed(2) }}</span
+                        <span
+                          class="font-bold text-xl text-surface-900 dark:text-surface-0"
                         >
+                          Total
+                        </span>
+                        <span class="font-bold text-2xl text-primary">
+                          ${{ totalCost.toFixed(2) }}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -349,20 +347,45 @@
         <!-- Step 4: Confirmation -->
         <p-step-panel [value]="4">
           <ng-template #content>
-            <div
-              class="bg-surface-0 dark:bg-surface-900 p-6 rounded-border shadow"
-            >
-              <div class="flex flex-col items-center max-w-[30rem] mx-auto">
-                <i class="pi pi-check-circle text-6xl text-success mb-6"></i>
-                <h3 class="text-2xl text-primary font-bold mb-6">
+            <div class="p-8 rounded-lg shadow bg-surface-0 dark:bg-surface-900">
+              <div
+                class="flex flex-col items-center max-w-xl mx-auto space-y-6"
+              >
+                <i class="pi pi-check-circle text-6xl text-success"></i>
+                <h3 class="text-2xl font-bold text-primary">
                   Order Confirmed!
                 </h3>
 
+                <!-- Mini Movie Info Section -->
                 <div
-                  class="bg-surface-50 dark:bg-surface-950 p-6 rounded-border w-full mb-6"
+                  class="w-full p-4 rounded-lg bg-surface-50 dark:bg-surface-950 shadow"
+                >
+                  <div class="flex items-center space-x-4">
+                    <img
+                      [src]="poster"
+                      [alt]="title"
+                      class="w-16 h-24 object-cover rounded shadow"
+                    />
+                    <div>
+                      <h4 class="text-lg font-semibold">
+                        {{ title }}
+                      </h4>
+                      <p class="text-surface-600 dark:text-surface-200">
+                        Format: {{ format }}
+                      </p>
+                      <p class="text-surface-600 dark:text-surface-200">
+                        Time: {{ time }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div
+                  class="p-6 rounded-lg bg-surface-50 dark:bg-surface-950 shadow w-full"
                 >
                   <h4 class="text-xl mb-4">Order Summary</h4>
-                  <div class="flex flex-col gap-4">
+                  <div class="space-y-4">
                     <div
                       class="flex justify-between"
                       *ngFor="let category of ticketCategories"
@@ -386,20 +409,19 @@
                         }}
                       </span>
                     </div>
+
                     <div
-                      class="flex justify-between font-bold border-t border-surface pt-4"
+                      class="flex justify-between font-bold pt-4 border-t border-surface"
                     >
                       <span>Total Amount Paid</span>
-                      <span class="text-primary"
-                        >${{ totalCost.toFixed(2) }}</span
-                      >
+                      <span class="text-primary">
+                        ${{ totalCost.toFixed(2) }}
+                      </span>
                     </div>
                   </div>
                 </div>
 
-                <p
-                  class="text-surface-600 dark:text-surface-200 text-center mb-6"
-                >
+                <p class="text-center text-surface-600 dark:text-surface-200">
                   Thank you for your purchase! Your tickets have been confirmed.
                   An email with your tickets has been sent to your registered
                   email address.
