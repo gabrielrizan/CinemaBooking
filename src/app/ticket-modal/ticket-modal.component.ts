@@ -113,36 +113,45 @@ Seats: ${seatLines}`;
       const qrSize = 100;
       const qrX = (pageWidth - qrSize) / 2;
 
-      const combinedCanvas = document.createElement('canvas');
-      combinedCanvas.width = qrSize;
-      combinedCanvas.height = qrSize;
-      const ctx = combinedCanvas.getContext('2d');
+      const baseQr = qrElement.toDataURL('image/png');
 
-      if (!ctx) return;
-
-      // Draw the QR code onto the new canvas
-      ctx.drawImage(qrElement, 0, 0, qrSize, qrSize);
-      // Load logo image (replace with your actual image URL or base64)
-      const logo = new Image();
-      logo.src = 'cinema-logo.png'; // OR base64
+      const qrImg = new Image();
+      qrImg.src = baseQr;
 
       await new Promise<void>((resolve, reject) => {
-        logo.onload = () => {
-          const logoSize = qrSize * 0.25;
-          const offset = (qrSize - logoSize) / 2;
-          ctx.drawImage(logo, offset, offset, logoSize, logoSize);
-          resolve();
+        qrImg.onload = () => {
+          const tempCanvas = document.createElement('canvas');
+          tempCanvas.width = qrSize * 2; // higher resolution
+          tempCanvas.height = qrSize * 2;
+          const tempCtx = tempCanvas.getContext('2d');
+
+          if (!tempCtx) return;
+
+          tempCtx.drawImage(qrImg, 0, 0, tempCanvas.width, tempCanvas.height);
+
+          const logo = new Image();
+          logo.src = 'cinema-logo.png';
+
+          logo.onload = () => {
+            const logoSize = tempCanvas.width * 0.25;
+            const offset = (tempCanvas.width - logoSize) / 2;
+            tempCtx.drawImage(logo, offset, offset, logoSize, logoSize);
+
+            const finalQR = tempCanvas.toDataURL('image/png');
+            pdf.addImage(finalQR, 'PNG', qrX, y + 5, qrSize, qrSize);
+            y += qrSize + 15;
+
+            pdf.setFontSize(10);
+            pdf.text('Scan this code at the entrance.', pageWidth / 2, y, {
+              align: 'center',
+            });
+
+            resolve();
+          };
+
+          logo.onerror = reject;
         };
-        logo.onerror = reject;
-      });
-
-      const qrWithLogo = combinedCanvas.toDataURL('image/png');
-      pdf.addImage(qrWithLogo, 'PNG', qrX, y + 5, qrSize, qrSize);
-      y += qrSize + 15;
-
-      pdf.setFontSize(10);
-      pdf.text('Scan this code at the entrance.', pageWidth / 2, y, {
-        align: 'center',
+        qrImg.onerror = reject;
       });
     }
 

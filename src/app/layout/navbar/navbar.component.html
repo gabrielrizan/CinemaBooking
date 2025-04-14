@@ -2,7 +2,11 @@
   <p-menubar [model]="items">
     <!-- Start Section -->
     <ng-template pTemplate="start">
-      <img src="cinema-logo.png" width="70px" alt="Cinema Logo" />
+      <img
+        [src]="isDarkMode ? 'cinema-logo-dark.png' : 'cinema-logo.png'"
+        width="70px"
+        alt="Cinema Logo"
+      />
     </ng-template>
 
     <!-- Menu Items -->
