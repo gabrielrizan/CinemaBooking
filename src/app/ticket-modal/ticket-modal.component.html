@@ -1,0 +1,68 @@
+<p-dialog
+  header="Your Ticket"
+  [(visible)]="visible"
+  [modal]="true"
+  [closable]="true"
+  [style]="{ width: '800px' }"
+  (onHide)="hide.emit()"
+>
+  <div id="ticket-pdf" class="p-6 space-y-6">
+    <!-- Top Info Section -->
+    <div class="flex flex-col md:flex-row md:items-start gap-6">
+      <!-- Poster -->
+      <img
+        [src]="poster"
+        alt="poster"
+        class="w-32 h-48 object-cover rounded shadow-sm"
+      />
+      <!-- Details -->
+      <div class="flex-1 space-y-3">
+        <h2 class="text-2xl font-semibold leading-tight">{{ title }}</h2>
+        <div class="text-base leading-relaxed">
+          <p><strong>Date:</strong> {{ date }}</p>
+          <p><strong>Time:</strong> {{ time }}</p>
+          <p><strong>Format:</strong> {{ format }}</p>
+          <p><strong>Cinema:</strong> {{ cinema }}</p>
+          <p>
+            <strong>Tickets:</strong>
+            <span *ngFor="let group of groupSeatsByRow(seats); let i = index">
+              Row {{ group.row }}: Seats {{ group.seats.join(", ")
+              }}<span *ngIf="i < groupSeatsByRow(seats).length - 1">; </span>
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- QR Section -->
+    <div class="mt-4 text-center">
+      <qrcode
+        [qrdata]="qrData"
+        [width]="200"
+        [elementType]="'canvas'"
+        [errorCorrectionLevel]="'M'"
+        [colorDark]="'#000000'"
+        [colorLight]="'#ffffff'"
+        [margin]="2"
+        [scale]="4"
+        [cssClass]="'my-custom-qr'"
+        [title]="'Ticket QR Code'"
+        [alt]="'QR code for ticket ' + ticketId"
+      ></qrcode>
+      <p class="mt-2 text-sm leading-snug">
+        Scan this code at the entrance to validate your ticket.
+      </p>
+    </div>
+
+    <!-- Download Button -->
+    <div class="text-center">
+      <p-button
+        label="Download Ticket"
+        icon="pi pi-download"
+        (onClick)="downloadTicketAsPDF()"
+        severity="success"
+        styleClass="p-button-raised"
+      ></p-button>
+    </div>
+  </div>
+</p-dialog>

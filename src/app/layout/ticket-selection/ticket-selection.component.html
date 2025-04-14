@@ -428,13 +428,24 @@
                 </p>
 
                 <p-button
-                  label="Complete Payment"
-                  icon="pi pi-check"
-                  iconPos="right"
-                  severity="success"
-                  (onClick)="proceedToPayment()"
-                  [disabled]="totalTickets === 0"
+                  label="See Tickets"
+                  icon="pi pi-ticket"
+                  severity="info"
+                  (onClick)="ticketModalVisible = true"
                 ></p-button>
+
+                <app-ticket-modal
+                  [visible]="ticketModalVisible"
+                  [ticketId]="ticketIdForModal"
+                  [title]="title"
+                  [date]="date"
+                  [time]="time"
+                  [format]="format"
+                  [poster]="poster"
+                  [cinema]="cinemaName"
+                  [seats]="selectedSeats"
+                  (hide)="onCloseTicketModal()"
+                />
               </div>
             </div>
           </ng-template>

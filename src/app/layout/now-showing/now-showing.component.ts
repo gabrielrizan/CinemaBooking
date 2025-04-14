@@ -384,6 +384,7 @@ export class NowShowingComponent implements OnInit {
       cinemaId: this.selectedCinema.id,
       hall: show.hall,
       time: show.time.slice(0, -3),
+      cinemaName: this.selectedCinema.name,
     };
 
     this.router.navigate(['/select-tickets'], { queryParams });

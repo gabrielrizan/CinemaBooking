@@ -9,27 +9,32 @@
             <!-- Container set as flex row: left for image, right for details -->
             <div class="flex">
               <!-- Left Side: Poster image container -->
-              <div class="relative w-40 flex-shrink-0">
+              <!-- Left Side: Poster image container -->
+              <div class="relative w-40 h-60 flex-shrink-0">
+                <!-- Movie Poster -->
                 <img
                   [src]="ticket.poster"
                   alt="Movie Poster"
-                  class="w-full h-full object-contain"
+                  class="w-full h-full object-cover rounded"
                 />
-                <!-- Movie Title overlay on the image -->
+
+                <!-- Status badge: top-left inside poster -->
+                <div class="absolute top-2 left-2">
+                  <p-tag
+                    [value]="'You have tickets'"
+                    [severity]="getStatusSeverity(ticket.payment_status)"
+                    styleClass="text-xs px-2 py-0 shadow"
+                  ></p-tag>
+                </div>
+
+                <!-- Title bar at bottom of image -->
                 <div
                   class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 text-white text-sm font-semibold px-2 py-1"
                 >
                   {{ ticket.movie_title }}
                 </div>
-                <!-- Payment status tag overlay -->
-                <div class="absolute top-2 right-2">
-                  <p-tag
-                    [value]="getUpcomingStatus(ticket.payment_status)"
-                    [severity]="getStatusSeverity(ticket.payment_status)"
-                    [rounded]="true"
-                  ></p-tag>
-                </div>
               </div>
+
               <!-- Right Side: Details & Actions -->
               <div class="flex flex-col justify-between p-4 flex-grow">
                 <div class="space-y-2">
@@ -76,6 +81,7 @@
                     label="Details"
                     icon="pi pi-eye"
                     styleClass="p-button-outlined flex-1"
+                    (onClick)="openTicketModal(ticket)"
                   ></p-button>
                   <p-button
                     label="Cancel"
@@ -89,6 +95,20 @@
             </div>
           </p-card>
         </div>
+
+        <!-- Ticket Modal with QR Code & Extra Information -->
+        <app-ticket-modal
+          [visible]="ticketModalVisible"
+          [ticketId]="selectedTicket?.id || ''"
+          [title]="selectedTicket?.movie_title || ''"
+          [date]="selectedTicket?.movie_date || ''"
+          [time]="selectedTicket?.movie_time || ''"
+          [format]="selectedTicket?.format || ''"
+          [poster]="selectedTicket?.poster || ''"
+          [cinema]="selectedTicket?.cinema || ''"
+          [seats]="selectedTicket?.seats || []"
+          (hide)="closeTicketModal()"
+        ></app-ticket-modal>
       </div>
     </p-tabPanel>
 
@@ -111,7 +131,7 @@
                 >
                   {{ ticket.movie_title }}
                 </div>
-                <!-- Watched badge overlay -->
+                <!-- Ticket booked tag overlay, pinned to the image -->
                 <div class="absolute top-2 right-2">
                   <p-badge value="Watched" severity="info"></p-badge>
                 </div>

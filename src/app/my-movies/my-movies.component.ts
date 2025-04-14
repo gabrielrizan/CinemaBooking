@@ -12,8 +12,9 @@ import { NowShowingService } from '../services/now-showing.service';
 import { BadgeModule } from 'primeng/badge';
 import { ChipModule } from 'primeng/chip';
 import { ImageModule } from 'primeng/image';
+import { TicketModalComponent } from '../ticket-modal/ticket-modal.component';
 
-interface Ticket {
+export interface Ticket {
   id: string;
   movie_title: string;
   showtime: string;
@@ -23,6 +24,8 @@ interface Ticket {
   poster?: string;
   movie_time?: string;
   movie_date?: string;
+  format?: string;
+  cinema?: string; // This will hold the cinema name
 }
 
 @Component({
@@ -38,6 +41,7 @@ interface Ticket {
     BadgeModule,
     ChipModule,
     ImageModule,
+    TicketModalComponent,
   ],
   standalone: true,
 })
@@ -45,6 +49,8 @@ export class MyMoviesComponent implements OnInit, OnDestroy {
   tickets: Ticket[] = [];
   upcomingMovies: Ticket[] = [];
   pastMovies: Ticket[] = [];
+  selectedTicket: Ticket | null = null;
+  ticketModalVisible: boolean = false;
   private authSubscription!: Subscription;
 
   constructor(
@@ -82,14 +88,21 @@ export class MyMoviesComponent implements OnInit, OnDestroy {
               .pipe(
                 catchError((err) => {
                   console.warn(
-                    `Error loading showtime for ticket ${ticket.id} (ID ${ticket.showtime})`,
+                    `Error retrieving showtime for ticket ${ticket.id}:`,
                     err
                   );
-                  return of({ time: '', date: '' });
+                  return of({
+                    time: '',
+                    date: '',
+                    format: 'Standard',
+                    cinema: { name: 'Unknown Cinema' },
+                  });
                 }),
                 tap((showtime) => {
                   ticket.movie_time = showtime.time;
                   ticket.movie_date = showtime.date;
+                  ticket.cinema = showtime.cinema?.name || 'Unknown Cinema';
+                  ticket.format = showtime.format || 'Standard';
                 })
               )
           );
@@ -98,7 +111,6 @@ export class MyMoviesComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (tickets: Ticket[]) => {
-          this.tickets = tickets;
           const now = new Date();
           this.upcomingMovies = tickets.filter((ticket) => {
             if (!ticket.movie_date || !ticket.movie_time) return false;
@@ -172,5 +184,14 @@ export class MyMoviesComponent implements OnInit, OnDestroy {
       }
     });
     return Object.keys(grouped).map((row) => ({ row, seats: grouped[row] }));
+  }
+
+  openTicketModal(ticket: Ticket): void {
+    this.selectedTicket = ticket;
+    this.ticketModalVisible = true;
+  }
+
+  closeTicketModal(): void {
+    this.ticketModalVisible = false;
   }
 }

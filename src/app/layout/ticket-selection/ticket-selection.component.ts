@@ -15,6 +15,7 @@ import { TagModule } from 'primeng/tag';
 import { TicketService } from '../../services/ticket.service';
 import { AuthService } from '../../services/auth.service';
 import { MessageService } from 'primeng/api';
+import { TicketModalComponent } from '../../ticket-modal/ticket-modal.component';
 import {
   SeatLayout,
   NowShowingService,
@@ -50,6 +51,7 @@ interface TicketResponse {
     PanelModule,
     ChipModule,
     TagModule,
+    TicketModalComponent,
   ],
   templateUrl: './ticket-selection.component.html',
   styleUrls: ['./ticket-selection.component.css'],
@@ -97,6 +99,9 @@ export class TicketSelectionComponent implements OnInit {
   processedSeats: any[] = [];
   paymentSuccess: boolean = false;
   boughtTickets: string[] = [];
+  ticketModalVisible: boolean = false;
+  ticketIdForModal: string = '';
+  cinemaName: string = localStorage.getItem('cinemaName') || '';
 
   constructor(
     private route: ActivatedRoute,
@@ -106,14 +111,16 @@ export class TicketSelectionComponent implements OnInit {
     private messageService: MessageService,
     private nowShowingService: NowShowingService
   ) {
-    this.movieId = this.route.snapshot.paramMap.get('movieId') ?? '';
-    this.selectedShowtime = this.route.snapshot.paramMap.get('showtime') ?? '';
+    // Use queryParams for movieId and showtime
+    const qp = this.route.snapshot.queryParams;
+    this.movieId = qp['movieId'] ?? '';
+    localStorage.setItem('movieId', this.movieId);
+    this.selectedShowtime = qp['showtime'] ?? '';
   }
 
   ngOnInit() {
     this.route.queryParams.subscribe({
       next: (params) => {
-        // If we're returning from a successful payment:
         if (params['success'] === 'true') {
           this.currentStep = 4;
           this.paymentSuccess = true;
@@ -124,8 +131,16 @@ export class TicketSelectionComponent implements OnInit {
           const storedTime = localStorage.getItem('movieTime');
           const storedPoster = localStorage.getItem('moviePoster');
           const storedTicketCounts = localStorage.getItem('ticketCounts');
+          const storedTicketId = localStorage.getItem('ticketId');
+          const storedCinemaName = localStorage.getItem('cinemaName');
+          const storedSeats = localStorage.getItem('selectedSeats');
 
-          // Apply them to our component if they exist
+          if (storedSeats) {
+            this.selectedSeats = JSON.parse(storedSeats);
+            this.selectedSeatsValid =
+              this.selectedSeats.length === this.totalTickets;
+          }
+
           if (storedTitle) this.title = storedTitle;
           if (storedFormat) this.format = storedFormat;
           if (storedTime) this.time = storedTime;
@@ -133,11 +148,14 @@ export class TicketSelectionComponent implements OnInit {
           if (storedTicketCounts) {
             this.ticketCounts = JSON.parse(storedTicketCounts);
           }
-
-          // Recalculate total cost after retrieval
+          if (storedTicketId) {
+            this.ticketIdForModal = storedTicketId;
+          }
+          if (storedCinemaName) {
+            this.cinemaName = storedCinemaName;
+          }
           this.updateTotalTickets();
         } else {
-          // Otherwise, normal param usage
           this.title = params['title'];
           this.format = params['format'];
           this.showtime = params['showtime'];
@@ -145,10 +163,7 @@ export class TicketSelectionComponent implements OnInit {
           this.poster = params['poster'];
           this.time = params['time'];
           this.date = params['date'];
-          console.log('Time', this.time);
-          console.log('Date', this.date);
-
-          // If user canceled or payment failed
+          this.cinemaName = params['cinemaName'];
           if (params['error'] === 'payment_cancelled') {
             this.messageService.add({
               severity: 'error',
@@ -158,11 +173,11 @@ export class TicketSelectionComponent implements OnInit {
             this.currentStep = 3;
           }
 
-          // Fetch cinema layout
+          // Fetch cinema layout based on provided hall parameter
           this.nowShowingService.getCinemaHall(params['hall']).subscribe({
             next: (data: SeatLayout) => {
               this.cinema_layout = data.layout as unknown as SeatLayout;
-              console.log('Layout data cinema: ', this.cinema_layout.layout);
+              console.log('Layout data cinema:', this.cinema_layout.layout);
               if (this.cinema_layout.layout) {
                 this.processSeats();
               }
@@ -172,7 +187,6 @@ export class TicketSelectionComponent implements OnInit {
       },
     });
 
-    // Fetch reserved seats if showtime is provided
     if (this.showtime) {
       this.ticketService.getReservedSeats(Number(this.showtime)).subscribe({
         next: (reserved: string[]) => {
@@ -241,19 +255,16 @@ export class TicketSelectionComponent implements OnInit {
   onSeatsSelected(seats: string[]) {
     this.selectedSeats = seats;
     this.selectedSeatsValid = seats.length === this.totalTickets;
+    localStorage.setItem('selectedSeats', JSON.stringify(seats));
   }
 
   onActiveIndexChange(event: any) {
-    if (event > this.currentStep) {
-      return;
-    }
-    if (event <= this.currentStep) {
-      this.currentStep = event;
-    }
+    if (event > this.currentStep) return;
+    this.currentStep = event;
   }
 
   async proceedToPayment() {
-    let formattedShowtime;
+    let formattedShowtime: string;
     try {
       const today = new Date();
       const [hours, minutes] = this.showtime.split(':');
@@ -264,16 +275,15 @@ export class TicketSelectionComponent implements OnInit {
       formattedShowtime = new Date().toISOString();
     }
 
-    const movieId = Number(this.movieId);
-    if (isNaN(movieId)) {
+    const movieIdNumber = Number(this.movieId);
+    if (isNaN(movieIdNumber)) {
       console.error('Invalid movie ID:', this.movieId);
       return;
     }
 
-    // Prepare ticket data
     const ticketData = {
       movie_title: this.title,
-      movie_id: movieId,
+      movie_id: movieIdNumber,
       showtime: this.route.snapshot.queryParams['showtime'],
       seats: this.selectedSeats,
       ticket_type: this.ticketCounts,
@@ -296,14 +306,20 @@ export class TicketSelectionComponent implements OnInit {
         throw new Error('Failed to create ticket');
       }
 
-      // **Store data in localStorage** before redirect
+      // Store details in localStorage
       localStorage.setItem('movieTitle', this.title);
       localStorage.setItem('movieFormat', this.format);
       localStorage.setItem('movieTime', this.time);
       localStorage.setItem('moviePoster', this.poster);
       localStorage.setItem('ticketCounts', JSON.stringify(this.ticketCounts));
+      // Store the ticket ID from the API response
+      localStorage.setItem('ticketId', ticketResponse.id);
+      localStorage.setItem(
+        'cinemaName',
+        this.route.snapshot.queryParams['cinemaName']
+      );
+      this.ticketIdForModal = ticketResponse.id;
 
-      // Prepare Stripe request
       const body = {
         ticketCounts: this.ticketCounts,
         prices: {
@@ -314,7 +330,6 @@ export class TicketSelectionComponent implements OnInit {
         ticketId: ticketResponse.id,
       };
 
-      // Create checkout session -> redirect user
       this.http
         .post(
           'http://127.0.0.1:8000/api/payments/create-checkout-session/',
@@ -344,5 +359,9 @@ export class TicketSelectionComponent implements OnInit {
         detail: 'Failed to create ticket. Please try again.',
       });
     }
+  }
+
+  onCloseTicketModal(): void {
+    this.ticketModalVisible = false;
   }
 }
