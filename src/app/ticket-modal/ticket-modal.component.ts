@@ -21,21 +21,21 @@ export class TicketModalComponent {
   @Input() format!: string;
   @Input() poster!: string;
   @Input() cinema!: string;
-  // New input for seat details:
   @Input() seats: string[] = [];
   @Output() hide = new EventEmitter<void>();
 
   // Compute the data to store inside the QR code.
   get qrData(): string {
-    const data = {
-      ticketId: this.ticketId,
-      cinema: this.cinema,
-      date: this.date,
-      time: this.time,
-      seats: this.seats,
-      format: this.format,
-    };
-    return JSON.stringify(data);
+    const seatLines = this.groupSeatsByRow(this.seats)
+      .map((group) => `Row ${group.row}: ${group.seats.join(', ')}`)
+      .join(' | ');
+
+    return `Ticket ID: ${this.ticketId}
+Cinema: ${this.cinema}
+Date: ${this.date}
+Time: ${this.time}
+Format: ${this.format}
+Seats: ${seatLines}`;
   }
 
   groupSeatsByRow(seats: string[]): Array<{ row: string; seats: string[] }> {
@@ -108,12 +108,38 @@ export class TicketModalComponent {
     const qrElement = document.querySelector(
       '.my-custom-qr canvas'
     ) as HTMLCanvasElement;
+
     if (qrElement) {
-      const qrSize = 50;
+      const qrSize = 100;
       const qrX = (pageWidth - qrSize) / 2;
-      const qrImg = qrElement.toDataURL('image/png');
-      pdf.addImage(qrImg, 'PNG', qrX, y + 5, qrSize, qrSize);
+
+      const combinedCanvas = document.createElement('canvas');
+      combinedCanvas.width = qrSize;
+      combinedCanvas.height = qrSize;
+      const ctx = combinedCanvas.getContext('2d');
+
+      if (!ctx) return;
+
+      // Draw the QR code onto the new canvas
+      ctx.drawImage(qrElement, 0, 0, qrSize, qrSize);
+      // Load logo image (replace with your actual image URL or base64)
+      const logo = new Image();
+      logo.src = 'cinema-logo.png'; // OR base64
+
+      await new Promise<void>((resolve, reject) => {
+        logo.onload = () => {
+          const logoSize = qrSize * 0.25;
+          const offset = (qrSize - logoSize) / 2;
+          ctx.drawImage(logo, offset, offset, logoSize, logoSize);
+          resolve();
+        };
+        logo.onerror = reject;
+      });
+
+      const qrWithLogo = combinedCanvas.toDataURL('image/png');
+      pdf.addImage(qrWithLogo, 'PNG', qrX, y + 5, qrSize, qrSize);
       y += qrSize + 15;
+
       pdf.setFontSize(10);
       pdf.text('Scan this code at the entrance.', pageWidth / 2, y, {
         align: 'center',
