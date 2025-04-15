@@ -108,52 +108,20 @@ Seats: ${seatLines}`;
     const qrElement = document.querySelector(
       '.my-custom-qr canvas'
     ) as HTMLCanvasElement;
-
     if (qrElement) {
       const qrSize = 100;
       const qrX = (pageWidth - qrSize) / 2;
-
       const baseQr = qrElement.toDataURL('image/png');
 
-      const qrImg = new Image();
-      qrImg.src = baseQr;
+      pdf.addImage(baseQr, 'SVG', qrX, y + 5, qrSize, qrSize);
+      y += qrSize + 15;
 
-      await new Promise<void>((resolve, reject) => {
-        qrImg.onload = () => {
-          const tempCanvas = document.createElement('canvas');
-          tempCanvas.width = qrSize * 2; // higher resolution
-          tempCanvas.height = qrSize * 2;
-          const tempCtx = tempCanvas.getContext('2d');
-
-          if (!tempCtx) return;
-
-          tempCtx.drawImage(qrImg, 0, 0, tempCanvas.width, tempCanvas.height);
-
-          const logo = new Image();
-          logo.src = 'cinema-logo.png';
-
-          logo.onload = () => {
-            const logoSize = tempCanvas.width * 0.25;
-            const offset = (tempCanvas.width - logoSize) / 2;
-            tempCtx.drawImage(logo, offset, offset, logoSize, logoSize);
-
-            const finalQR = tempCanvas.toDataURL('image/png');
-            pdf.addImage(finalQR, 'PNG', qrX, y + 5, qrSize, qrSize);
-            y += qrSize + 15;
-
-            pdf.setFontSize(10);
-            pdf.text('Scan this code at the entrance.', pageWidth / 2, y, {
-              align: 'center',
-            });
-
-            resolve();
-          };
-
-          logo.onerror = reject;
-        };
-        qrImg.onerror = reject;
+      pdf.setFontSize(10);
+      pdf.text('Scan this code at the entrance.', pageWidth / 2, y, {
+        align: 'center',
       });
     }
+
 
     pdf.save(`ticket-${this.ticketId}.pdf`);
   }
