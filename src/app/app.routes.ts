@@ -13,6 +13,7 @@ import { authGuard } from './layout/guards/auth.guard';
 import { AdminDasboardComponent } from './admin/admin-dasboard/admin-dasboard.component';
 import { adminGuard } from './layout/guards/admin.guard';
 import { LayoutCreationComponent } from './admin/layout-creation/layout-creation.component';
+import { ChatbotComponent } from './chatbot/chatbot.component';
 
 export const routes: Routes = [
   {
@@ -70,4 +71,8 @@ export const routes: Routes = [
     path: 'layout',
     component: LayoutCreationComponent,
   },
+  {
+    path: 'chatbot',
+    component: ChatbotComponent
+  }
 ];

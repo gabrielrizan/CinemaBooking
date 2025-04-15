@@ -11,4 +11,5 @@ urlpatterns = [
     path('api/payments/', include('payments.urls')),  # Payments-related routes
     path('api/tickets/', include('tickets.urls')),
     path('api/catalog/', include('catalog.urls')),
+    path('api/chatbot/', include('chatbot.urls')),
 ]

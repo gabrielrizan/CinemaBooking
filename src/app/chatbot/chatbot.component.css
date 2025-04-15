@@ -1,0 +1,67 @@
+/* Chatbot.component.css */
+
+/* Ensure the container takes full height */
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Custom scrollbar for chat container */
+.overflow-y-auto::-webkit-scrollbar {
+  width: 6px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* Message animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mb-4 {
+  animation: fadeIn 0.3s ease forwards;
+}
+
+/* Input focus styles */
+:host ::ng-deep .p-inputtext:focus {
+  box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb), 0.1) !important;
+}
+
+/* Ticket dialog enhancements */
+:host ::ng-deep .ticket-dialog .p-dialog-header {
+  border-bottom: 1px solid var(--surface-border);
+  padding: 1.25rem 1.5rem;
+}
+
+:host ::ng-deep .ticket-dialog .p-dialog-content {
+  padding: 0;
+}
+
+/* QR code container styling */
+:host ::ng-deep qrcode {
+  transition: transform 0.3s ease;
+}
+
+:host ::ng-deep qrcode:hover {
+  transform: scale(1.02);
+}
