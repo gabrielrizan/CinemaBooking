@@ -1,4 +1,10 @@
-import { Component, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
+import {
+  Component,
+  ViewChild,
+  ElementRef,
+  AfterViewChecked,
+  OnInit,
+} from '@angular/core';
 import { ChatService } from '../services/chat.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -15,6 +21,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 interface ChatMessage {
   role: 'user' | 'assistant';
   content: string;
+  timestamp?: Date;
 }
 
 @Component({
@@ -23,27 +30,31 @@ interface ChatMessage {
   styleUrls: ['./chatbot.component.css'],
   standalone: true,
   imports: [
-    CommonModule, 
-    FormsModule, 
-    PanelModule, 
-    ButtonModule, 
-    InputTextModule, 
+    CommonModule,
+    FormsModule,
+    PanelModule,
+    ButtonModule,
+    InputTextModule,
     RippleModule,
     CardModule,
     DividerModule,
     AvatarModule,
     TooltipModule,
-    ProgressSpinnerModule
+    ProgressSpinnerModule,
   ],
 })
-export class ChatbotComponent implements AfterViewChecked {
+export class ChatbotComponent implements AfterViewChecked, OnInit {
   @ViewChild('chatContainer') private chatContainer!: ElementRef;
-  
+
   userInput = '';
   messages: ChatMessage[] = [];
   isLoading = false;
-  
+
   constructor(private chatService: ChatService) {}
+
+  ngOnInit() {
+    // Optional: Add welcome message or load previous messages
+  }
 
   ngAfterViewChecked() {
     this.scrollToBottom();
@@ -51,54 +62,74 @@ export class ChatbotComponent implements AfterViewChecked {
 
   scrollToBottom(): void {
     try {
-      this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
-    } catch(err) { }
+      this.chatContainer.nativeElement.scrollTop =
+        this.chatContainer.nativeElement.scrollHeight;
+    } catch (err) {
+      console.error('Error scrolling to bottom:', err);
+    }
   }
 
   sendMessage(): void {
     if (!this.userInput.trim() || this.isLoading) return;
 
-    // 1) Add user's message locally
-    this.messages.push({ role: 'user', content: this.userInput });
-    
-    // 2) Set loading state
+    // Add user's message with timestamp
+    this.messages.push({
+      role: 'user',
+      content: this.userInput,
+      timestamp: new Date(),
+    });
+
+    // Set loading state
     this.isLoading = true;
-    
-    // 3) Scroll to see the loading indicator
+
+    // Scroll to see the loading indicator
     setTimeout(() => this.scrollToBottom(), 100);
 
-    // 4) Call ChatService
+    // Call ChatService
     this.chatService
       .chatWithAssistant(this.userInput)
       .then((reply) => {
-        // Add assistant's reply
-        this.messages.push({ role: 'assistant', content: reply });
+        // Add assistant's reply with timestamp
+        this.messages.push({
+          role: 'assistant',
+          content: reply,
+          timestamp: new Date(),
+        });
       })
       .catch((error) => {
         console.error('Error in chatbot:', error);
-        // Add error message
-        this.messages.push({ 
-          role: 'assistant', 
-          content: 'Sorry, I encountered an error processing your request. Please try again.' 
+        this.messages.push({
+          role: 'assistant',
+          content:
+            'Sorry, I encountered an error processing your request. Please try again.',
+          timestamp: new Date(),
         });
       })
       .finally(() => {
         this.isLoading = false;
+        // Ensure we scroll to the bottom after new content is added
+        setTimeout(() => this.scrollToBottom(), 100);
       });
 
-    // 5) Clear the input field
+    // Clear the input field
     this.userInput = '';
   }
-  
+
   // Handle Enter key press
   onKeyPress(event: KeyboardEvent): void {
     if (event.key === 'Enter') {
       this.sendMessage();
     }
   }
-  
+
   // Clear chat history
   clearChat(): void {
     this.messages = [];
+  }
+
+  // Optional: Add a method to format timestamps
+  formatTime(date?: Date): string {
+    if (!date) return '';
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   }
 }

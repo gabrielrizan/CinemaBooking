@@ -10,12 +10,6 @@ export class ChatService {
 
   constructor(private http: HttpClient) {}
 
-  /**
-   * Sends a message to the chatbot and returns the assistant's reply as a Promise.
-   *
-   * @param message - The user's message string
-   * @returns A Promise that resolves to the assistant's reply text
-   */
   chatWithAssistant(message: string): Promise<string> {
     const body = { message };
 

@@ -1,18 +1,25 @@
 <div
   class="flex flex-col h-full max-h-screen rounded-lg shadow-lg overflow-hidden"
 >
-  <!-- Chat Header -->
-  <div class="flex items-center justify-between p-4 border-b">
+  <div
+    class="flex items-center justify-between p-4 border-b surface-border surface-section"
+  >
     <div class="flex items-center gap-3">
       <p-avatar
-        icon="pi pi-comments"
+        image="cinema-logo.svg"
         styleClass="mr-2"
         size="large"
         shape="circle"
-      ></p-avatar>
+      >
+      </p-avatar>
       <div>
-        <h2 class="text-xl font-semibold">Chat Assistant</h2>
-        <span class="text-xs opacity-70">Online</span>
+        <h2 class="text-xl font-semibold">Cinema Chat</h2>
+        <span class="text-xs flex items-center gap-1 opacity-75">
+          <span
+            class="w-2 h-2 rounded-full inline-block animate-pulse border surface-border"
+          ></span>
+          Now Showing
+        </span>
       </div>
     </div>
     <button
@@ -25,74 +32,80 @@
     ></button>
   </div>
 
-  <!-- Chat Messages Container -->
   <div
     #chatContainer
     class="flex-grow p-4 overflow-y-auto"
     style="scroll-behavior: smooth"
   >
-    <!-- Welcome Message -->
     <div
       *ngIf="messages.length === 0"
-      class="flex flex-col items-center justify-center h-full text-center p-6"
+      class="flex flex-col items-center justify-center h-full text-center p-6 opacity-90"
     >
-      <i class="pi pi-comments text-6xl mb-4 opacity-20"></i>
-      <h3 class="text-xl font-semibold mb-2">Welcome to the Chat Assistant</h3>
-      <p class="text-sm opacity-70 mb-4">How can I help you today?</p>
+      <i class="pi pi-ticket text-6xl mb-6"></i>
+      <h3 class="text-xl font-semibold mb-3">Feature Presentation</h3>
+      <p class="text-sm mb-4 max-w-md opacity-75">
+        Welcome to Cinema Chat! Grab your popcorn and let's talk about movies,
+        shows, or anything else you'd like assistance with today.
+      </p>
     </div>
 
-    <!-- Message Bubbles -->
     <div *ngFor="let message of messages" class="mb-4">
-      <!-- User Message -->
       <div *ngIf="message.role === 'user'" class="flex justify-end">
         <div
-          class="max-w-3/4 rounded-lg py-2 px-4 shadow-sm"
-          [ngClass]="{ 'p-message p-message-info': true }"
+          class="max-w-3/4 rounded-lg py-2 px-4 shadow-md surface-ground border surface-border"
         >
           <p class="text-sm whitespace-pre-wrap">{{ message.content }}</p>
+          <span class="text-xs opacity-75 flex justify-end mt-1">You</span>
         </div>
       </div>
-
-      <!-- Assistant Message -->
-      <div *ngIf="message.role === 'assistant'" class="flex">
+      <div *ngIf="message.role === 'assistant'" class="flex items-start">
         <p-avatar
-          icon="pi pi-comments"
-          styleClass="mr-2"
+          image="cinema-logo.svg"
+          styleClass="mr-2 mt-1 shadow-md"
           shape="circle"
-        ></p-avatar>
-        <div class="max-w-3/4 rounded-lg py-2 px-4 shadow-sm border">
-          <p class="text-sm whitespace-pre-wrap">{{ message.content }}</p>
+        >
+        </p-avatar>
+        <div
+          class="max-w-3/4 rounded-lg py-2 px-4 shadow-md surface-card border surface-border"
+        >
+          <p class="text-sm whitespace-pre-wrap leading-relaxed">
+            {{ message.content }}
+          </p>
+          <span class="text-xs opacity-75 flex justify-start mt-1"
+            >TicketBuddy Assistant</span
+          >
         </div>
       </div>
     </div>
 
-    <!-- Loading Indicator -->
-    <div *ngIf="isLoading" class="flex mb-4">
+    <div *ngIf="isLoading" class="flex items-start mb-4">
       <p-avatar
-        icon="pi pi-comments"
-        styleClass="mr-2"
+        icon="pi pi-video"
+        styleClass="mr-2 mt-1 shadow-md"
         shape="circle"
-      ></p-avatar>
-      <div class="max-w-3/4 rounded-lg py-3 px-4 shadow-sm border">
+      >
+      </p-avatar>
+      <div
+        class="rounded-lg py-3 px-4 shadow-md surface-card border surface-border flex items-center"
+      >
         <p-progressSpinner
-          [style]="{ width: '30px', height: '30px' }"
-          styleClass="mr-2"
+          [style]="{ width: '24px', height: '24px' }"
           strokeWidth="4"
-        ></p-progressSpinner>
+        >
+        </p-progressSpinner>
+        <span class="ml-2 text-sm opacity-75">Rolling film...</span>
       </div>
     </div>
   </div>
 
-  <!-- Chat Input -->
-  <div class="p-4 border-t">
-    <div class="flex gap-2">
+  <div class="p-4 border-t surface-border surface-ground">
+    <div class="flex items-center">
       <span class="p-input-icon-right flex-grow">
-        <i class="pi pi-send cursor-pointer" (click)="sendMessage()"></i>
         <input
           type="text"
           pInputText
-          class="w-full p-inputtext-sm"
-          placeholder="Type your message..."
+          class="w-full p-3 rounded-full"
+          placeholder="What's on your mind?"
           [(ngModel)]="userInput"
           (keydown)="onKeyPress($event)"
           [disabled]="isLoading"
@@ -103,7 +116,7 @@
         icon="pi pi-send"
         [disabled]="!userInput.trim() || isLoading"
         (click)="sendMessage()"
-        class="p-button-rounded"
+        class="p-button-rounded ml-2 w-12 h-12 flex items-center justify-center"
       ></button>
     </div>
   </div>

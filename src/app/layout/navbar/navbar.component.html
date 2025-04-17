@@ -66,6 +66,15 @@
           (input)="onSearchChange($event)"
         />
 
+        <button
+          pButton
+          icon="pi pi-comments"
+          class="p-button-text"
+          pTooltip="Chat with Assistant"
+          tooltipPosition="bottom"
+          (click)="toggleChat()"
+        ></button>
+
         <!-- User Avatar -->
         <p-avatar
           icon="pi pi-user"
@@ -155,4 +164,15 @@
     class="blur-overlay"
     (click)="onSearchBlur()"
   ></div>
+
+  <p-dialog
+    [(visible)]="isChatOpen"
+    [modal]="false"
+    [dismissableMask]="true"
+    header="Chat Assistant"
+    [style]="{ width: '700px' }"
+    [baseZIndex]="1100"
+  >
+    <app-chatbot></app-chatbot>
+  </p-dialog>
 </div>

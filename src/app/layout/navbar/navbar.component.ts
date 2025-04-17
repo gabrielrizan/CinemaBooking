@@ -31,6 +31,7 @@ import { AuthService } from '../../services/auth.service';
 import { Genres, HomepageMovie, SearchMedia } from '../../models/movie.model';
 import { RouterModule } from '@angular/router';
 import { TooltipModule } from 'primeng/tooltip';
+import { ChatbotComponent } from '../../chatbot/chatbot.component';
 
 @Component({
   selector: 'app-navbar',
@@ -51,6 +52,7 @@ import { TooltipModule } from 'primeng/tooltip';
     LoginComponent,
     RouterModule,
     TooltipModule,
+    ChatbotComponent,
   ],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
@@ -68,6 +70,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
   filteredMovies: HomepageMovie[] = [];
   movieGenres: Genres[] = [];
   tvGenres: Genres[] = [];
+  isChatOpen: boolean = false;
 
   @ViewChild('op') overlayPanel: OverlayPanel | undefined;
   @ViewChild('searchInput') searchInput!: ElementRef;
@@ -460,6 +463,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.isDarkMode = !this.isDarkMode;
     const element = document.querySelector('html');
     element?.classList.toggle('dark-mode');
+  }
+
+  toggleChat() {
+    this.isChatOpen = !this.isChatOpen;
   }
 
   ngOnDestroy() {
