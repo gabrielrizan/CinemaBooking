@@ -17,8 +17,9 @@ import { DividerModule } from 'primeng/divider';
 import { AvatarModule } from 'primeng/avatar';
 import { TooltipModule } from 'primeng/tooltip';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { MarkdownPipe } from '../services/markdown.pipe';
 
-interface ChatMessage {
+export interface ChatMessage {
   role: 'user' | 'assistant';
   content: string;
   timestamp?: Date;
@@ -41,6 +42,7 @@ interface ChatMessage {
     AvatarModule,
     TooltipModule,
     ProgressSpinnerModule,
+    MarkdownPipe
   ],
 })
 export class ChatbotComponent implements AfterViewChecked, OnInit {
@@ -52,9 +54,7 @@ export class ChatbotComponent implements AfterViewChecked, OnInit {
 
   constructor(private chatService: ChatService) {}
 
-  ngOnInit() {
-    // Optional: Add welcome message or load previous messages
-  }
+  ngOnInit() {}
 
   ngAfterViewChecked() {
     this.scrollToBottom();
@@ -70,26 +70,27 @@ export class ChatbotComponent implements AfterViewChecked, OnInit {
   }
 
   sendMessage(): void {
-    if (!this.userInput.trim() || this.isLoading) return;
+    const trimmedMessage = this.userInput.trim();
+    if (!trimmedMessage || this.isLoading) return;
 
-    // Add user's message with timestamp
-    this.messages.push({
+    const userMsg: ChatMessage = {
       role: 'user',
-      content: this.userInput,
+      content: trimmedMessage,
       timestamp: new Date(),
-    });
+    };
+    this.messages.push(userMsg);
 
-    // Set loading state
     this.isLoading = true;
-
-    // Scroll to see the loading indicator
     setTimeout(() => this.scrollToBottom(), 100);
 
-    // Call ChatService
+    const history = this.messages.map(({ role, content }) => ({
+      role,
+      content,
+    }));
+
     this.chatService
-      .chatWithAssistant(this.userInput)
+      .chatWithAssistant(history, trimmedMessage)
       .then((reply) => {
-        // Add assistant's reply with timestamp
         this.messages.push({
           role: 'assistant',
           content: reply,
@@ -107,27 +108,22 @@ export class ChatbotComponent implements AfterViewChecked, OnInit {
       })
       .finally(() => {
         this.isLoading = false;
-        // Ensure we scroll to the bottom after new content is added
         setTimeout(() => this.scrollToBottom(), 100);
       });
 
-    // Clear the input field
     this.userInput = '';
   }
 
-  // Handle Enter key press
   onKeyPress(event: KeyboardEvent): void {
     if (event.key === 'Enter') {
       this.sendMessage();
     }
   }
 
-  // Clear chat history
   clearChat(): void {
     this.messages = [];
   }
 
-  // Optional: Add a method to format timestamps
   formatTime(date?: Date): string {
     if (!date) return '';
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });

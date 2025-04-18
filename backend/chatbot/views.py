@@ -6,7 +6,12 @@ from django.conf import settings
 from catalog.models import Movie
 
 from google import genai
-from google.genai import types
+from google.genai.types import (
+    GenerateContentConfig,
+    Part,
+    UserContent,
+    ModelContent,
+)
 
 
 
@@ -28,40 +33,42 @@ def get_now_playing_summary():
 
 @csrf_exempt
 def gemini_chat_view(request):
-
-    now_playing_info = get_now_playing_summary()
     if request.method != 'POST':
         return HttpResponseBadRequest("Only POST requests allowed.")
 
     try:
         body = json.loads(request.body)
-        user_message = body.get("message")
+        history = body.get("messages", [])      
+        new_message = body.get("newMessage")
+        if not new_message:
+            return JsonResponse({"error": "No newMessage provided"}, status=400)
 
-        if not user_message:
-            return JsonResponse({"error": "No message provided"}, status=400)
-        
-        config = types.GenerateContentConfig(
-            max_output_tokens=150,             
-            temperature=1,                  
+        config = GenerateContentConfig(
+            max_output_tokens=150,
+            temperature=0.2,
             system_instruction=(
-        "You are a helpful cinema chatbot. "
-        "Do not answer questions that are not related to movies/tv series."
-        "Below is a list of movies currently playing in OUR cinema:\n"
-        f"{now_playing_info}\n"
-        "Answer user questions about these movies, and other general queries.If a user asks about other movies or upcoming, answer the question."
-    )  # Extra nudge
+                "You are a helpful cinema chatbot. Answer the user's questions about movies, "
+                "If the user asks about the movies running, here are the movies currently playing:\n"
+                f"{get_now_playing_summary()}"
+            )
         )
 
-        response = client.models.generate_content(
+        history_contents = []
+        for turn in history:
+            part = Part(text=turn["content"])
+            if turn["role"] == "user":
+                history_contents.append(UserContent(parts=[part]))
+            else:
+                history_contents.append(ModelContent(parts=[part]))
+
+        chat = client.chats.create(
             model="gemini-2.0-flash",
-            contents=user_message,
             config=config,
+            history=history_contents,          
         )
 
-
-        gemini_reply = response.text
-
-        return JsonResponse({"reply": gemini_reply})
+        response = chat.send_message(new_message)
+        return JsonResponse({"reply": response.text})
 
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=500)

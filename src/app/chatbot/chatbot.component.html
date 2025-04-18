@@ -50,30 +50,38 @@
     </div>
 
     <div *ngFor="let message of messages" class="mb-4">
+      <!-- USER -->
       <div *ngIf="message.role === 'user'" class="flex justify-end">
         <div
           class="max-w-3/4 rounded-lg py-2 px-4 shadow-md surface-ground border surface-border"
         >
-          <p class="text-sm whitespace-pre-wrap">{{ message.content }}</p>
+          <div
+            [innerHTML]="message.content | markdown"
+            class="prose prose-invert text-sm whitespace-pre-wrap break-words"
+          ></div>
+
           <span class="text-xs opacity-75 flex justify-end mt-1">You</span>
         </div>
       </div>
+
+      <!-- ASSISTANT -->
       <div *ngIf="message.role === 'assistant'" class="flex items-start">
         <p-avatar
           image="cinema-logo.svg"
           styleClass="mr-2 mt-1 shadow-md"
           shape="circle"
-        >
-        </p-avatar>
+        ></p-avatar>
         <div
           class="max-w-3/4 rounded-lg py-2 px-4 shadow-md surface-card border surface-border"
         >
-          <p class="text-sm whitespace-pre-wrap leading-relaxed">
-            {{ message.content }}
-          </p>
-          <span class="text-xs opacity-75 flex justify-start mt-1"
-            >TicketBuddy Assistant</span
-          >
+          <div
+            [innerHTML]="message.content | markdown"
+            class="prose prose-invert text-sm leading-relaxed break-words"
+          ></div>
+
+          <span class="text-xs opacity-75 flex justify-start mt-1">
+            TicketBuddy Assistant
+          </span>
         </div>
       </div>
     </div>
