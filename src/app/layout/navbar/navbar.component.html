@@ -68,12 +68,13 @@
 
         <button
           pButton
-          icon="pi pi-comments"
           class="p-button-text"
           pTooltip="Chat with Assistant"
           tooltipPosition="bottom"
           (click)="toggleChat()"
-        ></button>
+        >
+          <img src="chatbot.png" alt="Chatbot" class="w-12 h-12" />
+        </button>
 
         <!-- User Avatar -->
         <p-avatar
@@ -170,7 +171,7 @@
     [modal]="false"
     [dismissableMask]="true"
     header="Chat Assistant"
-    [style]="{ width: '700px' }"
+    [style]="{ width: '900px', height: '600px' }"
     [baseZIndex]="1100"
   >
     <app-chatbot></app-chatbot>
