@@ -5,7 +5,6 @@ import { SignupComponent } from './auth/signup/signup.component';
 import { SearchCardComponent } from './search-card/search-card.component';
 import { BigsearchComponent } from './bigsearch/bigsearch.component';
 import { MovieInfoComponent } from './movie-info/movie-info.component';
-import { TicketsaleComponent } from './ticketsale/ticketsale.component';
 import { NowShowingComponent } from './layout/now-showing/now-showing.component';
 import { TicketSelectionComponent } from './layout/ticket-selection/ticket-selection.component';
 import { MyMoviesComponent } from './my-movies/my-movies.component';
@@ -47,10 +46,6 @@ export const routes: Routes = [
     component: MovieInfoComponent,
   },
   {
-    path: 'tickets/:name',
-    component: TicketsaleComponent,
-  },
-  {
     path: 'movies/now-showing',
     component: NowShowingComponent,
   },
@@ -74,10 +69,10 @@ export const routes: Routes = [
   },
   {
     path: 'chatbot',
-    component: ChatbotComponent
+    component: ChatbotComponent,
   },
   {
     path: 'for-you',
-    component: RecommendationComponent
-  }
+    component: RecommendationComponent,
+  },
 ];

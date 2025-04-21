@@ -2,7 +2,7 @@
   class="movie-card"
   *ngIf="sharedService.movieOrTvDetails$ | async as movie"
 >
-  <div class="content-wrapper">
+  <div class="mx-auto max-w-7xl">
     <!-- Movie Header Section -->
     <div
       class="movie-container blurred-background"
@@ -20,8 +20,8 @@
       }"
     >
       <!-- Movie Poster and Main Info Section -->
-      <div class="movie-content">
-        <div class="movie-poster-container">
+      <div class="movie-content mx-auto">
+        <div class="max-w-[300px] mr-8">
           <!-- Poster Image -->
           <img
             [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
@@ -102,7 +102,9 @@
     <!-- Movie Financial Info (Only for movies) -->
     <ng-container *ngIf="mediaType === 'movie'">
       <div class="movie-financial-info mt-6">
-        <div class="grid grid-cols-12 gap-4 align-center justify-center financial-container">
+        <div
+          class="grid grid-cols-12 gap-4 align-center justify-center financial-container"
+        >
           <div class="col-span-6 text-center">
             <p-card class="financial-card">
               <p>

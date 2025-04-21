@@ -1,9 +1,9 @@
 /* Content Wrapper */
-.content-wrapper {
+/* .content-wrapper {
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 1rem;
-}
+} */
 
 /* Movie Card */
 .movie-card {
@@ -43,8 +43,7 @@
 /* Movie Poster Container */
 .movie-poster-container {
   flex: 0 0 300px;
-  max-width: 300px;
-  margin-right: 2rem;
+  /* margin-right: 2rem; */
 }
 
 .movie-poster {

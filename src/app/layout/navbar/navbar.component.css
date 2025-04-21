@@ -24,7 +24,7 @@
 }
 
 .navbar-content {
-  max-width: 1500px;
+  /* max-width: 1500px; */
   background: var(--surface-card);
   border-radius: var(--border-radius);
   padding: 0.5rem;
@@ -212,27 +212,6 @@
   }
 }
 
-/* :host ::ng-deep .p-dialog .search-input {
-  background: var(--surface-ground);
-  border: 2px solid var(--primary-color);
-  padding: 1.5rem 2rem;
-  font-size: 1.5rem;
-  width: 80% !important;
-  max-width: 1000px;
-  transform-origin: top center;
-  animation: searchBarExpand 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: 50px;
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(var(--p-primary-color-rgb), 0.1);
-  transition: all 0.3s ease;
-}
-
-:host ::ng-deep .p-dialog .search-input:focus {
-  border-color: var(--p-primary-color);
-  box-shadow: 0 0 0 4px rgba(var(--p-primary-color-rgb), 0.2);
-  transform: translateY(-2px);
-} */
-
 /* Fixed Search Container */
 .fixed-search-container {
   position: fixed;
@@ -245,13 +224,13 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-.search-wrapper {
+/* .search-wrapper {
   max-width: 1000px;
   margin: 0 auto;
   position: relative;
   display: flex;
   justify-content: center;
-}
+} */
 
 .search-bar-container {
   width: 100%;
@@ -300,7 +279,7 @@
 .search-results-container {
   margin-top: 80px;
   padding: 1rem;
-  max-width: 1200px;
+  /* max-width: 1200px; */
   margin-left: auto;
   margin-right: auto;
 }

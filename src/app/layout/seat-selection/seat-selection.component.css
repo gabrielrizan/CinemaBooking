@@ -25,14 +25,6 @@
   display: block;
 }
 
-.screen {
-  max-width: 1000px;
-  height: 20px;
-  background-color: #aaaaaa; /* Light Gray */
-  border-radius: 10px;
-  margin: 10px auto;
-}
-
 /* Row and Seat Map Alignment */
 .seat-map {
   display: flex;
