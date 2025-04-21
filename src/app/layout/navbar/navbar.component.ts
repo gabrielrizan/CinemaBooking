@@ -29,7 +29,7 @@ import { SharedService } from '../../shared.service';
 import { LoginComponent } from '../../auth/login/login.component';
 import { AuthService } from '../../services/auth.service';
 import { Genres, HomepageMovie, SearchMedia } from '../../models/movie.model';
-import { RouterModule } from '@angular/router';
+import { Router, RouterLink, RouterModule } from '@angular/router';
 import { TooltipModule } from 'primeng/tooltip';
 import { ChatbotComponent } from '../../chatbot/chatbot.component';
 
@@ -141,22 +141,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
         ],
       },
       {
-        label: 'Offers',
-        icon: 'pi pi-tag',
-        items: [
-          {
-            label: 'Discounts',
-            icon: 'pi pi-percentage',
-            routerLink: ['/offers/discounts'],
-          },
-          {
-            label: 'Memberships',
-            icon: 'pi pi-id-card',
-            routerLink: ['/offers/memberships'],
-          },
-        ],
-      },
-      {
         label: 'Snacks',
         icon: 'pi pi-shopping-bag',
         items: [
@@ -176,16 +160,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
             routerLink: ['/snacks/combos'],
           },
         ],
-      },
-      {
-        label: 'Contact',
-        icon: 'pi pi-envelope',
-        routerLink: ['/contact'],
-      },
-      {
-        label: 'About Us',
-        icon: 'pi pi-info-circle',
-        routerLink: ['/about'],
       },
       {
         label: 'My Movies',
@@ -311,22 +285,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
         ],
       },
       {
-        label: 'Offers',
-        icon: 'pi pi-tag',
-        items: [
-          {
-            label: 'Discounts',
-            icon: 'pi pi-percentage',
-            routerLink: ['/offers/discounts'],
-          },
-          {
-            label: 'Memberships',
-            icon: 'pi pi-id-card',
-            routerLink: ['/offers/memberships'],
-          },
-        ],
-      },
-      {
         label: 'Snacks',
         icon: 'pi pi-shopping-bag',
         items: [
@@ -353,9 +311,9 @@ export class NavbarComponent implements OnInit, OnDestroy {
         routerLink: ['/contact'],
       },
       {
-        label: 'About Us',
-        icon: 'pi pi-info-circle',
-        routerLink: ['/about'],
+        label: 'For You',
+        icon: 'pi pi-user',
+        routerLink: ['/for-you'],
       },
       {
         label: 'My Movies',

@@ -60,4 +60,11 @@ export class TicketService {
       this.getHeaders()
     );
   }
+
+  getRecommendations(): Observable<any[]> {
+    return this.http.get<any[]>(
+      `${this.apiUrl}/tickets/recommendations/`,
+      this.getHeaders()
+    );
+  }
 }

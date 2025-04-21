@@ -2,13 +2,59 @@ from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import action, authentication_classes, permission_classes
 from rest_framework.response import Response
+ 
 from .models import Ticket
+from catalog.serializers import MovieSerializer
 from .serializers import TicketSerializer
 from rest_framework.views import APIView
+from catalog.models import Movie
+from django.db.models import Q
 
 class TicketViewSet(viewsets.ModelViewSet):
     serializer_class = TicketSerializer
     permission_classes = [IsAuthenticated]
+
+    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
+    def recommendations(self, request):
+        user = request.user
+
+        paid_ids = (
+            Ticket.objects
+                  .filter(user=user, payment_status='COMPLETED')
+                  .values_list('movie_id', flat=True)
+                  .distinct()
+        )
+        if not paid_ids:
+            return Response([], status=200)
+
+        genre_strs = Movie.objects.filter(id__in=paid_ids) \
+                                  .values_list('genre', flat=True) \
+                                  .distinct()
+
+        tokens = set()
+        for gs in genre_strs:
+            for t in gs.split(','):
+                tok = t.strip()
+                if tok:
+                    tokens.add(tok)
+
+        if not tokens:
+            return Response([], status=200)
+
+        q = Q()
+        for tok in tokens:
+            q |= Q(genre__icontains=tok)
+
+        qs = (
+            Movie.objects
+                 .filter(q)
+                 .exclude(id__in=paid_ids)
+                 .distinct()
+                 .order_by('-release_date')[:10]
+        )
+
+        serializer = MovieSerializer(qs, many=True)
+        return Response(serializer.data)
 
     def get_queryset(self):
         return Ticket.objects.filter(user=self.request.user)

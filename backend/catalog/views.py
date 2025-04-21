@@ -107,3 +107,15 @@ class CinemaHallByCinemaView(APIView):
         halls = CinemaHall.objects.filter(cinema_id=cinema_id)
         serializer = CinemaHallSerializer(halls, many=True)
         return Response(serializer.data)
+    
+
+class SimilarMoviesView(APIView):
+    def get(self, request, movie_id):
+        try:
+            movie = Movie.objects.get(id=movie_id)
+        except Movie.DoesNotExist:
+            return Response({"error": "Movie not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        similar_movies = Movie.objects.filter(genre=movie.genre).exclude(id=movie.id)
+        serializer = MovieSerializer(similar_movies, many=True)
+        return Response(serializer.data)

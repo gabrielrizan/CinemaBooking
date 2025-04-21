@@ -1,4 +1,4 @@
-<div class="flex flex-wrap gap-4 justify-center mt-12 container">
+<div class="flex flex-wrap gap-4 justify-center container mx-auto max-w-7xl">
   @for (movie of nowPlayingMovies; track movie.movieId) {
   <app-movie-card [movie]="movie"></app-movie-card>
   }

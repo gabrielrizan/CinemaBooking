@@ -1,0 +1,20 @@
+<!-- recommendation.component.html -->
+<div class="p-4">
+  <h2 class="text-2xl font-semibold mb-4">Recommended for you</h2>
+
+  <div *ngIf="loading">
+    <p>Loading recommendations...</p>
+  </div>
+
+  <div
+    *ngIf="!loading && movies.length > 0"
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+  >
+    <app-movie-card *ngFor="let movie of movies" [movie]="movie">
+    </app-movie-card>
+  </div>
+
+  <div *ngIf="!loading && movies.length === 0">
+    <p>No recommendations available yet.</p>
+  </div>
+</div>

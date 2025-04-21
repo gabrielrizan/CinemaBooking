@@ -14,6 +14,7 @@ import { AdminDasboardComponent } from './admin/admin-dasboard/admin-dasboard.co
 import { adminGuard } from './layout/guards/admin.guard';
 import { LayoutCreationComponent } from './admin/layout-creation/layout-creation.component';
 import { ChatbotComponent } from './chatbot/chatbot.component';
+import { RecommendationComponent } from './recommendation/recommendation.component';
 
 export const routes: Routes = [
   {
@@ -74,5 +75,9 @@ export const routes: Routes = [
   {
     path: 'chatbot',
     component: ChatbotComponent
+  },
+  {
+    path: 'for-you',
+    component: RecommendationComponent
   }
 ];
