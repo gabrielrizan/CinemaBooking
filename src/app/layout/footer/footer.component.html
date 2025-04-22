@@ -1,19 +1,13 @@
-<p-card
-  [style]="{
-    background: 'var(--p-surface-ground)',
-    border: 'none',
-    boxShadow: 'none'
-  }"
->
-  <div class="footer-content text-center">
-    <p>© {{ currentYear }} Cinema-App</p>
-    <div class="footer-links">
+<p-card class="bg-transparent border-0 shadow-none">
+  <div class="flex flex-col items-center p-6 space-y-4">
+    <p class="text-sm">© {{ currentYear }} TicketBuddy</p>
+    <div class="flex space-x-4">
       <a
         pButton
         type="button"
         icon="pi pi-twitter"
-        label="Twitter"
-        class="p-button-rounded p-button-text"
+        class="p-button-rounded p-button-text text-blue-500 hover:text-blue-400"
+        aria-label="Twitter"
         href="https://twitter.com"
         target="_blank"
       ></a>
@@ -21,8 +15,8 @@
         pButton
         type="button"
         icon="pi pi-facebook"
-        label="Facebook"
-        class="p-button-rounded p-button-text"
+        class="p-button-rounded p-button-text text-blue-600 hover:text-blue-500"
+        aria-label="Facebook"
         href="https://facebook.com"
         target="_blank"
       ></a>
@@ -30,8 +24,8 @@
         pButton
         type="button"
         icon="pi pi-linkedin"
-        label="LinkedIn"
-        class="p-button-rounded p-button-text"
+        class="p-button-rounded p-button-text text-blue-700 hover:text-blue-600"
+        aria-label="LinkedIn"
         href="https://linkedin.com"
         target="_blank"
       ></a>

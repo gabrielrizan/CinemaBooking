@@ -1,98 +1,105 @@
 <p-card
-  class="movie-card"
   *ngIf="sharedService.movieOrTvDetails$ | async as movie"
+  class="bg-gray-800 text-white shadow-2xl rounded-2xl overflow-hidden"
 >
-  <div class="mx-auto max-w-7xl">
+  <div class="mx-auto max-w-7xl px-4 py-8">
     <!-- Movie Header Section -->
-    <div
-      class="movie-container blurred-background"
-      [ngStyle]="{
-        'background-image':
-          'linear-gradient(to left, rgba(0,0,0,0.7) 50%, ' +
-          darkenedBlackBarsColor +
-          ' 74%), url(https://image.tmdb.org/t/p/w1280' +
-          movie.backdrop_path +
-          ')',
-        'background-size': 'cover',
-        'background-position': 'center',
-        'background-repeat': 'no-repeat',
-        
-      }"
-    >
-      <!-- Movie Poster and Main Info Section -->
-      <div class="movie-content mx-auto">
-        <div class="max-w-[300px] mr-8">
-          <!-- Poster Image -->
+    <div class="relative overflow-hidden rounded-lg">
+      <div
+        class="absolute inset-0 bg-cover bg-center bg-no-repeat filter blur-sm"
+        [ngStyle]="{
+          'background-image':
+            'linear-gradient(to left, rgba(0,0,0,0.7) 50%, ' +
+            darkenedBlackBarsColor +
+            ' 74%), url(https://image.tmdb.org/t/p/w1280' +
+            movie.backdrop_path +
+            ')'
+        }"
+      ></div>
+      <div class="relative z-10 flex flex-col md:flex-row p-8">
+        <!-- Poster -->
+        <div class="w-full md:w-[300px] flex-shrink-0 mb-6 md:mb-0 md:mr-8">
           <img
             [src]="'https://image.tmdb.org/t/p/w500' + movie.poster_path"
             alt="Movie Poster"
-            class="movie-poster"
+            class="w-full rounded-lg object-cover"
           />
         </div>
-        <div class="movie-info">
-          <h1 class="movie-title mt-0">{{ movie.title ?? movie.name }}</h1>
-          <p class="movie-meta">
+        <!-- Info -->
+        <div class="flex-1 text-white">
+          <h1 class="text-[2.5rem] font-bold mb-2">
+            {{ movie.title ?? movie.name }}
+          </h1>
+          <p class="font-bold text-gray-400 mb-4">
             {{ movie.release_date ?? movie.first_air_date }} |
             <span *ngFor="let genre of movie.genres; let last = last">
               {{ genre.name }}<span *ngIf="!last">, </span>
             </span>
           </p>
 
-          <!-- Conditionally render TV-specific details -->
+          <!-- TV Details -->
           <ng-container *ngIf="mediaType === 'tv'">
-            <p>
-              <strong>Creator: {{ directorName }}</strong>
+            <p class="text-white mb-1">
+              <strong>Creator:</strong> {{ directorName }}
             </p>
-            <p><strong>Seasons:</strong> {{ movie.number_of_seasons }}</p>
-            <p><strong>Episodes:</strong> {{ movie.number_of_episodes }}</p>
-            <p>
+            <p class="text-white mb-1">
+              <strong>Seasons:</strong> {{ movie.number_of_seasons }}
+            </p>
+            <p class="text-white mb-1">
+              <strong>Episodes:</strong> {{ movie.number_of_episodes }}
+            </p>
+            <p class="text-white mb-1">
               <strong>Status:</strong> {{ movie.status }}
-              <!-- Ongoing, Ended, etc. -->
             </p>
-            <p><strong>First Aired:</strong> {{ movie.first_air_date }}</p>
-            <p *ngIf="movie.last_episode_to_air">
+            <p class="text-white mb-1">
+              <strong>First Aired:</strong> {{ movie.first_air_date }}
+            </p>
+            <p *ngIf="movie.last_episode_to_air" class="text-white mb-1">
               <strong>Last Episode Aired:</strong>
               {{ movie.last_episode_to_air.air_date }}
             </p>
           </ng-container>
 
-          <!-- Conditionally render Movie-specific details -->
+          <!-- Movie Details -->
           <ng-container *ngIf="mediaType === 'movie'">
-            <p *ngIf="directorName">
+            <p *ngIf="directorName" class="text-white mb-1">
               <strong>Director:</strong> {{ directorName }}
             </p>
-            <p><strong>Runtime:</strong> {{ movie.runtime }} minutes</p>
+            <p class="text-white mb-1">
+              <strong>Runtime:</strong> {{ movie.runtime }} minutes
+            </p>
           </ng-container>
 
-          <!-- Movie/TV Overview -->
-          <p class="movie-overview">{{ movie.tagline }}</p>
-          <p class="movie-description">{{ movie.overview }}</p>
+          <!-- Tagline & Overview -->
+          <p class="italic text-xl mb-2 text-white">{{ movie.tagline }}</p>
+          <p class="text-base leading-relaxed mb-6 text-white">
+            {{ movie.overview }}
+          </p>
 
-          <!-- User Score Section -->
-          <div class="user-score-section mt-4">
-            <div class="user-score-container flex items-center">
-              <span class="score-label mr-2">User Score</span>
+          <!-- User Score -->
+          <div class="mt-4">
+            <div class="flex items-center text-xl text-white">
+              <span class="mr-2">User Score</span>
               <p-chip
                 label="{{ getVotePercentage(movie.vote_average ?? 0) + '%' }}"
-                class="custom-chip"
-                styleClass="p-chip-lg flex items-center justify-center"
+                styleClass="p-chip-lg flex items-center justify-center bg-blue-500 text-white"
               ></p-chip>
             </div>
           </div>
 
           <!-- Buttons -->
-          <div class="button-section mt-4">
+          <div class="mt-4 flex space-x-4">
             <button
               pButton
               label="Play Trailer"
               icon="pi pi-play"
-              class="p-button-primary"
+              styleClass="bg-blue-600 hover:bg-blue-700 text-white font-medium rounded px-4 py-2"
             ></button>
             <button
               pButton
               label="Add to Favorites"
               icon="pi pi-heart"
-              class="p-button-outlined ml-2"
+              styleClass="border border-white text-white font-medium rounded px-4 py-2 hover:bg-white hover:text-gray-800"
             ></button>
           </div>
         </div>
@@ -101,85 +108,62 @@
 
     <!-- Movie Financial Info (Only for movies) -->
     <ng-container *ngIf="mediaType === 'movie'">
-      <div class="movie-financial-info mt-6">
-        <div
-          class="grid grid-cols-12 gap-4 align-center justify-center financial-container"
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <p-card
+          class="text-gray-200 shadow rounded-lg p-4 flex items-center space-x-3"
         >
-          <div class="col-span-6 text-center">
-            <p-card class="financial-card">
-              <p>
-                <i
-                  class="pi pi-dollar"
-                  style="font-size: 2rem; color: #2196f3"
-                ></i>
-              </p>
-              <p><strong>Budget:</strong></p>
-              <p>{{ formatNumber(movie.budget ?? 0) }}</p>
-            </p-card>
+          <i class="pi pi-dollar text-2xl text-green-400"></i>
+          <div>
+            <div class="font-semibold">Budget</div>
+            <div>{{ formatNumber(movie.budget ?? 0) }}</div>
           </div>
-          <div class="col-span-6 text-center">
-            <p-card class="financial-card">
-              <p>
-                <i
-                  class="pi pi-chart-line"
-                  style="font-size: 2rem; color: #4caf50"
-                ></i>
-              </p>
-              <p><strong>Revenue:</strong></p>
-              <p>{{ formatNumber(movie.revenue ?? 0) }}</p>
-            </p-card>
+        </p-card>
+        <p-card
+          class="text-gray-200 shadow rounded-lg p-4 flex items-center space-x-3"
+        >
+          <i class="pi pi-chart-line text-2xl text-blue-400"></i>
+          <div>
+            <div class="font-semibold">Revenue</div>
+            <div>{{ formatNumber(movie.revenue ?? 0) }}</div>
           </div>
-        </div>
+        </p-card>
       </div>
     </ng-container>
 
-    <!-- Actors Section -->
-    <h2 class="mt-6">Cast</h2>
-    <div class="carousel-container">
-      <p-carousel
-        [value]="actors"
-        [numVisible]="7"
-        [numScroll]="1"
-        [circular]="true"
-        class="custom-carousel"
-        [responsiveOptions]="[]"
-        [showIndicators]="false"
-        [showNavigators]="true"
-        previousIcon="pi pi-angle-left"
-        nextIcon="pi pi-angle-right"
-      >
-        <ng-template pTemplate="item" let-actor>
-          <div class="actor-card">
-            <div class="actor-image-container">
-              <img
-                pImage
-                [src]="
-                  actor.profile_path
-                    ? 'https://image.tmdb.org/t/p/w185' + actor.profile_path
-                    : 'assets/placeholder.png'
-                "
-                alt="{{ actor.name }}"
-                class="actor-image"
-              />
-            </div>
-            <div class="actor-details">
-              <div class="actor-name" [title]="actor.name">
-                {{ actor.name }}
-              </div>
-              <div class="character-name" [title]="actor.character">
-                {{ actor.character }}
-              </div>
-            </div>
+    <!-- Cast Section -->
+    <h2 class="text-2xl font-semibold mb-4">Cast</h2>
+    <p-carousel
+      [value]="actors"
+      [numVisible]="7"
+      [circular]="true"
+      class="mb-4"
+    >
+      <ng-template pTemplate="item" let-actor>
+        <div class="w-32 flex-shrink-0 text-center">
+          <img
+            [src]="
+              actor.profile_path
+                ? 'https://image.tmdb.org/t/p/w185' + actor.profile_path
+                : 'assets/placeholder.png'
+            "
+            alt="{{ actor.name }}"
+            class="w-full h-40 object-cover rounded-lg mb-2"
+          />
+          <div class="text-sm font-semibold truncate" [title]="actor.name">
+            {{ actor.name }}
           </div>
-        </ng-template>
-      </p-carousel>
-    </div>
-    <div class="mt-4 text-center">
+          <div class="text-xs text-400 truncate" [title]="actor.character">
+            {{ actor.character }}
+          </div>
+        </div>
+      </ng-template>
+    </p-carousel>
+    <div class="text-center mb-8">
       <button
         pButton
         label="Get Full Cast"
         icon="pi pi-users"
-        class="p-button-outlined"
+        styleClass="p-button-outlined border-gray-200 text-gray-200 hover:bg-gray-200 hover:text-gray-900"
         (click)="showFullCastDialog()"
       ></button>
     </div>
@@ -193,12 +177,11 @@
       [closable]="true"
       [dismissableMask]="true"
     >
-      <div class="grid grid-cols-12 gap-4">
-        <div
-          class="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3"
-          *ngFor="let castMember of fullCast"
-        >
-          <div class="p-d-flex p-ai-center p-mb-3">
+      <div
+        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 p-4"
+      >
+        <ng-container *ngFor="let castMember of fullCast">
+          <div class="flex flex-col items-center text-center">
             <p-avatar
               [image]="
                 castMember.profile_path
@@ -207,120 +190,98 @@
               "
               size="large"
               shape="circle"
-              class="mr-4"
+              class="mb-2"
             ></p-avatar>
-            <div>
-              <div>
-                <strong>{{ castMember.name }}</strong>
-              </div>
-              <div>{{ castMember.character }}</div>
+            <div class="font-semibold truncate" [title]="castMember.name">
+              {{ castMember.name }}
+            </div>
+            <div
+              class="text-sm text-gray-400 truncate"
+              [title]="castMember.character"
+            >
+              {{ castMember.character }}
             </div>
           </div>
-        </div>
+        </ng-container>
       </div>
     </p-dialog>
 
     <!-- Reviews Section -->
-    <div class="reviews-section mt-6">
-      <h2>Reviews</h2>
-      <div class="reviews-list">
-        <ng-container *ngFor="let review of reviews.slice(0, visibleReviews)">
-          <p-panel [collapsed]="true" [toggleable]="true">
-            <ng-template pTemplate="header">
-              <div class="review-header">
-                <p-avatar
-                  *ngIf="getAvatarUrl(review.author_details.avatar_path)"
-                  [image]="getAvatarUrl(review.author_details.avatar_path)"
-                  size="large"
-                  shape="circle"
-                  class="mr-2"
-                ></p-avatar>
-                <p-avatar
-                  *ngIf="!getAvatarUrl(review.author_details.avatar_path)"
-                  [label]="getInitials(review.author)"
-                  size="large"
-                  shape="circle"
-                  class="mr-2"
-                ></p-avatar>
-                <div class="author-details">
-                  <strong class="review-author">{{ review.author }}</strong>
-                  <span class="review-date">{{
-                    review.created_at | date : "longDate"
-                  }}</span>
+    <h2 class="text-2xl font-semibold mb-4">Reviews</h2>
+    <div class="space-y-4 mb-8">
+      <ng-container *ngFor="let review of reviews.slice(0, visibleReviews)">
+        <p-panel [toggleable]="true" [collapsed]="true">
+          <ng-template pTemplate="header">
+            <div class="flex items-center space-x-3">
+              <p-avatar
+                *ngIf="getAvatarUrl(review.author_details.avatar_path)"
+                [image]="getAvatarUrl(review.author_details.avatar_path)"
+                shape="circle"
+              ></p-avatar>
+              <p-avatar
+                *ngIf="!getAvatarUrl(review.author_details.avatar_path)"
+                [label]="getInitials(review.author)"
+                shape="circle"
+              ></p-avatar>
+              <div>
+                <div class="font-semibold">{{ review.author }}</div>
+                <div class="text-sm">
+                  {{ review.created_at | date : "longDate" }}
                 </div>
               </div>
-            </ng-template>
-            <div class="review-content">
-              {{ getTruncatedContent(review.content, review.showFullContent) }}
-              <a
-                *ngIf="review.content.length > maxContentLength"
-                (click)="toggleReviewContent(review); $event.stopPropagation()"
-              >
-                {{ review.showFullContent ? "Read less" : "Read more" }}
-              </a>
             </div>
-          </p-panel>
-        </ng-container>
-      </div>
-
-      <!-- Show More/Show Less Buttons -->
-      <div class="reviews-load-more">
+          </ng-template>
+          <div class="mt-2 leading-relaxed text-200">
+            {{ getTruncatedContent(review.content, review.showFullContent) }}
+            <a
+              *ngIf="review.content.length > maxContentLength"
+              (click)="toggleReviewContent(review); $event.stopPropagation()"
+              class="text-blue-500 hover:underline ml-1"
+              >{{ review.showFullContent ? "Read less" : "Read more" }}</a
+            >
+          </div>
+        </p-panel>
+      </ng-container>
+      <div class="text-center">
         <button
           *ngIf="!reviewsExpanded && visibleReviews < reviews.length"
           pButton
           label="Show More Reviews"
+          class="p-button-text text-gray-200"
           (click)="loadMoreReviews()"
-          class="p-button-text"
         ></button>
         <button
           *ngIf="reviewsExpanded"
           pButton
           label="Show Less Reviews"
+          class="p-button-text text-gray-200"
           (click)="showLessReviews()"
-          class="p-button-text"
         ></button>
       </div>
     </div>
 
     <!-- Recommendations Section -->
-    <div class="recommendations-section mt-6">
-      <h2>Recommendations</h2>
-      <p-carousel
-        [value]="recommendations"
-        [numVisible]="5"
-        [numScroll]="1"
-        [circular]="true"
-        [showIndicators]="false"
-        [showNavigators]="true"
-        previousIcon="pi pi-angle-left"
-        nextIcon="pi pi-angle-right"
-        class="custom-carousel"
-      >
-        <ng-template pTemplate="item" let-movie>
-          <div
-            class="recommendation-card"
-            [routerLink]="['/movie-info', mediaType, movie.id]"
-          >
-            <div class="recommendation-image-container">
-              <img
-                pImage
-                [src]="
-                  movie.poster_path
-                    ? 'https://image.tmdb.org/t/p/w185' + movie.poster_path
-                    : 'assets/placeholder.png'
-                "
-                alt="{{ movie.title }}"
-                class="recommendation-image"
-              />
-            </div>
-            <div class="recommendation-details">
-              <div class="recommendation-title" [title]="movie.title">
-                {{ movie.title }}
-              </div>
-            </div>
+    <h2 class="text-2xl font-semibold mb-4">Recommendations</h2>
+    <p-carousel [value]="recommendations" [numVisible]="5" [circular]="true">
+      <ng-template pTemplate="item" let-rec>
+        <div
+          class="w-32 flex-shrink-0 text-center cursor-pointer"
+          [routerLink]="['/movie-info', mediaType, rec.id]"
+        >
+          <img
+            [src]="
+              rec.poster_path
+                ? 'https://image.tmdb.org/t/p/w185' + rec.poster_path
+                : 'assets/placeholder.png'
+            "
+            alt="{{ rec.title }}"
+            class="w-full h-48 object-cover rounded-lg mb-2"
+          />
+          <div class="text-sm font-medium truncate">
+            {{ rec.title }}
           </div>
-        </ng-template>
-      </p-carousel>
-    </div>
+        </div>
+      </ng-template>
+    </p-carousel>
   </div>
 </p-card>

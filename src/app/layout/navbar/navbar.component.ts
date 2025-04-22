@@ -311,14 +311,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
         routerLink: ['/contact'],
       },
       {
-        label: 'For You',
-        icon: 'pi pi-user',
-        routerLink: ['/for-you'],
-      },
-      {
         label: 'My Movies',
         icon: 'pi pi-video',
         routerLink: ['/my-movies'],
+        visible: this.isLoggedIn,
+      },
+      {
+        label: 'For You',
+        icon: 'pi pi-user',
+        routerLink: ['/for-you'],
         visible: this.isLoggedIn,
       },
     ];
