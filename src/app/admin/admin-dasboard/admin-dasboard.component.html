@@ -1,3 +1,6 @@
+<p-toast></p-toast>
+<p-confirmdialog key="cancelTicket"></p-confirmdialog>
+
 <div class="admin-dashboard p-4 max-w-7xl mx-auto">
   <h1 class="text-3xl mb-4">Admin Dashboard</h1>
 
@@ -62,9 +65,8 @@
             <td>{{ ticket.movie_title }}</td>
             <td>{{ ticket.user_email }}</td>
             <td>
-              {{ ticket.showtime_date | date : "mediumDate" }}&nbsp;{{
-                ticket.showtime_time | slice : 0 : 5
-              }}
+              {{ ticket.showtime_date | date : "mediumDate" }}
+              {{ ticket.showtime_time | slice : 0 : 5 }}
             </td>
             <td>
               <ng-container [ngSwitch]="ticket.payment_status">
@@ -89,7 +91,11 @@
               </ng-container>
             </td>
             <td>
-              <p-button icon="pi pi-eye" styleClass="p-button-sm"></p-button>
+              <p-button
+                icon="pi pi-times"
+                styleClass="p-button-danger p-button-sm"
+                (click)="confirmCancel($event, ticket)"
+              ></p-button>
             </td>
           </tr>
         </ng-template>

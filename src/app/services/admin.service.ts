@@ -34,6 +34,14 @@ export class AdminService {
     );
   }
 
+  cancelTicket(id: number) {
+    return this.http.patch(
+      `${this.apiUrl}admin/tickets/${id}/cancel/`,
+      {},
+      this.getHeaders()
+    );
+  }
+
   updateUser(userId: string, userData: any): Observable<any> {
     return this.http.put(
       `${this.apiUrl}admin/users/${userId}/`,
