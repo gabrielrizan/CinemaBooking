@@ -4,11 +4,18 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { TabViewModule } from 'primeng/tabview';
 import { AdminService } from '../../services/admin.service';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-admin-dasboard',
   standalone: true,
-  imports: [CommonModule, TableModule, ButtonModule, TabViewModule],
+  imports: [
+    CommonModule,
+    TableModule,
+    ButtonModule,
+    TabViewModule,
+    TooltipModule,
+  ],
   templateUrl: './admin-dasboard.component.html',
   styleUrl: './admin-dasboard.component.css',
 })
@@ -32,6 +39,7 @@ export class AdminDasboardComponent implements OnInit {
   loadTickets() {
     this.adminService.getTickets().subscribe((tickets) => {
       this.tickets = tickets;
+      console.log(tickets);
     });
   }
 }

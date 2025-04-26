@@ -86,11 +86,9 @@ class ReservedSeatsView(APIView):
         if not showtime_id:
             return Response({"error": "Missing showtime_id"}, status=status.HTTP_400_BAD_REQUEST)
         
-        # First, check if any tickets exist for this showtime
         all_tickets = Ticket.objects.filter(showtime_id=showtime_id)
         print(f"Found {all_tickets.count()} total tickets for showtime {showtime_id}")
         
-        # Then filter by payment status
         completed_tickets = all_tickets.filter(payment_status='COMPLETED')
         print(f"Found {completed_tickets.count()} completed tickets")
         

@@ -1,9 +1,14 @@
-<div class="admin-dashboard p-4 max-w-7xl max-auto">
+<div class="admin-dashboard p-4 max-w-7xl mx-auto">
   <h1 class="text-3xl mb-4">Admin Dashboard</h1>
 
   <p-tabView>
     <p-tabPanel header="Users">
-      <p-table [value]="users" [paginator]="true" [rows]="10">
+      <p-table
+        [value]="users"
+        [paginator]="true"
+        [rows]="10"
+        tableStyleClass="min-w-full"
+      >
         <ng-template pTemplate="header">
           <tr>
             <th>Email</th>
@@ -13,6 +18,7 @@
             <th>Actions</th>
           </tr>
         </ng-template>
+
         <ng-template pTemplate="body" let-user>
           <tr>
             <td>{{ user.email }}</td>
@@ -35,22 +41,53 @@
     </p-tabPanel>
 
     <p-tabPanel header="Tickets">
-      <p-table [value]="tickets" [paginator]="true" [rows]="10">
+      <p-table
+        [value]="tickets"
+        [paginator]="true"
+        [rows]="10"
+        tableStyleClass="min-w-full"
+      >
         <ng-template pTemplate="header">
           <tr>
             <th>Movie</th>
             <th>User</th>
-            <th>Showtime</th>
-            <th>Payment Status</th>
+            <th>Show time</th>
+            <th>Status</th>
             <th>Actions</th>
           </tr>
         </ng-template>
+
         <ng-template pTemplate="body" let-ticket>
           <tr>
             <td>{{ ticket.movie_title }}</td>
-            <td>{{ ticket.user }}</td>
-            <td>{{ ticket.showtime | date : "medium" }}</td>
-            <td>{{ ticket.payment_status }}</td>
+            <td>{{ ticket.user_email }}</td>
+            <td>
+              {{ ticket.showtime_date | date : "mediumDate" }}&nbsp;{{
+                ticket.showtime_time | slice : 0 : 5
+              }}
+            </td>
+            <td>
+              <ng-container [ngSwitch]="ticket.payment_status">
+                <i
+                  *ngSwitchCase="'COMPLETED'"
+                  class="pi pi-check-circle text-green-500 text-lg"
+                  pTooltip="COMPLETED"
+                  tooltipPosition="top"
+                ></i>
+                <i
+                  *ngSwitchCase="'PENDING'"
+                  class="pi pi-clock text-amber-500 text-lg"
+                  pTooltip="PENDING"
+                  tooltipPosition="top"
+                ></i>
+                <i
+                  *ngSwitchDefault
+                  class="pi pi-times-circle text-red-500 text-lg"
+                  [pTooltip]="ticket.payment_status"
+                  tooltipPosition="top"
+                ></i>
+              </ng-container>
+            </td>
             <td>
               <p-button icon="pi pi-eye" styleClass="p-button-sm"></p-button>
             </td>
