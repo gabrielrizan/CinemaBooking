@@ -52,6 +52,13 @@ class CinemaListView(APIView):
         cinemas = Cinema.objects.all()
         serializer = CinemaSerializer(cinemas, many=True)
         return Response(serializer.data)
+    
+    def post(self, request):
+        serializer = CinemaSerializer(data=request.data)
+        if serializer.is_valid():
+            cinema = serializer.save()
+            return Response(CinemaSerializer(cinema).data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class MovieShowtimesView(APIView):
     def get(self, request, movie_id):
@@ -108,6 +115,13 @@ class CinemaHallByCinemaView(APIView):
         serializer = CinemaHallSerializer(halls, many=True)
         return Response(serializer.data)
     
+    def post(self, request, cinema_id):
+        data = {**request.data, 'cinema': cinema_id}
+        serializer = CinemaHallSerializer(data=data)
+        if serializer.is_valid():
+            hall = serializer.save()
+            return Response(CinemaHallSerializer(hall).data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class SimilarMoviesView(APIView):
     def get(self, request, movie_id):

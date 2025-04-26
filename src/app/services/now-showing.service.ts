@@ -7,6 +7,7 @@ export interface Cinema {
   name: string;
   city: string;
   address: string;
+  halls?: SeatLayout[];
 }
 
 export interface Movie {
@@ -90,5 +91,23 @@ export class NowShowingService {
 
   getNowPlayingMovies(): Observable<Movie[]> {
     return this.http.get<Movie[]>(`${this.apiUrl}/now-playing/`);
+  }
+
+  addCinema(cinema: {
+    name: string;
+    city: string;
+    address: string;
+  }): Observable<Cinema> {
+    return this.http.post<Cinema>(`${this.apiUrl}/cinemas/`, cinema);
+  }
+
+  addCinemaHall(
+    cinemaId: number,
+    hall: { name: string; layout?: any }
+  ): Observable<SeatLayout> {
+    return this.http.post<SeatLayout>(
+      `${this.apiUrl}/cinemas/${cinemaId}/halls/`,
+      hall
+    );
   }
 }

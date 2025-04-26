@@ -353,7 +353,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
           {
             label: 'Cinema Layouts',
             icon: 'pi pi-th-large',
-            routerLink: ['/admin/cinemas/layouts'],
+            routerLink: ['/admin/layout'],
           },
           {
             label: 'Add New Cinema',

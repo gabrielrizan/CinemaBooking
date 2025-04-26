@@ -64,8 +64,9 @@ export const routes: Routes = [
     canActivate: [adminGuard],
   },
   {
-    path: 'layout',
+    path: 'admin/layout',
     component: LayoutCreationComponent,
+    canActivate: [adminGuard],
   },
   {
     path: 'chatbot',

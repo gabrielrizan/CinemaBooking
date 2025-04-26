@@ -1,36 +1,58 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { TabViewModule } from 'primeng/tabview';
+import { DialogModule } from 'primeng/dialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { CardModule } from 'primeng/card';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { AdminService } from '../../services/admin.service';
+import {
+  NowShowingService,
+  Cinema,
+  SeatLayout,
+} from '../../services/now-showing.service';
 
 @Component({
   selector: 'app-admin-dasboard',
   standalone: true,
   imports: [
     CommonModule,
+    FormsModule,
     TableModule,
     ButtonModule,
     TabViewModule,
+    DialogModule,
+    InputTextModule,
+    CardModule,
     ConfirmDialog,
     ToastModule,
     TooltipModule,
   ],
   templateUrl: './admin-dasboard.component.html',
-  styleUrl: './admin-dasboard.component.css',
+  styleUrls: ['./admin-dasboard.component.css'],
   providers: [ConfirmationService, MessageService],
 })
 export class AdminDasboardComponent implements OnInit {
   users: any[] = [];
   tickets: any[] = [];
+  cinemas: Array<Cinema & { halls: SeatLayout[] }> = [];
+
+  cinemaDialogVisible = false;
+  newCinema: Partial<Cinema> = { name: '', city: '', address: '' };
+
+  hallDialogVisible = false;
+  cinemaForNewHall: (Cinema & { halls: SeatLayout[] }) | null = null;
+  newHallName = '';
 
   constructor(
     private adminService: AdminService,
+    private nowShowing: NowShowingService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService
   ) {}
@@ -38,19 +60,28 @@ export class AdminDasboardComponent implements OnInit {
   ngOnInit() {
     this.loadUsers();
     this.loadTickets();
+    this.loadCinemas();
   }
 
   loadUsers() {
-    this.adminService.getUsers().subscribe((users) => {
-      console.log(users);
-      this.users = users;
-    });
+    this.adminService.getUsers().subscribe((users) => (this.users = users));
   }
 
   loadTickets() {
     this.adminService
       .getTickets()
       .subscribe((tickets) => (this.tickets = tickets));
+  }
+
+  loadCinemas() {
+    this.nowShowing.getCinemas().subscribe((list) => {
+      this.cinemas = list.map((c) => ({ ...c, halls: [] }));
+      this.cinemas.forEach((cinema) =>
+        this.nowShowing
+          .getCinemaHallsByCinema(cinema.id)
+          .subscribe((halls) => (cinema.halls = halls))
+      );
+    });
   }
 
   confirmCancel(event: Event, ticket: any) {
@@ -65,10 +96,7 @@ export class AdminDasboardComponent implements OnInit {
         severity: 'secondary',
         outlined: true,
       },
-      acceptButtonProps: {
-        label: 'Cancel Ticket',
-        severity: 'danger',
-      },
+      acceptButtonProps: { label: 'Cancel Ticket', severity: 'danger' },
       accept: () => {
         this.adminService.cancelTicket(ticket.id).subscribe(() => {
           ticket.payment_status = 'CANCELLED';
@@ -113,5 +141,33 @@ export class AdminDasboardComponent implements OnInit {
         });
       },
     });
+  }
+
+  createCinema() {
+    this.newCinema = { name: '', city: '', address: '' };
+    this.cinemaDialogVisible = true;
+  }
+
+  saveCinema() {
+    this.nowShowing.addCinema(this.newCinema as Cinema).subscribe((cinema) => {
+      this.cinemas.push({ ...cinema, halls: [] });
+      this.cinemaDialogVisible = false;
+    });
+  }
+
+  createHall(cinema: Cinema & { halls: SeatLayout[] }) {
+    this.cinemaForNewHall = cinema;
+    this.newHallName = '';
+    this.hallDialogVisible = true;
+  }
+
+  saveHall() {
+    if (!this.cinemaForNewHall) return;
+    this.nowShowing
+      .addCinemaHall(this.cinemaForNewHall.id, { name: this.newHallName })
+      .subscribe((hall) => {
+        this.cinemaForNewHall!.halls.push(hall);
+        this.hallDialogVisible = false;
+      });
   }
 }
