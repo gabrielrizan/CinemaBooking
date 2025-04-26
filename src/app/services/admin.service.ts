@@ -56,4 +56,12 @@ export class AdminService {
       this.getHeaders()
     );
   }
+
+  promoteUser(id: number, makeAdmin: boolean) {
+    return this.http.patch(
+      `${this.apiUrl}admin/users/${id}/`,
+      { is_staff: makeAdmin },
+      this.getHeaders()
+    );
+  }
 }

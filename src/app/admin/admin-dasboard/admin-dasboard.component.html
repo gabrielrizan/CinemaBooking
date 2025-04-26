@@ -1,5 +1,6 @@
 <p-toast></p-toast>
 <p-confirmdialog key="cancelTicket"></p-confirmdialog>
+<p-confirmdialog key="promoteUser"></p-confirmdialog>
 
 <div class="admin-dashboard p-4 max-w-7xl mx-auto">
   <h1 class="text-3xl mb-4">Admin Dashboard</h1>
@@ -17,7 +18,7 @@
             <th>Email</th>
             <th>First Name</th>
             <th>Last Name</th>
-            <th>Status</th>
+            <th>Role</th>
             <th>Actions</th>
           </tr>
         </ng-template>
@@ -27,15 +28,12 @@
             <td>{{ user.email }}</td>
             <td>{{ user.firstname }}</td>
             <td>{{ user.lastname }}</td>
-            <td>{{ user.is_active ? "Active" : "Inactive" }}</td>
+            <td>{{ user.is_staff ? "Moderator" : "User" }}</td>
             <td>
               <p-button
                 icon="pi pi-pencil"
                 styleClass="p-button-sm mr-2"
-              ></p-button>
-              <p-button
-                icon="pi pi-trash"
-                styleClass="p-button-danger p-button-sm"
+                (click)="confirmPromote($event, user)"
               ></p-button>
             </td>
           </tr>

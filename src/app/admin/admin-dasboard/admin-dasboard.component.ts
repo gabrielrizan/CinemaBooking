@@ -41,7 +41,10 @@ export class AdminDasboardComponent implements OnInit {
   }
 
   loadUsers() {
-    this.adminService.getUsers().subscribe((users) => (this.users = users));
+    this.adminService.getUsers().subscribe((users) => {
+      console.log(users);
+      this.users = users;
+    });
   }
 
   loadTickets() {
@@ -82,6 +85,31 @@ export class AdminDasboardComponent implements OnInit {
           summary: 'Aborted',
           detail: 'Cancellation aborted',
           life: 3000,
+        });
+      },
+    });
+  }
+
+  confirmPromote(event: Event, user: any) {
+    const makeAdmin = !user.is_staff;
+    this.confirmationService.confirm({
+      key: 'promoteUser',
+      target: event.target as EventTarget,
+      message: makeAdmin
+        ? `Promote ${user.email} to Admin?`
+        : `Revoke Admin from ${user.email}?`,
+      header: 'Change Role',
+      icon: 'pi pi-user-edit',
+      rejectButtonProps: { label: 'No', severity: 'secondary', outlined: true },
+      acceptButtonProps: { label: 'Yes', severity: 'success' },
+      accept: () => {
+        this.adminService.promoteUser(user.id, makeAdmin).subscribe(() => {
+          user.is_staff = makeAdmin;
+          this.messageService.add({
+            severity: 'info',
+            summary: 'Role Updated',
+            detail: `${user.email} is now ${makeAdmin ? 'Admin' : 'User'}`,
+          });
         });
       },
     });
