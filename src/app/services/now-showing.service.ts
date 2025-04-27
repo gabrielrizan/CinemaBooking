@@ -110,4 +110,8 @@ export class NowShowingService {
       hall
     );
   }
+
+  updateMovie(movieId: number, data: Partial<{ nowPlaying: boolean }>) {
+    return this.http.patch(`${this.apiUrl}/movies/${movieId}/`, data);
+  }
 }

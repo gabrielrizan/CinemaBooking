@@ -18,25 +18,40 @@
           <span class="genre">{{ movie.genre }}</span>
           <span class="runtime">{{ movie.duration }}m</span>
         </div>
-        <p>{{ movie.description }}</p>
+        <p>{{ shortDescription }}</p>
         <p><strong>Actors:</strong> {{ movie.actors.join(", ") }}</p>
         <p><strong>Director:</strong> {{ movie.director }}</p>
       </div>
       <div class="buttons">
-        <button
-          pButton
-          type="button"
-          label="Watch Trailer"
-          icon="pi pi-play"
-          (click)="watchTrailer()"
-        ></button>
-        <button
-          pButton
-          type="button"
-          label="Buy Ticket"
-          icon="pi pi-ticket"
-          (click)="buyTicket()"
-        ></button>
+        <ng-container *ngIf="!isAdmin">
+          <button
+            pButton
+            type="button"
+            label="Watch Trailer"
+            icon="pi pi-play"
+            (click)="watchTrailer()"
+          ></button>
+          <button
+            pButton
+            type="button"
+            label="Buy Ticket"
+            icon="pi pi-ticket"
+            (click)="buyTicket()"
+          ></button>
+        </ng-container>
+
+        <ng-container *ngIf="isAdmin">
+          <button
+            pButton
+            type="button"
+            label="{{
+              movie.nowPlaying ? 'Remove from cinemas' : 'Put back in cinemas'
+            }}"
+            icon="pi pi-sync"
+            class="p-button-danger"
+            (click)="onToggle()"
+          ></button>
+        </ng-container>
       </div>
     </div>
   </div>

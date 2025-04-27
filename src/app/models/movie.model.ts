@@ -16,6 +16,7 @@ export interface HomepageMovie {
   backgroundUrl: string;
   ageRating: string;
   trailerUrl?: string;
+  nowPlaying?: boolean;
 }
 
 export interface ApiMovie {

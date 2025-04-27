@@ -19,6 +19,8 @@ import {
   Cinema,
   SeatLayout,
 } from '../../services/now-showing.service';
+import { LayoutCreationComponent } from '../layout-creation/layout-creation.component';
+import { MovieCardComponent } from '../../movie-card/movie-card.component';
 
 interface SavedLayout {
   id: string;
@@ -45,6 +47,8 @@ interface SavedLayout {
     ToastModule,
     TooltipModule,
     DropdownModule,
+    LayoutCreationComponent,
+    MovieCardComponent,
   ],
   templateUrl: './admin-dasboard.component.html',
   styleUrls: ['./admin-dasboard.component.css'],
@@ -53,6 +57,7 @@ interface SavedLayout {
 export class AdminDasboardComponent implements OnInit {
   users: any[] = [];
   tickets: any[] = [];
+  movies: any[] = [];
   cinemas: Array<Cinema & { halls: SeatLayout[] }> = [];
 
   // dialogs
@@ -71,12 +76,15 @@ export class AdminDasboardComponent implements OnInit {
     private nowShowing: NowShowingService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService
-  ) {}
+  ) {
+    
+  }
 
   ngOnInit() {
     this.loadUsers();
     this.loadTickets();
     this.loadCinemas();
+    this.loadNowPlaying();
 
     // ←── LOAD your saved layouts from localStorage
     const stored = localStorage.getItem('savedLayouts');
@@ -99,6 +107,27 @@ export class AdminDasboardComponent implements OnInit {
           .getCinemaHallsByCinema(cinema.id)
           .subscribe((h) => (cinema.halls = h))
       );
+    });
+  }
+
+  loadNowPlaying() {
+    this.nowShowing.getNowPlayingMovies().subscribe((data: any[]) => {
+      this.movies = data.map((movie) => ({
+        title: movie.title,
+        description: movie.synopsis,
+        imageUrl: movie.poster,
+        actors: movie.cast.split(',').map((a: string) => a.trim()),
+        rating: +movie.rating / 10,
+        trailerUrl: movie.trailer,
+        movieId: movie.id,
+        year: new Date(movie.release_date).getFullYear(),
+        director: movie.director,
+        duration: movie.runtime,
+        genre: movie.genre,
+        backgroundUrl: movie.backgroundUrl || 'default-background.jpg',
+        ageRating: movie.ageRating || 'PG-13',
+        nowPlaying: movie.nowPlaying,
+      }));
     });
   }
 
@@ -205,5 +234,11 @@ export class AdminDasboardComponent implements OnInit {
         this.cinemaForNewHall!.halls.push(hall);
         this.hallDialogVisible = false;
       });
+  }
+
+  toggleNowPlaying(movieId: number, current: boolean) {
+    this.nowShowing
+      .updateMovie(movieId, { nowPlaying: !current })
+      .subscribe(() => this.loadNowPlaying());
   }
 }

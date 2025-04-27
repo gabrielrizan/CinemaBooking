@@ -99,7 +99,7 @@
     </div>
 
     <!-- Layout Dropdown -->
-    <div class="field h-48">
+    <div class="field h-72">
       <label for="layoutPicker" class="block text-sm font-medium"
         >Choose Layout</label
       >
@@ -126,7 +126,7 @@
   </ng-template>
 </p-dialog>
 
-<div class="admin-dashboard p-4 max-w-7xl mx-auto space-y-6">
+<div class="admin-dashboard p-4 max-w-7xl mx-auto">
   <h1 class="text-3xl font-bold">Admin Dashboard</h1>
 
   <p-tabView class="bg-transparent">
@@ -268,6 +268,21 @@
             </ul>
           </p-card>
         </ng-container>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="Layouts">
+      <app-layout-creation></app-layout-creation>
+    </p-tabPanel>
+    <p-tabPanel header="Movies">
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+      >
+        <ng-container *ngFor="let mv of movies">
+          <app-movie-card [movie]="mv" [isAdmin]="true"></app-movie-card>
+        </ng-container>
+        <div *ngIf="movies.length === 0" class="col-span-full text-center p-8">
+          <p>No movies are currently marked as “Now Playing.”</p>
+        </div>
       </div>
     </p-tabPanel>
   </p-tabView>

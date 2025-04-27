@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { HomepageMovie } from '../models/movie.model';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -23,10 +23,12 @@ import { DialogModule } from 'primeng/dialog';
     DialogModule,
   ],
   templateUrl: './movie-card.component.html',
-  styleUrls: ['./movie-card.component.css']
+  styleUrls: ['./movie-card.component.css'],
 })
 export class MovieCardComponent {
   @Input() movie!: HomepageMovie;
+  @Input() isAdmin = false;
+  @Output() toggle = new EventEmitter<number>();
 
   wordLimit = 3000;
   isExpanded = true;
@@ -62,7 +64,15 @@ export class MovieCardComponent {
   }
 
   getStars(rating: number): number[] {
-    return Array(10).fill(0).map((_, i) => i + 1);
+    return Array(10)
+      .fill(0)
+      .map((_, i) => i + 1);
+  }
+
+  get shortDescription() {
+    return this.movie.description.length > 270
+      ? this.movie.description.slice(0, 270) + '…'
+      : this.movie.description;
   }
 
   getSanitizedTrailerUrl(): SafeResourceUrl {
@@ -73,5 +83,9 @@ export class MovieCardComponent {
       url = `https://www.youtube.com/embed/${videoId}`;
     }
     return this.sanitizer.bypassSecurityTrustResourceUrl(url || '');
+  }
+
+  onToggle() {
+    this.toggle.emit(Number(this.movie.movieId));
   }
 }
