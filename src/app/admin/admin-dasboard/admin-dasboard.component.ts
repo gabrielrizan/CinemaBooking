@@ -10,13 +10,24 @@ import { CardModule } from 'primeng/card';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
+import { DropdownModule } from 'primeng/dropdown';
 import { ConfirmationService, MessageService } from 'primeng/api';
+
 import { AdminService } from '../../services/admin.service';
 import {
   NowShowingService,
   Cinema,
   SeatLayout,
 } from '../../services/now-showing.service';
+
+interface SavedLayout {
+  id: string;
+  name: string;
+  rows: number;
+  layout: any;
+  seatsPerRow: number[];
+  createdAt: string;
+}
 
 @Component({
   selector: 'app-admin-dasboard',
@@ -33,6 +44,7 @@ import {
     ConfirmDialog,
     ToastModule,
     TooltipModule,
+    DropdownModule,
   ],
   templateUrl: './admin-dasboard.component.html',
   styleUrls: ['./admin-dasboard.component.css'],
@@ -43,12 +55,16 @@ export class AdminDasboardComponent implements OnInit {
   tickets: any[] = [];
   cinemas: Array<Cinema & { halls: SeatLayout[] }> = [];
 
+  // dialogs
   cinemaDialogVisible = false;
   newCinema: Partial<Cinema> = { name: '', city: '', address: '' };
 
   hallDialogVisible = false;
   cinemaForNewHall: (Cinema & { halls: SeatLayout[] }) | null = null;
   newHallName = '';
+  // <-- NEW dropdown state
+  savedLayouts: SavedLayout[] = [];
+  selectedLayoutId: string | null = null;
 
   constructor(
     private adminService: AdminService,
@@ -61,16 +77,18 @@ export class AdminDasboardComponent implements OnInit {
     this.loadUsers();
     this.loadTickets();
     this.loadCinemas();
+
+    // ←── LOAD your saved layouts from localStorage
+    const stored = localStorage.getItem('savedLayouts');
+    this.savedLayouts = stored ? JSON.parse(stored) : [];
   }
 
   loadUsers() {
-    this.adminService.getUsers().subscribe((users) => (this.users = users));
+    this.adminService.getUsers().subscribe((u) => (this.users = u));
   }
 
   loadTickets() {
-    this.adminService
-      .getTickets()
-      .subscribe((tickets) => (this.tickets = tickets));
+    this.adminService.getTickets().subscribe((t) => (this.tickets = t));
   }
 
   loadCinemas() {
@@ -79,7 +97,7 @@ export class AdminDasboardComponent implements OnInit {
       this.cinemas.forEach((cinema) =>
         this.nowShowing
           .getCinemaHallsByCinema(cinema.id)
-          .subscribe((halls) => (cinema.halls = halls))
+          .subscribe((h) => (cinema.halls = h))
       );
     });
   }
@@ -158,14 +176,32 @@ export class AdminDasboardComponent implements OnInit {
   createHall(cinema: Cinema & { halls: SeatLayout[] }) {
     this.cinemaForNewHall = cinema;
     this.newHallName = '';
+    this.selectedLayoutId = null; // ← reset dropdown
     this.hallDialogVisible = true;
   }
 
   saveHall() {
     if (!this.cinemaForNewHall) return;
+
+    // 1️⃣ find the selected layout object
+    const chosen = this.savedLayouts.find(
+      (l) => l.id === this.selectedLayoutId
+    );
+    if (!chosen) return; // nothing selected
+
+    // 2️⃣ build payload with the full SavedLayout
+    const payload: any = {
+      name: this.newHallName,
+      layout: chosen, // <-- entire SavedLayout
+      rows: chosen.rows,
+      seatsPerRow: chosen.seatsPerRow,
+    };
+
+    // 3️⃣ POST to your API
     this.nowShowing
-      .addCinemaHall(this.cinemaForNewHall.id, { name: this.newHallName })
+      .addCinemaHall(this.cinemaForNewHall.id, payload)
       .subscribe((hall) => {
+        // push the newly created CinemaHall onto the UI list
         this.cinemaForNewHall!.halls.push(hall);
         this.hallDialogVisible = false;
       });

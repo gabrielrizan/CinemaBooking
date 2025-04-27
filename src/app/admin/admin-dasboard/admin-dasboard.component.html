@@ -33,15 +33,89 @@
   </ng-template>
 </p-dialog>
 
-<p-dialog header="New Hall" [(visible)]="hallDialogVisible" [modal]="true">
-  <div>
+<p-dialog
+  header="New Cinema"
+  [(visible)]="cinemaDialogVisible"
+  [modal]="true"
+  [closeOnEscape]="true"
+  [dismissableMask]="true"
+  [blockScroll]="true"
+  [appendTo]="'body'"
+  [focusTrap]="true"
+>
+  <div class="p-dialog-content space-y-3">
     <input
       pInputText
-      [(ngModel)]="newHallName"
-      placeholder="Hall Name"
+      [(ngModel)]="newCinema.name"
+      placeholder="Name"
+      class="w-full"
+    />
+    <input
+      pInputText
+      [(ngModel)]="newCinema.city"
+      placeholder="City"
+      class="w-full"
+    />
+    <input
+      pInputText
+      [(ngModel)]="newCinema.address"
+      placeholder="Address"
       class="w-full"
     />
   </div>
+  <ng-template pTemplate="footer">
+    <p-button
+      label="Cancel"
+      class="p-button-text"
+      (click)="cinemaDialogVisible = false"
+    ></p-button>
+    <p-button label="Save" (click)="saveCinema()"></p-button>
+  </ng-template>
+</p-dialog>
+
+<!-- Add Hall Dialog (styled like your Add Showing example) -->
+<p-dialog
+  header="Add New Hall"
+  [(visible)]="hallDialogVisible"
+  [modal]="true"
+  [closeOnEscape]="true"
+  [dismissableMask]="true"
+  [blockScroll]="true"
+  [appendTo]="'body'"
+  [focusTrap]="true"
+  [style]="{ width: '30vw' }"
+>
+  <div class="p-dialog-content space-y-4">
+    <!-- Hall Name -->
+    <div class="field">
+      <label for="hallName" class="block text-sm font-medium">Hall Name</label>
+      <input
+        id="hallName"
+        pInputText
+        [(ngModel)]="newHallName"
+        placeholder="Enter hall name"
+        class="w-full"
+      />
+    </div>
+
+    <!-- Layout Dropdown -->
+    <div class="field h-48">
+      <label for="layoutPicker" class="block text-sm font-medium"
+        >Choose Layout</label
+      >
+      <p-dropdown
+        id="layoutPicker"
+        [options]="savedLayouts"
+        optionLabel="name"
+        optionValue="id"
+        placeholder="Select layout…"
+        [(ngModel)]="selectedLayoutId"
+        class="w-full"
+        [panelStyle]="{ width: '100%' }"
+      ></p-dropdown>
+    </div>
+  </div>
+
   <ng-template pTemplate="footer">
     <p-button
       label="Cancel"
@@ -50,24 +124,6 @@
     ></p-button>
     <p-button label="Save" (click)="saveHall()"></p-button>
   </ng-template>
-</p-dialog>
-<p-dialog header="New Hall" [(visible)]="hallDialogVisible" [modal]="true">
-  <div>
-    <input
-      pInputText
-      [(ngModel)]="newHallName"
-      placeholder="Hall Name"
-      class="w-full"
-    />
-  </div>
-  <p-footer>
-    <p-button
-      label="Cancel"
-      class="p-button-text"
-      (click)="hallDialogVisible = false"
-    ></p-button>
-    <p-button label="Save" (click)="saveHall()"></p-button>
-  </p-footer>
 </p-dialog>
 
 <div class="admin-dashboard p-4 max-w-7xl mx-auto space-y-6">
@@ -194,7 +250,6 @@
                 <span class="text-lg font-semibold">{{ cinema.name }}</span>
                 <button
                   pButton
-                  type="button"
                   icon="pi pi-plus"
                   class="p-button-rounded p-button-text"
                   (click)="createHall(cinema)"

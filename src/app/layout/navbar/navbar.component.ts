@@ -1,10 +1,9 @@
 import {
   Component,
   OnInit,
-  ViewChild,
   OnDestroy,
+  ViewChild,
   ElementRef,
-  AfterViewInit,
 } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { MenubarModule } from 'primeng/menubar';
@@ -20,21 +19,22 @@ import { DialogModule } from 'primeng/dialog';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { FormsModule } from '@angular/forms';
 import { Subject, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+
 import { MultiSearchService } from '../../multi-search.service';
 import { SearchCardComponent } from '../../search-card/search-card.component';
 import { BigsearchComponent } from '../../bigsearch/bigsearch.component';
-import { of } from 'rxjs';
 import { SharedService } from '../../shared.service';
 import { LoginComponent } from '../../auth/login/login.component';
 import { AuthService } from '../../services/auth.service';
 import { Genres, HomepageMovie, SearchMedia } from '../../models/movie.model';
-import { Router, RouterLink, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { TooltipModule } from 'primeng/tooltip';
 import { ChatbotComponent } from '../../chatbot/chatbot.component';
 
 @Component({
   selector: 'app-navbar',
+  standalone: true,
   imports: [
     CommonModule,
     FormsModule,
@@ -59,28 +59,26 @@ import { ChatbotComponent } from '../../chatbot/chatbot.component';
 })
 export class NavbarComponent implements OnInit, OnDestroy {
   movies: SearchMedia[] = [];
-  loading: boolean = true;
+  loading = false;
   error: string | null = null;
-  searchTerm: string = '';
-  isAdminView: boolean = true;
-  items: MenuItem[] | undefined;
+  searchTerm = '';
+  items: MenuItem[] = [];
   isLoggedIn = false;
-  isSearchActive: boolean = false;
-  visible: boolean = false;
-  filteredMovies: HomepageMovie[] = [];
+  isSearchActive = false;
   movieGenres: Genres[] = [];
   tvGenres: Genres[] = [];
-  isChatOpen: boolean = false;
-
-  @ViewChild('op') overlayPanel: OverlayPanel | undefined;
-  @ViewChild('searchInput') searchInput!: ElementRef;
-  @ViewChild('avatarEl', { static: false }) avatarEl!: ElementRef;
-  @ViewChild('loginComponent') loginComponent!: LoginComponent;
+  userFirstName = '';
+  isAdmin = false;
+  isDarkMode = true;
+  isChatOpen = false;
 
   private searchSubject = new Subject<string>();
-  userFirstName: string = '';
-  private authSubscription!: Subscription;
-  isAdmin: boolean = false;
+  private authSub!: Subscription;
+  private adminViewSub!: Subscription;
+
+  @ViewChild('overlay') overlayPanel?: OverlayPanel;
+  @ViewChild('searchInput') searchInput!: ElementRef;
+  @ViewChild('loginComponent') loginComponent!: LoginComponent;
 
   constructor(
     private movieService: MultiSearchService,
@@ -89,103 +87,46 @@ export class NavbarComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.authSubscription = this.authService.isLoggedIn$.subscribe(
-      (isLoggedIn) => {
-        this.isLoggedIn = isLoggedIn;
-        if (isLoggedIn) {
-          // Get user details when logged in
-          this.authService.getUserDetails().subscribe({
-            next: (user) => {
-              this.userFirstName = user.firstname;
-              this.isAdmin = user.is_staff === true;
-              this.updateMenuItems(); // Update menu items when admin status changes
-            },
-            error: (error) => {
-              console.error('Error loading user details:', error);
-            },
-          });
-        } else {
-          // Reset admin status and menu items when logged out
-          this.isAdmin = false;
-          this.userFirstName = '';
+    // 1) respond to login/logout
+    this.authSub = this.authService.isLoggedIn$.subscribe((loggedIn) => {
+      this.isLoggedIn = loggedIn;
+      if (loggedIn) {
+        this.authService.getUserDetails().subscribe((user) => {
+          this.userFirstName = user.firstname;
+          this.isAdmin = user.is_staff === true;
+          // if admin and not already in adminView, toggle on
+          if (this.isAdmin && !this.authService.isAdminView()) {
+            this.authService.toggleAdminView();
+          }
           this.updateMenuItems();
-        }
+        });
+      } else {
+        this.isAdmin = false;
+        this.userFirstName = '';
+        this.updateMenuItems();
       }
-    );
+    });
 
-    this.items = [
-      {
-        label: 'Home',
-        icon: 'pi pi-home',
-        routerLink: ['/home'],
-      },
-      {
-        label: 'Movies',
-        icon: 'pi pi-video',
-        items: [
-          {
-            label: 'Now Showing',
-            icon: 'pi pi-play',
-            routerLink: ['/movies/now-showing'],
-          },
-          {
-            label: 'Coming Soon',
-            icon: 'pi pi-clock',
-            routerLink: ['/movies/coming-soon'],
-          },
-          {
-            label: 'Top Rated',
-            icon: 'pi pi-thumbs-up',
-            routerLink: ['/movies/top-rated'],
-          },
-        ],
-      },
-      {
-        label: 'Snacks',
-        icon: 'pi pi-shopping-bag',
-        items: [
-          {
-            label: 'Popcorn',
-            icon: 'pi pi-shopping-cart',
-            routerLink: ['/snacks/popcorn'],
-          },
-          {
-            label: 'Drinks',
-            icon: 'pi pi-glass-martini',
-            routerLink: ['/snacks/drinks'],
-          },
-          {
-            label: 'Combos',
-            icon: 'pi pi-box',
-            routerLink: ['/snacks/combos'],
-          },
-        ],
-      },
-      {
-        label: 'My Movies',
-        icon: 'pi pi-video',
-        routerLink: ['/my-movies'],
-        visible: this.isLoggedIn,
-      },
-    ];
+    // 2) respond to adminView toggle so switch-to-regular works
+    this.adminViewSub = this.authService.adminView$.subscribe((_) => {
+      this.updateMenuItems();
+    });
 
+    // initial menu
+    this.updateMenuItems();
+
+    // search handling
     this.searchSubject
-      .pipe(
-        debounceTime(300), // Wait for 300ms pause in events
-        distinctUntilChanged() // Ignore if next search term is same as previous
-      )
-      .subscribe((query) => {
-        if (!query.trim()) {
-          this.movies = []; // Clear the results if the query is empty
+      .pipe(debounceTime(300), distinctUntilChanged())
+      .subscribe((q) => {
+        if (!q.trim()) {
+          this.movies = [];
           return;
         }
-
         this.loading = true;
-        this.error = null;
-
-        this.movieService.searchMovies(query).subscribe({
-          next: (response) => {
-            this.movies = response.results || []; // Handle the API response and extract results
+        this.movieService.searchMovies(q).subscribe({
+          next: (r) => {
+            this.movies = r.results || [];
             this.loading = false;
           },
           error: () => {
@@ -195,74 +136,27 @@ export class NavbarComponent implements OnInit, OnDestroy {
         });
       });
 
-    this.movieService.getMovieGenres().subscribe((data) => {
-      this.movieGenres = data;
-    });
+    // load genres
+    this.movieService.getMovieGenres().subscribe((g) => (this.movieGenres = g));
+    this.movieService.getTvGenres().subscribe((g) => (this.tvGenres = g));
 
-    this.movieService.getTvGenres().subscribe((data) => {
-      this.tvGenres = data;
-    });
-
-    this.sharedService.searchBlur$.subscribe(() => {
-      this.isSearchActive = false;
-    });
-
-    this.authService.isLoggedIn$.subscribe((loggedIn) => {
-      this.isLoggedIn = loggedIn;
-      if (loggedIn) {
-        this.loadUserDetails();
-      } else {
-        this.userFirstName = '';
-      }
-    });
-
-    // Add subscription to check if user is admin
-    this.authService.getUserDetails().subscribe({
-      next: (user) => {
-        this.userFirstName = user.firstname;
-        this.isAdmin = user.is_staff === true;
-        this.updateMenuItems();
-      },
-      error: (error) => {
-        console.error('Error loading user details:', error);
-      },
-    });
-
-    // Subscribe to admin view changes
-    this.authService.adminView$.subscribe((isAdminView) => {
-      this.isAdminView = isAdminView;
-      this.updateMenuItems();
-    });
+    // shared blur
+    this.sharedService.searchBlur$.subscribe(
+      () => (this.isSearchActive = false)
+    );
   }
 
-  toggleAdminView() {
-    this.isAdminView = !this.isAdminView;
-    this.updateMenuItems();
-  }
-
-  private loadUserDetails() {
-    this.authService.getUserDetails().subscribe({
-      next: (user) => {
-        this.userFirstName = user.firstname;
-        // Update menu items to show user name
-        this.updateMenuItems();
-      },
-      error: (error) => {
-        console.error('Error loading user details:', error);
-      },
-    });
+  ngOnDestroy() {
+    this.authSub.unsubscribe();
+    this.adminViewSub.unsubscribe();
   }
 
   private updateMenuItems() {
-    const baseItems = [
-      {
-        label: 'Home',
-        icon: 'pi pi-home',
-        routerLink: ['/home'],
-      },
+    const base: MenuItem[] = [
+      { label: 'Home', icon: 'pi pi-home', routerLink: ['/home'] },
     ];
 
-    const regularItems = [
+    const regular: MenuItem[] = [
       {
         label: 'Movies',
         icon: 'pi pi-video',
@@ -306,25 +200,14 @@ export class NavbarComponent implements OnInit, OnDestroy {
         ],
       },
       {
-        label: 'Contact',
-        icon: 'pi pi-envelope',
-        routerLink: ['/contact'],
-      },
-      {
         label: 'My Movies',
         icon: 'pi pi-video',
         routerLink: ['/my-movies'],
         visible: this.isLoggedIn,
       },
-      {
-        label: 'For You',
-        icon: 'pi pi-user',
-        routerLink: ['/for-you'],
-        visible: this.isLoggedIn,
-      },
     ];
 
-    const adminItems = [
+    const admin: MenuItem[] = [
       {
         label: 'Dashboard',
         icon: 'pi pi-chart-bar',
@@ -386,51 +269,33 @@ export class NavbarComponent implements OnInit, OnDestroy {
     ];
 
     this.items = [
-      ...baseItems,
-      ...(this.isAdmin && this.authService.isAdminView()
-        ? adminItems
-        : regularItems),
+      ...base,
+      ...(this.isAdmin && this.authService.isAdminView() ? admin : regular),
     ];
   }
 
-  logout() {
-    this.authService.logout(); // Use the service's logout method
-    this.overlayPanel?.hide();
+  onSearchChange(e: Event) {
+    this.searchSubject.next((e.target as HTMLInputElement).value);
   }
 
-  onSearchFocus() {
-    this.isSearchActive = true;
-    // Focus the expanded search input after dialog opens
-    setTimeout(() => {
-      if (this.searchInput?.nativeElement) {
-        this.searchInput.nativeElement.focus();
-      }
-    }, 0);
-  }
-
-  onSearchBlur() {
-    this.isSearchActive = false;
-  }
-
-  onSearchChange(event: Event) {
-    const query = (event.target as HTMLInputElement).value.toLowerCase();
-    this.searchSubject.next(query); // Emit the query to the searchSubject
-  }
-  isDarkMode: boolean = true;
-
-  toggleDarkMode(): void {
+  toggleDarkMode() {
     this.isDarkMode = !this.isDarkMode;
-    const element = document.querySelector('html');
-    element?.classList.toggle('dark-mode');
+    document.documentElement.classList.toggle('dark-mode');
   }
 
   toggleChat() {
     this.isChatOpen = !this.isChatOpen;
   }
 
-  ngOnDestroy() {
-    if (this.authSubscription) {
-      this.authSubscription.unsubscribe();
-    }
+  logout() {
+    this.authService.logout();
+    this.overlayPanel?.hide();
+  }
+
+  onSearchFocus() {
+    this.isSearchActive = true;
+  }
+  onSearchBlur() {
+    this.isSearchActive = false;
   }
 }
