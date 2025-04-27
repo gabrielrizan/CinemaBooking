@@ -21,6 +21,7 @@ import {
 } from '../../services/now-showing.service';
 import { LayoutCreationComponent } from '../layout-creation/layout-creation.component';
 import { MovieCardComponent } from '../../movie-card/movie-card.component';
+import { AddMovieComponent } from '../add-movie/add-movie.component';
 
 interface SavedLayout {
   id: string;
@@ -49,6 +50,7 @@ interface SavedLayout {
     DropdownModule,
     LayoutCreationComponent,
     MovieCardComponent,
+    AddMovieComponent,
   ],
   templateUrl: './admin-dasboard.component.html',
   styleUrls: ['./admin-dasboard.component.css'],
@@ -58,7 +60,9 @@ export class AdminDasboardComponent implements OnInit {
   users: any[] = [];
   tickets: any[] = [];
   movies: any[] = [];
+  allMovies: any[] = [];
   cinemas: Array<Cinema & { halls: SeatLayout[] }> = [];
+  addMovieVisible = false;
 
   // dialogs
   cinemaDialogVisible = false;
@@ -76,15 +80,14 @@ export class AdminDasboardComponent implements OnInit {
     private nowShowing: NowShowingService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService
-  ) {
-    
-  }
+  ) {}
 
   ngOnInit() {
     this.loadUsers();
     this.loadTickets();
     this.loadCinemas();
     this.loadNowPlaying();
+    this.loadAllMovies();
 
     // ←── LOAD your saved layouts from localStorage
     const stored = localStorage.getItem('savedLayouts');
@@ -107,6 +110,28 @@ export class AdminDasboardComponent implements OnInit {
           .getCinemaHallsByCinema(cinema.id)
           .subscribe((h) => (cinema.halls = h))
       );
+    });
+  }
+
+  loadAllMovies() {
+    this.nowShowing.getMovies().subscribe((data: any[]) => {
+      console.log('All the movies', data);
+      this.allMovies = data.map((movie) => ({
+        title: movie.title,
+        description: movie.synopsis,
+        imageUrl: movie.poster,
+        actors: movie.cast.split(',').map((a: string) => a.trim()),
+        rating: +movie.rating / 10,
+        trailerUrl: movie.trailer,
+        movieId: movie.id,
+        year: new Date(movie.release_date).getFullYear(),
+        director: movie.director,
+        duration: movie.runtime,
+        genre: movie.genre,
+        backgroundUrl: movie.backgroundUrl || 'default-background.jpg',
+        ageRating: movie.ageRating || 'PG-13',
+        nowPlaying: movie.nowPlaying,
+      }));
     });
   }
 
@@ -212,16 +237,14 @@ export class AdminDasboardComponent implements OnInit {
   saveHall() {
     if (!this.cinemaForNewHall) return;
 
-    // 1️⃣ find the selected layout object
     const chosen = this.savedLayouts.find(
       (l) => l.id === this.selectedLayoutId
     );
     if (!chosen) return; // nothing selected
 
-    // 2️⃣ build payload with the full SavedLayout
     const payload: any = {
       name: this.newHallName,
-      layout: chosen, // <-- entire SavedLayout
+      layout: chosen,
       rows: chosen.rows,
       seatsPerRow: chosen.seatsPerRow,
     };
@@ -230,15 +253,44 @@ export class AdminDasboardComponent implements OnInit {
     this.nowShowing
       .addCinemaHall(this.cinemaForNewHall.id, payload)
       .subscribe((hall) => {
-        // push the newly created CinemaHall onto the UI list
         this.cinemaForNewHall!.halls.push(hall);
         this.hallDialogVisible = false;
       });
   }
 
+  get notShowingMovies() {
+    return this.allMovies.filter((m) => !m.nowPlaying);
+  }
+
   toggleNowPlaying(movieId: number, current: boolean) {
-    this.nowShowing
-      .updateMovie(movieId, { nowPlaying: !current })
-      .subscribe(() => this.loadNowPlaying());
+    const action = current
+      ? 'pull this movie out of the cinemas'
+      : 'put it back in the cinemas';
+    this.confirmationService.confirm({
+      message: `Are you sure you want to ${action}?`,
+      header: 'Please Confirm',
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.nowShowing
+          .updateMovie(movieId, { nowPlaying: !current })
+          .subscribe(() => {
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: current
+                ? 'Movie removed from cinemas'
+                : 'Movie put back into cinemas',
+            });
+            this.loadNowPlaying();
+            this.loadAllMovies();
+          });
+      },
+    });
+  }
+
+  onMovieAdded() {
+    this.addMovieVisible = false;
+    this.loadNowPlaying();
+    this.loadAllMovies();
   }
 }

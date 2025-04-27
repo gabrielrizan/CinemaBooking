@@ -35,6 +35,7 @@ interface AgeRatingOption {
     RatingModule,
     ChipModule,
     DropdownModule,
+    
   ],
   templateUrl: './add-movie.component.html',
   styleUrls: ['./add-movie.component.css'],

@@ -2,6 +2,9 @@
 <p-confirmdialog key="cancelTicket"></p-confirmdialog>
 <p-confirmdialog key="promoteUser"></p-confirmdialog>
 
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>
+
 <p-dialog header="New Cinema" [(visible)]="cinemaDialogVisible" [modal]="true">
   <div class="space-y-3">
     <input
@@ -273,17 +276,71 @@
     <p-tabPanel header="Layouts">
       <app-layout-creation></app-layout-creation>
     </p-tabPanel>
-    <p-tabPanel header="Movies">
-      <div
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
-      >
-        <ng-container *ngFor="let mv of movies">
-          <app-movie-card [movie]="mv" [isAdmin]="true"></app-movie-card>
-        </ng-container>
-        <div *ngIf="movies.length === 0" class="col-span-full text-center p-8">
-          <p>No movies are currently marked as “Now Playing.”</p>
-        </div>
+    <p-tabPanel header="Movies" class="bg-transparent">
+      <!-- Add Movie Button -->
+      <div class="flex justify-end mb-4">
+        <button
+          pButton
+          type="button"
+          label="Add Movie"
+          icon="pi pi-plus"
+          (click)="addMovieVisible = true"
+          class="px-4 py-2 rounded-md"
+        ></button>
       </div>
+
+      <!-- Now Showing Section -->
+      <section>
+        <h2 class="text-2xl font-semibold mb-4">Now Showing</h2>
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+        >
+          <ng-container *ngFor="let mv of movies">
+            <app-movie-card
+              [movie]="mv"
+              [isAdmin]="true"
+              (toggle)="toggleNowPlaying($event, mv.nowPlaying)"
+            ></app-movie-card>
+          </ng-container>
+          <div
+            *ngIf="movies.length === 0"
+            class="col-span-full text-center p-8"
+          >
+            <p>No movies are currently marked as “Now Playing.”</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- All Movies Section -->
+      <section class="mt-12">
+        <h2 class="text-2xl font-semibold mb-4">All Movies</h2>
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+        >
+          <ng-container *ngFor="let mv of notShowingMovies">
+            <div class="filter grayscale">
+              <app-movie-card
+                [movie]="mv"
+                [isAdmin]="true"
+                (toggle)="toggleNowPlaying($event, mv.nowPlaying)"
+              ></app-movie-card>
+            </div>
+          </ng-container>
+          <div
+            *ngIf="notShowingMovies.length === 0"
+            class="col-span-full text-center p-8"
+          >
+            <p>All catalog movies are currently showing.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Add Movie Dialog -->
+      <app-add-movie
+        [visible]="addMovieVisible"
+        (closeDialog)="addMovieVisible = false"
+        (movieAdded)="onMovieAdded()"
+      ></app-add-movie>
     </p-tabPanel>
   </p-tabView>
 </div>
