@@ -200,9 +200,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
         ],
       },
       {
-        label: 'My Movies',
-        icon: 'pi pi-video',
+        label: 'My Tickets',
+        icon: 'pi pi-ticket',
         routerLink: ['/my-movies'],
+        visible: this.isLoggedIn,
+      },
+      {
+        label: 'For You',
+        icon: 'pi pi-user',
+        routerLink: ['/for-you'],
         visible: this.isLoggedIn,
       },
     ];

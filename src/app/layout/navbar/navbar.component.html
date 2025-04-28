@@ -167,10 +167,9 @@
 
   <p-dialog
     [(visible)]="isChatOpen"
-    [modal]="false"
-    [dismissableMask]="true"
-    header="Chat Assistant"
-    [style]="{ width: '900px', height: '600px' }"
+    blockScroll="true"
+    [showHeader]="false"
+    [style]="{ width: '900px', height: '800px' }"
     [baseZIndex]="1100"
   >
     <app-chatbot></app-chatbot>

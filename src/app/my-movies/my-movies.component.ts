@@ -166,7 +166,7 @@ export class MyMoviesComponent implements OnInit, OnDestroy {
   }
 
   cancelTicket(ticketId: string) {
-    console.log('Cancelling ticket:', ticketId);
+    
   }
 
   groupSeatsByRow(seats: string[]): Array<{ row: string; seats: string[] }> {
@@ -194,4 +194,6 @@ export class MyMoviesComponent implements OnInit, OnDestroy {
   closeTicketModal(): void {
     this.ticketModalVisible = false;
   }
+
+ 
 }

@@ -64,12 +64,7 @@ export class LoginComponent implements OnInit {
     {
       label: 'My Tickets',
       icon: 'pi pi-ticket',
-      routerLink: ['/my-tickets'],
-    },
-    {
-      label: 'My Searches',
-      icon: 'pi pi-history',
-      routerLink: ['/my-searches'],
+      routerLink: ['/my-movies'],
     },
     {
       label: 'Logout',
@@ -126,12 +121,7 @@ export class LoginComponent implements OnInit {
       {
         label: 'My Tickets',
         icon: 'pi pi-ticket',
-        routerLink: ['/my-tickets'],
-      },
-      {
-        label: 'My Searches',
-        icon: 'pi pi-history',
-        routerLink: ['/my-searches'],
+        routerLink: ['/my-movies'],
       },
       { separator: true },
       {

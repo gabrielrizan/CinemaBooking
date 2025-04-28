@@ -14,6 +14,7 @@ import { adminGuard } from './layout/guards/admin.guard';
 import { LayoutCreationComponent } from './admin/layout-creation/layout-creation.component';
 import { ChatbotComponent } from './chatbot/chatbot.component';
 import { RecommendationComponent } from './recommendation/recommendation.component';
+import { MyAccountComponent } from './my-account/my-account.component';
 
 export const routes: Routes = [
   {
@@ -75,5 +76,9 @@ export const routes: Routes = [
   {
     path: 'for-you',
     component: RecommendationComponent,
+  },
+  {
+    path: 'my-account',
+    component: MyAccountComponent,
   },
 ];

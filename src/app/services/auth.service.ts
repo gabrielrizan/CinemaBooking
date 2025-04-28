@@ -6,6 +6,7 @@ import { jwtDecode } from 'jwt-decode';
 import { Router } from '@angular/router';
 
 interface UserDetails {
+  id: number;
   email: string;
   firstname: string;
   lastname: string;
@@ -135,4 +136,24 @@ export class AuthService {
   isAdminView(): boolean {
     return this.adminViewSubject.value;
   }
+
+  updateCurrentUser(payload: {
+    firstname?: string;
+    lastname?: string;
+    dob?: string;
+  }): Observable<UserDetails> {
+    const token = localStorage.getItem('access_token');
+    return this.http
+      .patch<UserDetails>(`${this.apiUrl}users/me/`, payload, {
+        headers: {
+          Authorization: `JWT ${token}`,
+        },
+      })
+      .pipe(
+        tap((user) => {
+          this.userDetailsSubject.next(user);
+        })
+      );
+  }
+
 }

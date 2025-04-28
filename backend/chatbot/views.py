@@ -47,9 +47,11 @@ def gemini_chat_view(request):
             max_output_tokens=150,
             temperature=0.2,
             system_instruction=(
-                "You are a helpful cinema chatbot. Answer the user's questions about movies, "
+                "You are a helpful cinema chatbot. Answer the user's questions about movies all the movies, not just the ones that are showing."
                 "If the user asks about the movies running, here are the movies currently playing:\n"
                 f"{get_now_playing_summary()}"
+                "Even if the user asks about information other tahan genre, ratting or runtime, you should answer them with your knowledge."
+
             )
         )
 

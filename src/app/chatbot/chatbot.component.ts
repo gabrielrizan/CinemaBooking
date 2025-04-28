@@ -4,6 +4,7 @@ import {
   ElementRef,
   AfterViewChecked,
   OnInit,
+  AfterViewInit,
 } from '@angular/core';
 import { ChatService } from '../services/chat.service';
 import { CommonModule } from '@angular/common';
@@ -42,90 +43,76 @@ export interface ChatMessage {
     AvatarModule,
     TooltipModule,
     ProgressSpinnerModule,
-    MarkdownPipe
+    MarkdownPipe,
   ],
 })
-export class ChatbotComponent implements AfterViewChecked, OnInit {
+export class ChatbotComponent implements OnInit, AfterViewInit {
   @ViewChild('chatContainer') private chatContainer!: ElementRef;
-
   userInput = '';
   messages: ChatMessage[] = [];
   isLoading = false;
+  private isNearBottom = true;
 
   constructor(private chatService: ChatService) {}
 
   ngOnInit() {}
 
-  ngAfterViewChecked() {
-    this.scrollToBottom();
+  ngAfterViewInit() {
+    this.chatContainer.nativeElement.addEventListener('scroll', () => {
+      const c = this.chatContainer.nativeElement;
+      this.isNearBottom =
+        c.scrollHeight - (c.scrollTop + c.clientHeight) <= 100;
+    });
   }
 
-  scrollToBottom(): void {
-    try {
-      this.chatContainer.nativeElement.scrollTop =
-        this.chatContainer.nativeElement.scrollHeight;
-    } catch (err) {
-      console.error('Error scrolling to bottom:', err);
+  private scrollToBottom() {
+    if (this.isNearBottom) {
+      const c = this.chatContainer.nativeElement;
+      c.scrollTop = c.scrollHeight;
     }
   }
 
-  sendMessage(): void {
-    const trimmedMessage = this.userInput.trim();
-    if (!trimmedMessage || this.isLoading) return;
-
-    const userMsg: ChatMessage = {
-      role: 'user',
-      content: trimmedMessage,
-      timestamp: new Date(),
-    };
-    this.messages.push(userMsg);
-
+  sendMessage() {
+    const text = this.userInput.trim();
+    if (!text || this.isLoading) return;
+    this.messages.push({ role: 'user', content: text, timestamp: new Date() });
     this.isLoading = true;
-    setTimeout(() => this.scrollToBottom(), 100);
-
-    const history = this.messages.map(({ role, content }) => ({
-      role,
-      content,
+    const history = this.messages.map((m) => ({
+      role: m.role,
+      content: m.content,
     }));
-
     this.chatService
-      .chatWithAssistant(history, trimmedMessage)
+      .chatWithAssistant(history, text)
       .then((reply) => {
         this.messages.push({
           role: 'assistant',
           content: reply,
           timestamp: new Date(),
         });
+        setTimeout(() => this.scrollToBottom(), 0);
       })
-      .catch((error) => {
-        console.error('Error in chatbot:', error);
+      .catch(() => {
         this.messages.push({
           role: 'assistant',
           content:
             'Sorry, I encountered an error processing your request. Please try again.',
           timestamp: new Date(),
         });
+        setTimeout(() => this.scrollToBottom(), 0);
       })
-      .finally(() => {
-        this.isLoading = false;
-        setTimeout(() => this.scrollToBottom(), 100);
-      });
-
+      .finally(() => (this.isLoading = false));
     this.userInput = '';
   }
 
-  onKeyPress(event: KeyboardEvent): void {
-    if (event.key === 'Enter') {
-      this.sendMessage();
-    }
+  onKeyPress(e: KeyboardEvent) {
+    if (e.key === 'Enter') this.sendMessage();
   }
-
-  clearChat(): void {
+  clearChat() {
     this.messages = [];
   }
-
-  formatTime(date?: Date): string {
-    if (!date) return '';
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  formatTime(d?: Date) {
+    return d
+      ? d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      : '';
   }
 }

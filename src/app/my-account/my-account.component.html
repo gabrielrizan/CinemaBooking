@@ -1,0 +1,78 @@
+<p-toast position="top-right"></p-toast>
+
+<div class="max-w-3xl mx-auto p-6">
+  <p-card class="shadow-lg rounded-lg">
+    <div class="mb-6">
+      <h2 class="text-3xl font-semibold">My Account</h2>
+    </div>
+
+    <form
+      #f="ngForm"
+      (ngSubmit)="onSave(f)"
+      class="grid grid-cols-1 md:grid-cols-2 gap-6"
+    >
+      <!-- Email (read-only) -->
+      <div class="col-span-1 md:col-span-2">
+        <label class="block text-sm font-medium mb-1">Email</label>
+        <input
+          type="email"
+          pInputText
+          [ngModel]="user.email"
+          name="email"
+          readonly
+          class="w-full cursor-not-allowed"
+        />
+      </div>
+
+      <!-- First Name -->
+      <div>
+        <label class="block text-sm font-medium mb-1">First Name</label>
+        <input
+          type="text"
+          pInputText
+          [(ngModel)]="user.firstname"
+          name="firstname"
+          required
+          class="w-full"
+        />
+      </div>
+
+      <!-- Last Name -->
+      <div>
+        <label class="block text-sm font-medium mb-1">Last Name</label>
+        <input
+          type="text"
+          pInputText
+          [(ngModel)]="user.lastname"
+          name="lastname"
+          required
+          class="w-full"
+        />
+      </div>
+
+      <!-- Date of Birth -->
+      <div class="col-span-1 md:col-span-2">
+        <label class="block text-sm font-medium mb-1">Date of Birth</label>
+        <p-calendar
+          [(ngModel)]="user.dob"
+          name="dob"
+          dateFormat="yy-mm-dd"
+          showIcon="true"
+          required
+          class="w-full"
+        ></p-calendar>
+      </div>
+
+      <!-- Save Button -->
+      <div class="col-span-1 md:col-span-2 text-right">
+        <p-button
+          type="submit"
+          label="Save Changes"
+          icon="pi pi-save"
+          [disabled]="f.invalid || loading"
+          class="p-button-rounded p-button-primary"
+        ></p-button>
+      </div>
+    </form>
+  </p-card>
+</div>
