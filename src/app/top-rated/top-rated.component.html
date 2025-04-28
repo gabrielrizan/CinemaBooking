@@ -1,0 +1,28 @@
+<!-- top-rated.component.html
+     ─────────────────────────────────────────────────────────────── -->
+<div class="max-w-7xl mx-auto p-6 space-y-10">
+  <h1 class="text-3xl font-bold">Top-Rated Movies</h1>
+
+  <!-- Loader -->
+  <div *ngIf="loading" class="flex justify-center py-20">
+    <p-progressSpinner styleClass="w-12 h-12"></p-progressSpinner>
+  </div>
+
+  <!-- Movie grid -->
+  <div
+    *ngIf="!loading"
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5"
+  >
+    <ng-container *ngFor="let mv of topRatedMovies">
+      <app-movie-card [movie]="mv"></app-movie-card>
+    </ng-container>
+
+    <!-- empty state -->
+    <div
+      *ngIf="topRatedMovies.length === 0 && !loading"
+      class="col-span-full text-center py-10"
+    >
+      <p>No data available.</p>
+    </div>
+  </div>
+</div>

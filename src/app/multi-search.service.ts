@@ -8,11 +8,16 @@ import { Genres } from './models/movie.model';
   providedIn: 'root',
 })
 export class MultiSearchService {
-  private apiUrl = 'https://api.themoviedb.org/3/search/multi'; // The Movie Database (TMDb) API endpoint
-  private movieGenreUrl = 'https://api.themoviedb.org/3/genre/movie/list'; // The Movie Database (TMDb) API endpoint
-  private tvGenreUrl = 'https://api.themoviedb.org/3/genre/tv/list'; // The Movie Database (TMDb) API endpoint
-  private movieUrl = 'https://api.themoviedb.org/3/movie'; // The Movie Database (TMDb) API endpoint
-  private tvUrl = 'https://api.themoviedb.org/3/tv'; // The Movie Database (TMDb) API endpoint
+  private apiUrl = 'https://api.themoviedb.org/3/search/multi';
+  private movieGenreUrl = 'https://api.themoviedb.org/3/genre/movie/list';
+  private tvGenreUrl = 'https://api.themoviedb.org/3/genre/tv/list';
+  private movieUrl = 'https://api.themoviedb.org/3/movie';
+  private tvUrl = 'https://api.themoviedb.org/3/tv';
+  private upcomingUrl = 'https://api.themoviedb.org/3/movie/upcoming';
+  private popularUrl = 'https://api.themoviedb.org/3/movie/popular';
+  private topRatedUrl = 'https://api.themoviedb.org/3/movie/top_rated';
+  private movieTrailerUrl =
+    'https://api.themoviedb.org/3/movie/{movie_id}/videos';
 
   constructor(private http: HttpClient) {}
 
@@ -21,15 +26,12 @@ export class MultiSearchService {
   private genresLoaded = false;
 
   searchMovies(query: string): Observable<any> {
-    // Set up the headers with the Authorization Bearer token
     const headers = new HttpHeaders({
       Authorization: environment.bearer,
     });
 
-    // Set up query parameters
     const params = new HttpParams().set('query', query);
 
-    // Return the HTTP request as an Observable
     return this.http.get<any>(this.apiUrl, { headers, params });
   }
 
@@ -147,5 +149,42 @@ export class MultiSearchService {
     return this.http.get<any>(`${this.tvUrl}/${tvId}/recommendations`, {
       headers: header,
     });
+  }
+
+  getUpcomingMovies(): Observable<any> {
+    const header = new HttpHeaders({
+      Authorization: environment.bearer,
+    });
+
+    return this.http.get<any>(this.upcomingUrl, { headers: header });
+  }
+
+  getPopularMovies(): Observable<any> {
+    const header = new HttpHeaders({
+      Authorization: environment.bearer,
+    });
+
+    return this.http.get<any>(this.popularUrl, { headers: header });
+  }
+
+  getTopRatedMovies(): Observable<any> {
+    const header = new HttpHeaders({
+      Authorization: environment.bearer,
+    });
+
+    return this.http.get<any>(this.topRatedUrl, { headers: header });
+  }
+
+  getTrailer(movieId: string): Observable<any> {
+    const header = new HttpHeaders({
+      Authorization: environment.bearer,
+    });
+
+    return this.http.get<any>(
+      `${this.movieTrailerUrl.replace('{movie_id}', movieId)}`,
+      {
+        headers: header,
+      }
+    );
   }
 }

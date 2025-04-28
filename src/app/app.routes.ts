@@ -15,6 +15,8 @@ import { LayoutCreationComponent } from './admin/layout-creation/layout-creation
 import { ChatbotComponent } from './chatbot/chatbot.component';
 import { RecommendationComponent } from './recommendation/recommendation.component';
 import { MyAccountComponent } from './my-account/my-account.component';
+import { TopRatedComponent } from './top-rated/top-rated.component';
+import { ComingSoonComponent } from './coming-soon/coming-soon.component';
 
 export const routes: Routes = [
   {
@@ -80,5 +82,13 @@ export const routes: Routes = [
   {
     path: 'my-account',
     component: MyAccountComponent,
+  },
+  {
+    path: 'movies/top-rated',
+    component: TopRatedComponent,
+  },
+  {
+    path: 'movies/coming-soon',
+    component: ComingSoonComponent,
   },
 ];

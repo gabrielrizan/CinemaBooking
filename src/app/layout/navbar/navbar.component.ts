@@ -169,7 +169,7 @@ export class NavbarComponent implements OnInit, OnDestroy {
           {
             label: 'Coming Soon',
             icon: 'pi pi-clock',
-            routerLink: ['/movies/coming-soon'],
+            routerLink: ['movies/coming-soon'],
           },
           {
             label: 'Top Rated',
