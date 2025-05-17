@@ -28,7 +28,7 @@
   <!-- Cinema Selector Section -->
   <div class="mb-6">
     <h2 class="text-xl mb-4" *ngIf="selectedCinema">
-      PROGRAM PENTRU {{ selectedCinema.name | uppercase }}
+      Schedule For {{ selectedCinema.name | uppercase }}
     </h2>
     <div class="flex flex-col sm:flex-row gap-4">
       <p-dropdown
@@ -150,7 +150,7 @@
               >
                 <div class="format-label mb-3">
                   <span
-                    class="text-lg font-semibold bg-primary/10 text-primary px-4 py-1 rounded-full"
+                    class="text-lg font-semibold bg-primary/10 text-primary py-1 rounded-full"
                   >
                     {{ format }}
                   </span>

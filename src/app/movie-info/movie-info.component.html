@@ -86,29 +86,13 @@
               ></p-chip>
             </div>
           </div>
-
-          <!-- Buttons -->
-          <div class="mt-4 flex space-x-4">
-            <button
-              pButton
-              label="Play Trailer"
-              icon="pi pi-play"
-              styleClass="bg-blue-600 hover:bg-blue-700 text-white font-medium rounded px-4 py-2"
-            ></button>
-            <button
-              pButton
-              label="Add to Favorites"
-              icon="pi pi-heart"
-              styleClass="border border-white text-white font-medium rounded px-4 py-2 hover:bg-white hover:text-gray-800"
-            ></button>
-          </div>
         </div>
       </div>
     </div>
 
     <!-- Movie Financial Info (Only for movies) -->
     <ng-container *ngIf="mediaType === 'movie'">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+      <div class="grid grid-cols-2 mb-8">
         <p-card
           class="text-gray-200 shadow rounded-lg p-4 flex items-center space-x-3"
         >
