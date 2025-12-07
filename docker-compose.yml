@@ -1,0 +1,71 @@
+services:
+  # 1. Database Service
+  db:
+    image: mysql:8.0
+    container_name: cinema-db
+    restart: always
+    environment:
+      MYSQL_DATABASE: cinema_db
+      MYSQL_USER: cinema_user
+      MYSQL_PASSWORD: cinema_password
+      MYSQL_ROOT_PASSWORD: admin123
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+# 2. Backend Service (Django)
+  backend:
+    build: 
+      context: ./backend
+    container_name: cinema-backend
+    command: >
+      sh -c "python manage.py migrate &&
+             gunicorn --bind 0.0.0.0:8000 cinema_backend.wsgi:application"
+    volumes:
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # --- Hardcoded Docker Configs ---
+      - DB_HOST=db
+      - DB_NAME=cinema_db
+      - DB_USER=cinema_user
+      - DB_PASSWORD=cinema_password
+      - DB_PORT=3306
+      - ALLOWED_HOSTS=localhost,127.0.0.1,backend
+      - CORS_ALLOWED_ORIGINS=http://localhost,http://localhost:4200
+      - CSRF_TRUSTED_ORIGINS=http://localhost,http://localhost:4200
+
+      # --- SUPERUSER CREDENTIALS ---
+      # Django uses these specific names automatically
+      - DJANGO_SUPERUSER_EMAIL=admin@example.com
+      - DJANGO_SUPERUSER_USERNAME=admin
+      - DJANGO_SUPERUSER_PASSWORD=admin123
+      - DJANGO_SUPERUSER_FIRSTNAME=Admin
+      - DJANGO_SUPERUSER_LASTNAME=User
+      - DJANGO_SUPERUSER_DOB=2000-01-01
+      
+      # --- Pass-through Variables (Read from .env) ---
+      - STRIPE_SECRET_KEY
+      - STRIPE_PUBLISHABLE_KEY
+      - STRIPE_WEBHOOK_SECRET
+      - GEMINI_API_KEY
+
+  # 3. Frontend Service (Angular)
+  frontend:
+    build: 
+      context: ./frontend
+    container_name: cinema-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  db_data:
