@@ -1,0 +1,7 @@
+export const environment = {
+  production: false,
+  bearer:
+    'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIzNWU4OTlmMjg4MGNlOWYxNTliZjdiODFlZmUxYWEyMSIsIm5iZiI6MTcyMzUzOTQ2NS4yOTMsInN1YiI6IjY2YmIyMDA5OTViYzYyOWVhY2JkYjFhNCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.rBaSkt_ToLatCnQYLdjpsuCUdI0BWrMbwGevUTUAUQE',
+  stripePublishableKey:
+    'pk_test_51QY7xeJ1irMsiTTCg8k7vyIcPuCBtXt7ecB0zea20g7upLMFJDOWELx30dyHYk0xY9AaHwypXuUkPCkI64qPwkrY00hHKg1KFX',
+};

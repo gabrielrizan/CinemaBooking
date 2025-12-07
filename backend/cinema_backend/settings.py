@@ -88,10 +88,10 @@ WSGI_APPLICATION = 'cinema_backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'mysql.connector.django',
         'NAME': 'cinema_db',  # Name of your MySQL database
         'USER': 'root',     # MySQL user
-        'PASSWORD': 'admin',  # MySQL user password
+        'PASSWORD': 'admin123',  # MySQL user password
         'HOST': 'localhost',           # Or your MySQL server IP address
         'PORT': '3306',                # Default MySQL port
     }

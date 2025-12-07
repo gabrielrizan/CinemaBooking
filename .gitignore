@@ -1,147 +1,72 @@
-# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
-
-# Compiled output
-/dist
-/tmp
-/out-tsc
-/bazel-out
-
-# Node
-/node_modules
-npm-debug.log
-yarn-error.log
-
-# IDEs and editors
+# --- GLOBAL IGNORES (IDE, System Files) ---
+.DS_Store
+Thumbs.db
 .idea/
+.vscode/
+.history/
+*.sublime-workspace
+*.sublime-project
 .project
 .classpath
 .c9/
 *.launch
 .settings/
-*.sublime-workspace
 
-# Visual Studio Code
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-.history/*
+# --- PYTHON/DJANGO BACKEND IGNORES (inside /backend) ---
+# Virtual Environments
+backend/venv/
+backend/env/
+backend/.venv/
 
-# Miscellaneous
-/.angular/cache
-.sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
-testem.log
-/typings
-
-# System files
-.DS_Store
-Thumbs.db
-
-# Ignore environment files
-src/environments/environment.ts
-src/environments/environment.prod.ts
-
-# Byte-compiled / optimized / DLL files
+# Django/Python Artifacts
+backend/__pycache__/
+backend/*.py[cod]
+backend/*$py.class
+backend/*.mo
+backend/*.pot
+backend/*.log
+backend/local_settings.py
+backend/db.sqlite3
+backend/*.sqlite3
+backend/build/
+backend/dist/
+backend/*.egg-info/
+backend/*.whl
+backend/.pytest_cache/
+backend/htmlcov/
+backend/.tox/
+backend/.coverage*
 __pycache__/
 *.py[cod]
-*$py.class
-
-# C extensions
-*.so
-
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
+*.egg
 *.egg-info/
 .installed.cfg
-*.egg
-*.whl
 
-# PyInstaller
-# Usually these files are written by a python script from a template
-# before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
+# --- NODE/ANGULAR FRONTEND IGNORES (inside /frontend) ---
+# Dependencies and Lock Files
+frontend/node_modules/
+frontend/npm-debug.log
+frontend/yarn-error.log
 
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
+# Build Artifacts
+frontend/dist/
+frontend/tmp/
+frontend/out-tsc/
+frontend/coverage/
 
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-.hypothesis/
-.pytest_cache/
-*.log
+# Angular/Cache Files (Crucial for fixing your 10k changes error)
+frontend/.angular/cache/ # <--- THIS is the key fix for the 10k files.
+frontend/.sass-cache/
+frontend/connect.lock
 
-# Jupyter Notebook
-.ipynb_checkpoints
+# IDE/Cache Files (If IDEs create cache inside frontend)
+frontend/.vscode/
+frontend/.cache
+frontend/.angular/cache/
 
-# Translations
-*.mo
-*.pot
+# Environment Files (If you decide to move them here)
+# frontend/src/environments/environment*.ts
 
-# Django stuff:
-local_settings.py
-db.sqlite3  # SQLite database file
-
-# Flask stuff:
-instance/
-.webassets-cache
-
-# Scrapy stuff:
-.scrapy
-
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-target/
-
-# Django stuff:
-*.log
-local_settings.py
-
-# SQLite database
-db.sqlite3
-*.sqlite3
-
-# Virtual environment
-venv/
-env/
-.venv/
-
-
-# VSCode
-.vscode/
-
-# JetBrains / PyCharm
-.idea/
-
-# Sublime Text
-*.sublime-project
-*.sublime-workspace
-
-# Environment variables
+# --- PROJECT ROOT IGNORES ---
+# Global Environment File
 .env
