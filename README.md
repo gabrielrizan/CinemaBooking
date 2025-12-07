@@ -1,27 +1,111 @@
-# CinemaApp
+# Cinema Booking Application
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.1.3.
+A full-stack cinema booking platform featuring movie listings, seat selection, booking management, and ticket generation. The application consists of an Angular frontend, a Django REST API backend, and a MySQL database, all fully containerized using Docker.
 
-## Development server
+## Tech Stack
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+* Frontend: Angular 19, PrimeNG, TailwindCSS
+* Backend: Django 6.0, Django REST Framework, Gunicorn
+* Database: MySQL 8.0
+* Containerization: Docker, Docker Compose
+* PDF Generation: jsPDF, html2canvas (Frontend)
+* Authentication: JWT (SimpleJWT)
 
-## Code scaffolding
+---
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Getting Started
 
-## Build
+### Prerequisites
+* Docker Desktop (must be installed and running)
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+### 1. Installation
 
-## Running unit tests
+1.  Clone the repository:
+    git clone <your-repo-url>
+    cd cinema-project
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+2.  Configure Environment Variables:
+    Create a file named .env in the root directory and add your API keys:
+    
+    STRIPE_SECRET_KEY=sk_test_...
+    STRIPE_PUBLISHABLE_KEY=pk_test_...
+    STRIPE_WEBHOOK_SECRET=whsec_...
+    GEMINI_API_KEY=AIzaSy...
+    
+    # Optional Overrides
+    DEBUG=True
 
-## Running end-to-end tests
+3.  Build and Run:
+    Run the application using Docker Compose. This will build the images, create the database, and start all services.
+    
+    docker compose up --build
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+    (Wait a few moments for the database to initialize and the backend to apply migrations.)
 
-## Further help
+---
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Accessing the Application
+
+Once the containers are running:
+
+* Frontend: http://localhost (Main user interface)
+* Backend API: http://localhost:8000 (Django REST API endpoints)
+* Admin Panel: http://localhost:8000/admin (Django Superuser Interface)
+
+### Default Superuser Credentials
+The system automatically creates an admin user on startup (configured in docker-compose.yml):
+
+* Email: admin@example.com
+* Username: admin
+* Password: admin123
+
+---
+
+## Project Structure
+
+cinema-project/
+├── docker-compose.yml       # Orchestrates Frontend, Backend, and DB
+├── .env                     # Local secrets (ignored by git)
+├── frontend/                # Angular Application
+│   ├── Dockerfile
+│   ├── nginx.conf           # Nginx config for serving Angular
+│   └── src/
+└── backend/                 # Django Application
+    ├── Dockerfile
+    ├── entrypoint.sh        # Startup script (migrations + superuser)
+    ├── requirements.txt
+    ├── manage.py
+    └── cinema_backend/      # Main Django settings
+
+---
+
+## Development Commands
+
+### Stopping the Application
+To stop containers but keep data:
+docker compose stop
+
+To stop containers and remove them (data persists in volume):
+docker compose down
+
+### Resetting the Database
+If you need to wipe the database completely (e.g., if initialization failed):
+docker compose down -v
+docker compose up --build
+
+### Running Backend Commands
+To run Django management commands (like creating a new migration) inside the running container:
+docker compose exec backend python manage.py makemigrations
+docker compose exec backend python manage.py migrate
+
+### Viewing Logs
+To see logs for a specific service (e.g., backend errors):
+docker compose logs -f backend
+
+---
+
+## Configuration Notes
+
+* CORS: Configured to allow requests from localhost and localhost:4200.
+* Database Host: The backend connects to the hostname 'db' (internal Docker DNS), not 'localhost'.
+* Production Build: The frontend uses a multi-stage Docker build. It builds the Angular app with Node.js and serves the static output with Nginx.
