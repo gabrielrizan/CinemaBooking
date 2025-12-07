@@ -32,7 +32,7 @@ A full-stack cinema booking platform featuring movie listings, seat selection, b
     STRIPE_WEBHOOK_SECRET=whsec_...
     GEMINI_API_KEY=AIzaSy...
     
-### 2. Optional Overrides
+### Optional Overrides
 
     DEBUG=True
 
