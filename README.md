@@ -61,23 +61,6 @@ The system automatically creates an admin user on startup (configured in docker-
 
 ---
 
-## Project Structure
-
-cinema-project/
-├── docker-compose.yml       # 🐳 Orchestrates Frontend, Backend, and DB
-├── .env                     # 🔑 Local secrets (ignored by git)
-├── frontend/                # 🅰️ Angular Application
-│   ├── Dockerfile           # Multi-stage build (Node -> Nginx)
-│   ├── nginx.conf           # Nginx server config
-│   └── src/
-└── backend/                 # 🐍 Django Application
-    ├── Dockerfile           # Python 3.14 image
-    ├── entrypoint.sh        # Startup script (migrations + superuser)
-    ├── requirements.txt     # Python dependencies
-    ├── manage.py
-    └── cinema_backend/      # Main Django settings
----
-
 ## Development Commands
 
 ### Stopping the Application
